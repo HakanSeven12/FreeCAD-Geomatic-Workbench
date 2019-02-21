@@ -44,7 +44,6 @@ class GeomaticWorkbench ( Workbench ):
 
     def Activated(self):
         #This function is executed when the workbench is activated
-        #GroupName = ['Point Groups']
         FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
         return
 
