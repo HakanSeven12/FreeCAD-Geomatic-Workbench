@@ -41,6 +41,6 @@ class ImportPointFile:
                 yy = int(YLE)-1
                 zz = int(ZLE)-1
                 
-                Point = Draft.makePoint(X = row[xx], Y = row[yy], Z = row[zz], color = None, name = " " + str(row[pn]), point_size = 3)
+                Point = Draft.makePoint(X = float(row[xx])*1000, Y = float(row[yy])*1000, Z = float(row[zz])*1000, color = None, name = " " + str(row[pn]), point_size = 3)
 
 FreeCADGui.addCommand('Import Point File',ImportPointFile()) 
