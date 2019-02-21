@@ -2,9 +2,7 @@ import FreeCAD
 import FreeCADGui
 import Draft
 import csv
-import os
 from PySide import QtCore, QtGui
-import sys
 
 class ImportPointFile:
    def __init__(self):
@@ -38,8 +36,6 @@ class ImportPointFile:
             File=open(FilePath, 'r')
             reader = csv.reader(File, delimiter=" ")
             for i, row in enumerate( reader ):
-                if i == 0: continue # Skip column titles
-                #pn, xx, yy, zz = row[0:4]
                 pn = int(PointNameLE)-1
                 xx = int(XLE)-1
                 yy = int(YLE)-1
