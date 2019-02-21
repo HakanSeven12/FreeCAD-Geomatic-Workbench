@@ -29,15 +29,23 @@ class GeomaticWorkbench ( Workbench ):
         self.__class__.MenuText = "Geomatic"
         self.__class__.ToolTip = "Geomatic"
 
-    def Initialize(self):
+    def Initialize(self): #This function is executed when FreeCAD starts
         import ImportPointFile
 
+        #Create Toolbar
         list = ['Import Point File']
         self.appendToolbar("Point Tools",list)
 
+        #Create Menu
         #menu = ["Test &Commands","TestToolsGui"]
         #list = ["Std_TestQM","Std_TestReloadQM","Test_Test","Test_TestAll","Test_TestDoc","Test_TestBase"]
         #self.appendCommandbar("TestToolsGui",list)
         #self.appendMenu(menu,list)
+
+    def Activated(self):
+        #This function is executed when the workbench is activated
+        #GroupName = ['Point Groups']
+        FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+        return
 
 Gui.addWorkbench(GeomaticWorkbench())
