@@ -1,4 +1,4 @@
-# Freecad Geomatic Workbench
+# FreeCAD Geomatic Workbench
 This workbench is being developed to provide functionality specific to Geomatic/Survey engineering.
 
 ## Functions
