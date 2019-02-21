@@ -23,7 +23,7 @@ class ImportPointFile:
         self.IPFui.show()
   
    def BrowseFile(self):
-        self.FilePath = QtGui.QFileDialog.getOpenFileName(None, 'Select File', "", '*.*')
+        self.FilePath = QtGui.QFileDialog.getOpenFileName(None, 'Select File', "", 'All Files (*.*)')
         head, tail = os.path.split(self.FilePath[0])
 
         self.IPFui.BrowseLE.setText(self.FilePath[0])
