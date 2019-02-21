@@ -6,6 +6,7 @@ Import Point Files
 
 ## Installation
 Clone the project into the `~/.FreeCAD/Mod/Geomatic` folder.
+
 Go "Edit -> Preferences -> General -> Units" set "Number of decimals = 6".
 
 ## Developer 
