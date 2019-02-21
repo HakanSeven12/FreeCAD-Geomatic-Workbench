@@ -2,7 +2,9 @@ import FreeCAD
 import FreeCADGui
 import Draft
 import csv
+import os
 from PySide import QtCore, QtGui
+
 
 class ImportPointFile:
    def __init__(self):
@@ -22,8 +24,10 @@ class ImportPointFile:
   
    def BrowseFile(self):
         self.FilePath = QtGui.QFileDialog.getOpenFileName(None, 'Select File', "", '*.*')
+        head, tail = os.path.split(self.FilePath[0])
 
         self.IPFui.BrowseLE.setText(self.FilePath[0])
+        self.IPFui.SubGroupNameLE.setText(tail)
 
    def ImportFile(self):
         #Import UI variables
@@ -31,6 +35,10 @@ class ImportPointFile:
         XLE = self.IPFui.XLE.text()
         YLE = self.IPFui.YLE.text()
         ZLE = self.IPFui.ZLE.text()
+        SubPoints = self.IPFui.SubGroupNameLE.text()
+
+        #Create Group under Points
+        SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",SubPoints)
 
         for FilePath in self.FilePath:
             File=open(FilePath, 'r')
@@ -42,5 +50,7 @@ class ImportPointFile:
                 zz = int(ZLE)-1
                 
                 Point = Draft.makePoint(X = float(row[xx])*1000, Y = float(row[yy])*1000, Z = float(row[zz])*1000, color = None, name = " " + str(row[pn]), point_size = 3)
+                SubGroup.addObject(Point)
+                FreeCAD.ActiveDocument.Points.addObject(SubGroup)
 
 FreeCADGui.addCommand('Import Point File',ImportPointFile()) 
