@@ -24,10 +24,10 @@ class ImportPointFile:
   
    def BrowseFile(self):
         self.FilePath = QtGui.QFileDialog.getOpenFileName(None, 'Select File', "", 'All Files (*.*)')
-        head, tail = os.path.split(self.FilePath[0])
+        self.head, self.tail = os.path.split(self.FilePath[0])
 
         self.IPFui.BrowseLE.setText(self.FilePath[0])
-        self.IPFui.SubGroupNameLE.setText(tail)
+        self.IPFui.SubGroupNameLE.setText(self.tail)
 
    def ImportFile(self):
         #Import UI variables
@@ -39,19 +39,19 @@ class ImportPointFile:
 
         #Create Group under Points
         SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",SubPoints)
+        FreeCAD.ActiveDocument.Points.addObject(SubGroup)
 
-        for FilePath in self.FilePath:
-            File=open(FilePath, 'r')
-            reader = csv.reader(File, delimiter=" ")
-            for i, row in enumerate( reader ):
-                pn = int(PointNameLE)-1
-                xx = int(XLE)-1
-                yy = int(YLE)-1
-                zz = int(ZLE)-1
+        #Read Points from file
+        File=open(self.head +"/"+ self.tail, 'r')
+        reader = csv.reader(File, delimiter=" ")
+        for i, row in enumerate( reader ):
+            pn = int(PointNameLE)-1
+            xx = int(XLE)-1
+            yy = int(YLE)-1
+            zz = int(ZLE)-1
                 
-                Point = Draft.makePoint(X = float(row[xx])*1000, Y = float(row[yy])*1000, Z = float(row[zz])*1000, color = None, name = "Point", point_size = 3)
-                Point.Label = str(row[pn])
-                SubGroup.addObject(Point)
-                FreeCAD.ActiveDocument.Points.addObject(SubGroup)
+            Point = Draft.makePoint(X = float(row[xx])*1000, Y = float(row[yy])*1000, Z = float(row[zz])*1000, color = None, name = "Point", point_size = 3)
+            Point.Label = str(row[pn])
+            SubGroup.addObject(Point)
 
 FreeCADGui.addCommand('Import Point File',ImportPointFile()) 
