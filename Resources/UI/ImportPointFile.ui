@@ -195,27 +195,43 @@
     <string>Cancel</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="SubGroupNameLE">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>260</y>
-     <width>161</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="ExplanationL2">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>230</y>
-     <width>121</width>
+     <width>101</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Write SubGroup Name</string>
+    <string>Select Point Group</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="CreateGroupChB">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>280</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Create New Group</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="SubGroupListCB">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>250</y>
+     <width>351</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="editable">
+    <bool>false</bool>
    </property>
   </widget>
  </widget>
