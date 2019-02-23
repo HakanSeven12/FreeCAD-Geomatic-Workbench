@@ -15,13 +15,29 @@ class ImportPointFile:
         self.IPFui.BrowseB.clicked.connect(self.BrowseFile)
         self.IPFui.ImportB.clicked.connect(self.ImportFile)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
+        self.IPFui.CreateGroupChB.stateChanged.connect(self.CreateNewGroup)
 
    def GetResources(self):
         return {'MenuText': 'Import Point File', 'ToolTip': 'Import point file which include survey data.'}
   
    def Activated(self):
         self.IPFui.show()
-  
+        self.IPFui.SubGroupListCB.clear()
+        SG = FreeCAD.ActiveDocument.Points.Group
+        OutList = FreeCAD.ActiveDocument.Points.OutList
+        Count = 0
+
+        for i in OutList:
+            SubGroupName = SG[Count].Name
+            self.IPFui.SubGroupListCB.addItem(str(SubGroupName))
+            Count = Count + 1
+
+   def CreateNewGroup(self):
+        if self.IPFui.CreateGroupChB.isChecked():
+            self.IPFui.SubGroupListCB.setEditable(True)
+        else:
+            self.IPFui.SubGroupListCB.setEditable(False)
+
    def BrowseFile(self):
         self.FilePath = QtGui.QFileDialog.getOpenFileName(None, 'Select File', "", 'All Files (*.*)')
         self.head, self.tail = os.path.split(self.FilePath[0])
@@ -35,12 +51,15 @@ class ImportPointFile:
         XLE = self.IPFui.XLE.text()
         YLE = self.IPFui.YLE.text()
         ZLE = self.IPFui.ZLE.text()
-        SubPoints = self.IPFui.SubGroupNameLE.text()
+        SPG = self.IPFui.SubGroupListCB.currentText()
 
         #Create Group under Points
-        SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",SubPoints)
-        FreeCAD.ActiveDocument.Points.addObject(SubGroup)
-
+        if self.IPFui.CreateGroupChB.isChecked():
+            SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",SPG)
+            FreeCAD.ActiveDocument.Points.addObject(SubGroup)
+        else:
+            SubGroup = FreeCAD.ActiveDocument.getObject(SPG)
+			
         #Read Points from file
         File=open(self.head +"/"+ self.tail, 'r')
         reader = csv.reader(File, delimiter=" ")
