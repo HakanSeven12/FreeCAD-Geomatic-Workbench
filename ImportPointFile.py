@@ -25,10 +25,12 @@ class ImportPointFile:
         self.IPFui.SubGroupListCB.clear()
         SG = FreeCAD.ActiveDocument.Points.Group
         OutList = FreeCAD.ActiveDocument.Points.OutList
+        self.GroupList = []
         Count = 0
 
         for i in OutList:
-            SubGroupName = SG[Count].Name
+            self.GroupList.append(SG[Count].Name)
+            SubGroupName = SG[Count].Label
             self.IPFui.SubGroupListCB.addItem(str(SubGroupName))
             Count = Count + 1
 
@@ -41,9 +43,7 @@ class ImportPointFile:
    def BrowseFile(self):
         self.FilePath = QtGui.QFileDialog.getOpenFileName(None, 'Select File', "", 'All Files (*.*)')
         self.head, self.tail = os.path.split(self.FilePath[0])
-
         self.IPFui.BrowseLE.setText(self.FilePath[0])
-        self.IPFui.SubGroupNameLE.setText(self.tail)
 
    def ImportFile(self):
         #Import UI variables
@@ -51,7 +51,8 @@ class ImportPointFile:
         XLE = self.IPFui.XLE.text()
         YLE = self.IPFui.YLE.text()
         ZLE = self.IPFui.ZLE.text()
-        SPG = self.IPFui.SubGroupListCB.currentText()
+        Index = self.IPFui.SubGroupListCB.currentIndex()
+        SPG = self.GroupList[Index]
 
         #Create Group under Points
         if self.IPFui.CreateGroupChB.isChecked():
