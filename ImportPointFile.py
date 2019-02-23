@@ -52,11 +52,12 @@ class ImportPointFile:
         YLE = self.IPFui.YLE.text()
         ZLE = self.IPFui.ZLE.text()
         Index = self.IPFui.SubGroupListCB.currentIndex()
+        CNG = self.IPFui.SubGroupListCB.currentText()
         SPG = self.GroupList[Index]
 
         #Create Group under Points
         if self.IPFui.CreateGroupChB.isChecked():
-            SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",SPG)
+            SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",CNG)
             FreeCAD.ActiveDocument.Points.addObject(SubGroup)
         else:
             SubGroup = FreeCAD.ActiveDocument.getObject(SPG)
