@@ -36,6 +36,11 @@ class GeomaticWorkbench ( Workbench ):
         list = ['Import Point File']
         self.appendToolbar("Point Tools",list)
 
+        #Create Point Groups
+        FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+        SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'All Points')
+        FreeCAD.ActiveDocument.Points.addObject(SubGroup)
+
         #Create Menu
         #menu = ["Test &Commands","TestToolsGui"]
         #list = ["Std_TestQM","Std_TestReloadQM","Test_Test","Test_TestAll","Test_TestDoc","Test_TestBase"]
@@ -44,7 +49,8 @@ class GeomaticWorkbench ( Workbench ):
 
     def Activated(self):
         #This function is executed when the workbench is activated
-        FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+
         return
 
 Gui.addWorkbench(GeomaticWorkbench())
+
