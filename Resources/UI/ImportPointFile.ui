@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>369</width>
+    <width>441</width>
     <height>346</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Import Point File</string>
+   <string>Import Point File(s)</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
@@ -19,22 +19,22 @@
   <widget class="QLabel" name="SelectFileL">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>10</y>
-     <width>51</width>
+     <width>91</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Select File</string>
+    <string>Selected File(s)</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="BrowseLE">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>35</y>
-     <width>231</width>
+     <width>281</width>
      <height>20</height>
     </rect>
    </property>
@@ -42,9 +42,9 @@
   <widget class="QPushButton" name="BrowseB">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>320</x>
      <y>30</y>
-     <width>100</width>
+     <width>101</width>
      <height>23</height>
     </rect>
    </property>
@@ -68,8 +68,8 @@
   <widget class="QLabel" name="XL">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>130</y>
+     <x>160</x>
+     <y>100</y>
      <width>21</width>
      <height>20</height>
     </rect>
@@ -81,8 +81,8 @@
   <widget class="QLabel" name="YL">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>160</y>
+     <x>250</x>
+     <y>100</y>
      <width>21</width>
      <height>20</height>
     </rect>
@@ -94,8 +94,8 @@
   <widget class="QLabel" name="ZL">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>190</y>
+     <x>340</x>
+     <y>100</y>
      <width>21</width>
      <height>20</height>
     </rect>
@@ -109,12 +109,12 @@
     <rect>
      <x>20</x>
      <y>70</y>
-     <width>211</width>
+     <width>141</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Select Points Name and X,Y,Z Columns No</string>
+    <string>Specify Point File Format</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="PointNameLE">
@@ -122,7 +122,7 @@
     <rect>
      <x>90</x>
      <y>100</y>
-     <width>31</width>
+     <width>21</width>
      <height>20</height>
     </rect>
    </property>
@@ -133,9 +133,9 @@
   <widget class="QLineEdit" name="XLE">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>130</y>
-     <width>31</width>
+     <x>180</x>
+     <y>100</y>
+     <width>21</width>
      <height>20</height>
     </rect>
    </property>
@@ -146,9 +146,9 @@
   <widget class="QLineEdit" name="YLE">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>160</y>
-     <width>31</width>
+     <x>270</x>
+     <y>100</y>
+     <width>21</width>
      <height>20</height>
     </rect>
    </property>
@@ -159,9 +159,9 @@
   <widget class="QLineEdit" name="ZLE">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>190</y>
-     <width>31</width>
+     <x>360</x>
+     <y>100</y>
+     <width>21</width>
      <height>20</height>
     </rect>
    </property>
@@ -172,7 +172,7 @@
   <widget class="QPushButton" name="ImportB">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>200</x>
      <y>300</y>
      <width>100</width>
      <height>23</height>
@@ -185,7 +185,7 @@
   <widget class="QPushButton" name="CancelB">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>320</x>
      <y>300</y>
      <width>100</width>
      <height>23</height>
@@ -214,7 +214,7 @@
      <x>20</x>
      <y>280</y>
      <width>131</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
@@ -224,9 +224,9 @@
   <widget class="QComboBox" name="SubGroupListCB">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>250</y>
-     <width>351</width>
+     <width>401</width>
      <height>22</height>
     </rect>
    </property>
