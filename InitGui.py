@@ -31,15 +31,27 @@ class GeomaticWorkbench ( Workbench ):
 
     def Initialize(self): #This function is executed when FreeCAD starts
         import ImportPointFile
+        import CreateSurface
 
         #Create Toolbar
         list = ['Import Point File']
         self.appendToolbar("Point Tools",list)
 
+        #Create Toolbar
+        list = ['Create Surface']
+        self.appendToolbar("Surface Tools",list)
+
         #Create Point Groups
-        FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
-        SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'All Points')
-        FreeCAD.ActiveDocument.Points.addObject(SubGroup)
+        try:
+            App.ActiveDocument.Points
+        except:
+            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+
+        try:
+            App.ActiveDocument.All_Points
+        except:
+            SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'All Points')
+            FreeCAD.ActiveDocument.Points.addObject(SubGroup)
 
         #Create Menu
         #menu = ["Test &Commands","TestToolsGui"]
