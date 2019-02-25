@@ -71,8 +71,9 @@ class ImportPointFile:
             yy = int(YLE)-1
             zz = int(ZLE)-1
                 
-            Point = Draft.makePoint(X = float(row[xx])*1000, Y = float(row[yy])*1000, Z = float(row[zz])*1000, color = None, name = "Point", point_size = 3)
+            Point = Draft.makePoint(X = float(row[xx])*1000, Y = float(row[yy])*1000, Z = float(row[zz])*1000, color = (0.37,0.69,0.22) , name = "Point", point_size = 3)
             Point.Label = str(row[pn])
             SubGroup.addObject(Point)
+        FreeCADGui.SendMsgToActiveView("ViewFit")
 
 FreeCADGui.addCommand('Import Point File',ImportPointFile()) 
