@@ -42,7 +42,6 @@ class CreateSurface:
             Count = Count + 1
 
         data = np.array(trp)
-        print (data)
   
         tri = scipy.spatial.Delaunay( data[:,:2] )
 
