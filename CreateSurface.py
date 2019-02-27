@@ -1,9 +1,12 @@
 import FreeCAD
 import FreeCADGui
+from PySide import QtCore, QtGui
 import Points
 import Mesh
-import ReverseEngineering as Reen
-from PySide import QtCore, QtGui
+import numpy as np
+import scipy.spatial
+from scipy.spatial import Delaunay
+import pylab
 
 class CreateSurface:
    def __init__(self):
@@ -24,24 +27,40 @@ class CreateSurface:
    def CreateSurface(self):
         #Import UI variables
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
-        TLenghLE = float(self.IPFui.TLenghLE.text())*1000
-        OVLE = float(self.IPFui.OVLE.text())
         #Create surface
         GroupName = FreeCAD.ActiveDocument.All_Points.Group
         OutList = FreeCAD.ActiveDocument.All_Points.OutList
         limits = range(1,int(len(OutList)))
         Count = 0
+        data = np.empty((0,3), float)
 
         for i in limits:
-            xx = float(GroupName[Count].X)
-            yy = float(GroupName[Count].Y)
-            zz = float(GroupName[Count].Z)
-            self.planarMesh.append( (xx,yy,zz) ) 
+            xx = int(GroupName[Count].X)
+            yy = int(GroupName[Count].Y)
+            zz = int(GroupName[Count].Z)
+            np.append(data, np.array([[xx,yy,zz]]),axis = 0)
             Count = Count + 1
 
-        Points.show(Points.Points(self.planarMesh))
-        PointCloud = FreeCAD.ActiveDocument.Points001.Points
-        planarMeshObject=Reen.triangulate(PointCloud, TLenghLE, OVLE)
+        print (data)
+  
+        tri = scipy.spatial.Delaunay( data[:,:2] )
+
+        pylab.triplot( data[:,0], data[:,1], tri.simplices.copy() )
+        pylab.plot( data[:,0], data[:,1], 'ro' ) ;
+
+        planarMesh = []
+
+        for i in tri.simplices:
+
+           first = int(i[0:1])
+           second = int(i[1:2])
+           third = int(i[2:3])
+
+           planarMesh.append(data[first])
+           planarMesh.append(data[second])
+           planarMesh.append(data[third])
+
+        planarMeshObject = Mesh.Mesh(planarMesh)
         Mesh.show(planarMeshObject)
 
 FreeCADGui.addCommand('Create Surface',CreateSurface()) 
