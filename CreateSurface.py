@@ -32,15 +32,16 @@ class CreateSurface:
         OutList = FreeCAD.ActiveDocument.All_Points.OutList
         limits = range(1,int(len(OutList)))
         Count = 0
-        data = np.empty((0,3), float)
+        trp = []
 
         for i in limits:
-            xx = int(GroupName[Count].X)
-            yy = int(GroupName[Count].Y)
-            zz = int(GroupName[Count].Z)
-            np.append(data, np.array([[xx,yy,zz]]),axis = 0)
+            xx = float(GroupName[Count].X)
+            yy = float(GroupName[Count].Y)
+            zz = float(GroupName[Count].Z)
+            trp.append([xx,yy,zz])
             Count = Count + 1
 
+        data = np.array(trp)
         print (data)
   
         tri = scipy.spatial.Delaunay( data[:,:2] )
