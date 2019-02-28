@@ -42,23 +42,24 @@ class CreateSurface:
             Count = Count + 1
 
         data = np.array(trp)
-  
-        tri = scipy.spatial.Delaunay( data[:,:2] )
+        test = np.array(trp)
+        data -= data.mean(axis=0)
+        tri = scipy.spatial.Delaunay( data[:,:2]) # qhull_options = "Q3"
 
-        pylab.triplot( data[:,0], data[:,1], tri.simplices.copy() )
-        pylab.plot( data[:,0], data[:,1], 'ro' ) ;
+        #pylab.triplot( data[:,0], data[:,1], tri.simplices.copy() )
+        #pylab.plot( data[:,0], data[:,1], 'ro' ) ;
 
         planarMesh = []
 
-        for i in tri.simplices:
+        for i in tri.vertices:
 
            first = int(i[0:1])
            second = int(i[1:2])
            third = int(i[2:3])
 
-           planarMesh.append(data[first])
-           planarMesh.append(data[second])
-           planarMesh.append(data[third])
+           planarMesh.append(test[first])
+           planarMesh.append(test[second])
+           planarMesh.append(test[third])
 
         planarMeshObject = Mesh.Mesh(planarMesh)
         Mesh.show(planarMeshObject)
