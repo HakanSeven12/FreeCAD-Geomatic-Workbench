@@ -3,6 +3,7 @@ This workbench is being developed to provide functionality specific to Geomatic/
 
 ## Functions
 Import Point Files
+Create Surface
 
 ## Installation
 Clone the project into the `~/.FreeCAD/Mod/Geomatic` folder.
