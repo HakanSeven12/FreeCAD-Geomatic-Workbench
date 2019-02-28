@@ -1,12 +1,10 @@
 import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
-import Points
 import Mesh
 import numpy as np
 import scipy.spatial
 from scipy.spatial import Delaunay
-import pylab
 
 class CreateSurface:
    def __init__(self):
@@ -22,7 +20,7 @@ class CreateSurface:
 
    def Activated(self):
         self.IPFui.show()
-        self.planarMesh = []
+        self.plotMesh = []
 
    def CreateSurface(self):
         #Import UI variables
@@ -30,7 +28,7 @@ class CreateSurface:
         #Create surface
         GroupName = FreeCAD.ActiveDocument.All_Points.Group
         OutList = FreeCAD.ActiveDocument.All_Points.OutList
-        limits = range(1,int(len(OutList)))
+        limits = range(1,int(len(OutList)+1))
         Count = 0
         trp = []
 
@@ -43,13 +41,10 @@ class CreateSurface:
 
         data = np.array(trp)
         test = np.array(trp)
-        data -= data.mean(axis=0)
-        tri = scipy.spatial.Delaunay( data[:,:2]) # qhull_options = "Q3"
+        test -= test.mean(axis=0)
+        tri = scipy.spatial.Delaunay( test[:,:2]) 
 
-        #pylab.triplot( data[:,0], data[:,1], tri.simplices.copy() )
-        #pylab.plot( data[:,0], data[:,1], 'ro' ) ;
-
-        planarMesh = []
+        plotMesh = []
 
         for i in tri.vertices:
 
@@ -57,11 +52,11 @@ class CreateSurface:
            second = int(i[1:2])
            third = int(i[2:3])
 
-           planarMesh.append(test[first])
-           planarMesh.append(test[second])
-           planarMesh.append(test[third])
+           plotMesh.append(data[first])
+           plotMesh.append(data[second])
+           plotMesh.append(data[third])
 
-        planarMeshObject = Mesh.Mesh(planarMesh)
-        Mesh.show(planarMeshObject)
+        plotMeshObject = Mesh.Mesh(plotMesh)
+        Mesh.show(plotMeshObject)
 
 FreeCADGui.addCommand('Create Surface',CreateSurface()) 
