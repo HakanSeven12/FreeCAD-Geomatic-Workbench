@@ -41,18 +41,6 @@ class GeomaticWorkbench ( Workbench ):
         list = ['Create Surface']
         self.appendToolbar("Surface Tools",list)
 
-        #Create Point Groups
-        try:
-            App.ActiveDocument.Points
-        except:
-            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
-
-        try:
-            App.ActiveDocument.All_Points
-        except:
-            SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'All Points')
-            FreeCAD.ActiveDocument.Points.addObject(SubGroup)
-
         #Create Menu
         #menu = ["Test &Commands","TestToolsGui"]
         #list = ["Std_TestQM","Std_TestReloadQM","Test_Test","Test_TestAll","Test_TestDoc","Test_TestBase"]
@@ -61,6 +49,26 @@ class GeomaticWorkbench ( Workbench ):
 
     def Activated(self):
         #This function is executed when the workbench is activated
+
+        #Create Point Groups
+        try:
+            App.ActiveDocument.Point_Groups
+        except:
+            PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
+            PointGroups.Label = "Point Groups"
+
+        try:
+            App.ActiveDocument.All_Points
+        except:
+            SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'All_Points')
+            SubGroup.Label = "All Points"
+            FreeCAD.ActiveDocument.Point_Groups.addObject(SubGroup)
+
+        #Create Surfaces Group
+        try:
+            App.ActiveDocument.Surfaces
+        except:
+            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
 
         return
 
