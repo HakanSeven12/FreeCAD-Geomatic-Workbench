@@ -121,9 +121,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>70</y>
+     <y>90</y>
      <width>241</width>
-     <height>221</height>
+     <height>201</height>
     </rect>
    </property>
    <property name="editTriggers">
@@ -134,6 +134,19 @@
    </property>
    <property name="selectionBehavior">
     <enum>QAbstractItemView::SelectRows</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="SelectPointGroupL">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>60</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select Point Groups</string>
    </property>
   </widget>
  </widget>
