@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>282</width>
-    <height>218</height>
+    <width>294</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>90</y>
+     <y>310</y>
      <width>121</width>
      <height>16</height>
     </rect>
@@ -30,20 +30,20 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>120</y>
-     <width>71</width>
+     <y>340</y>
+     <width>121</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>Other Value</string>
+    <string>Maximum Triangle Angle</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="TLenghLE">
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>90</y>
+     <y>310</y>
      <width>113</width>
      <height>20</height>
     </rect>
@@ -56,21 +56,21 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>120</y>
+     <y>340</y>
      <width>113</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>4</string>
+    <string>170</string>
    </property>
   </widget>
   <widget class="QPushButton" name="CreateB">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>170</y>
-     <width>75</width>
+     <x>64</x>
+     <y>390</y>
+     <width>91</width>
      <height>23</height>
     </rect>
    </property>
@@ -81,9 +81,9 @@
   <widget class="QPushButton" name="CancelB">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>170</y>
-     <width>75</width>
+     <x>164</x>
+     <y>390</y>
+     <width>91</width>
      <height>23</height>
     </rect>
    </property>
@@ -101,7 +101,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Test</string>
+    <string>Surface</string>
    </property>
   </widget>
   <widget class="QLabel" name="SurfaceNameL">
@@ -115,6 +115,25 @@
    </property>
    <property name="text">
     <string>Surface Name</string>
+   </property>
+  </widget>
+  <widget class="QListView" name="PointGroupsLV">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>70</y>
+     <width>241</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::MultiSelection</enum>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
    </property>
   </widget>
  </widget>
