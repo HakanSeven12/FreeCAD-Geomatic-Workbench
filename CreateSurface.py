@@ -20,7 +20,6 @@ class CreateSurface:
 
    def Activated(self):
         self.IPFui.show()
-        self.plotMesh = []
 
    def CreateSurface(self):
         #Import UI variables
@@ -57,6 +56,7 @@ class CreateSurface:
            plotMesh.append(data[third])
 
         plotMeshObject = Mesh.Mesh(plotMesh)
-        Mesh.show(plotMeshObject)
+        Surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", SurfaceNameLE)
+        SurfaceMesh = plotMeshObject
 
 FreeCADGui.addCommand('Create Surface',CreateSurface()) 
