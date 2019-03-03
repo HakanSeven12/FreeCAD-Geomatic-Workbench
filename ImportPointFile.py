@@ -23,8 +23,8 @@ class ImportPointFile:
    def Activated(self):
         self.IPFui.show()
         self.IPFui.SubGroupListCB.clear()
-        SG = FreeCAD.ActiveDocument.Points.Group
-        OutList = FreeCAD.ActiveDocument.Points.OutList
+        SG = FreeCAD.ActiveDocument.Point_Groups.Group
+        OutList = FreeCAD.ActiveDocument.Point_Groups.OutList
         self.GroupList = []
         Count = 0
 
@@ -58,7 +58,7 @@ class ImportPointFile:
         #Create Group under Points
         if self.IPFui.CreateGroupChB.isChecked():
             SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",CNG)
-            FreeCAD.ActiveDocument.Points.addObject(SubGroup)
+            FreeCAD.ActiveDocument.Point_Groups.addObject(SubGroup)
         else:
             SubGroup = FreeCAD.ActiveDocument.getObject(SPG)
 			
