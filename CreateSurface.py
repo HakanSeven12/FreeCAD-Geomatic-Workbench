@@ -20,24 +20,44 @@ class CreateSurface:
 
    def Activated(self):
         self.IPFui.show()
+        model = QtGui.QStandardItemModel()
+        self.IPFui.PointGroupsLV.setModel(model)
+
+        SG = FreeCAD.ActiveDocument.Point_Groups.Group
+        OutList = FreeCAD.ActiveDocument.Point_Groups.OutList
+        self.GroupList = []
+        Count = 0
+
+        for i in OutList:
+            self.GroupList.append(SG[Count].Name)
+            SubGroupName = SG[Count].Label
+            item = QtGui.QStandardItem(SubGroupName)
+            model.appendRow(item)
+            Count = Count + 1
 
    def CreateSurface(self):
         #Import UI variables
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
+        trp = []
+        GroupCounter = 0
 
         #Create surface
-        GroupName = FreeCAD.ActiveDocument.All_Points.Group
-        OutList = FreeCAD.ActiveDocument.All_Points.OutList
-        limits = range(1,int(len(OutList)+1))
-        Count = 0
-        trp = []
+        for i in self.IPFui.PointGroupsLV.selectedIndexes():
+            Selections = self.IPFui.PointGroupsLV.selectedIndexes()[GroupCounter]
+            Index = int(Selections.row())
+            SPG = self.GroupList[Index]
+            GroupName = FreeCAD.ActiveDocument.getObject(SPG).Group
+            OutList = FreeCAD.ActiveDocument.getObject(SPG).OutList
+            limits = range(1,int(len(OutList)+1))
+            GroupCounter = GroupCounter + 1
+            Count = 0
 
-        for i in limits:
-            xx = float(GroupName[Count].X)
-            yy = float(GroupName[Count].Y)
-            zz = float(GroupName[Count].Z)
-            trp.append([xx,yy,zz])
-            Count = Count + 1
+            for i in limits:
+                xx = float(GroupName[Count].X)
+                yy = float(GroupName[Count].Y)
+                zz = float(GroupName[Count].Z)
+                trp.append([xx,yy,zz])
+                Count = Count + 1
 
         data = np.array(trp)
         test = np.array(trp)
