@@ -24,6 +24,7 @@ class CreateSurface:
    def CreateSurface(self):
         #Import UI variables
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
+
         #Create surface
         GroupName = FreeCAD.ActiveDocument.All_Points.Group
         OutList = FreeCAD.ActiveDocument.All_Points.OutList
@@ -57,6 +58,7 @@ class CreateSurface:
 
         plotMeshObject = Mesh.Mesh(plotMesh)
         Surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", SurfaceNameLE)
-        SurfaceMesh = plotMeshObject
+        Surface.Mesh = plotMeshObject
+        FreeCAD.ActiveDocument.Surfaces.addObject(Surface)
 
 FreeCADGui.addCommand('Create Surface',CreateSurface()) 
