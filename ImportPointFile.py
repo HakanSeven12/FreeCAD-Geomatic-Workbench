@@ -10,6 +10,7 @@ class ImportPointFile:
    def __init__(self):
         #Import *.ui file(s)
         self.IPFui = FreeCADGui.PySideUic.loadUi(FreeCAD.getHomePath() + "Mod/Geomatic/Resources/UI/ImportPointFile.ui")
+        self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         
         #To Do List
         self.IPFui.BrowseB.clicked.connect(self.BrowseFile)
