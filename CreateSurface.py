@@ -10,6 +10,7 @@ class CreateSurface:
    def __init__(self):
         #Import *.ui file(s)
         self.IPFui = FreeCADGui.PySideUic.loadUi(FreeCAD.getHomePath() + "Mod/Geomatic/Resources/UI/CreateSurface.ui")
+        self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         
         #To Do List
         self.IPFui.CreateB.clicked.connect(self.CreateSurface)
