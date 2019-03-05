@@ -32,13 +32,14 @@ class GeomaticWorkbench ( Workbench ):
     def Initialize(self): #This function is executed when FreeCAD starts
         import ImportPointFile
         import CreateSurface
+        import EditSurface
 
         #Create Toolbar
         list = ['Import Point File']
         self.appendToolbar("Point Tools",list)
 
         #Create Toolbar
-        list = ['Create Surface']
+        list = ['Create Surface','Edit Surface']
         self.appendToolbar("Surface Tools",list)
 
         #Create Menu
