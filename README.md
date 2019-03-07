@@ -9,7 +9,9 @@ Create Surface
 ## Installation
 Clone the project into the `~/.FreeCAD/Mod/Geomatic` folder.
 
-Go "Edit -> Preferences -> General -> Units" set "Number of decimals = 6".
+Go to "Edit -> Preferences -> General -> Units" set "Number of decimals = 6".
+
+Go to "Edit -> Preferences -> General -> Document" check "Allow dublicade object labels in one document".
 
 ## Feedback 
 Discuss this Workbench on the FreeCAD forum thread dedicated to this topic: 
