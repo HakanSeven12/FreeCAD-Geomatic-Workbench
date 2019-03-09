@@ -39,8 +39,6 @@ class EditSurface:
 
         FreeCADGui.runCommand("Mesh_AddFacet")
 
-        print ("Add")
-
    def DeleteTriangle(self):
         '''Index = self.IPFui.SelectSurfaceCB.currentIndex()
         SS = self.GroupList[Index]
@@ -48,14 +46,10 @@ class EditSurface:
 
         FreeCADGui.runCommand("Mesh_RemoveComponents")
 
-        print ("Delete")
-
    def SwapEdge(self):
         Index = self.IPFui.SelectSurfaceCB.currentIndex()
         SS = self.GroupList[Index]
         Surface = FreeCAD.ActiveDocument.getObject(SS)
-
-        FreeCADGui.runCommand("Mesh_SwapEdge")
 
         print ("Swap")
 
