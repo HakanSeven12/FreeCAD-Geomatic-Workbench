@@ -69,9 +69,9 @@ class CreateSurface:
 
         for i in tri.vertices:
 
-           first = int(i[0:1])
-           second = int(i[1:2])
-           third = int(i[2:3])
+           first = int(i[0])
+           second = int(i[1])
+           third = int(i[2])
 
            plotMesh.append(data[first])
            plotMesh.append(data[second])
