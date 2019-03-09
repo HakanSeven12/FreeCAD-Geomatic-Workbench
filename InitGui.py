@@ -33,14 +33,19 @@ class GeomaticWorkbench ( Workbench ):
         import ImportPointFile
         import CreateSurface
         import EditSurface
+        import CreateGuideLines
 
-        #Create Toolbar
+        #Create Point Toolbar
         list = ['Import Point File']
         self.appendToolbar("Point Tools",list)
 
-        #Create Toolbar
+        #Create Surface Toolbar
         list = ['Create Surface','Edit Surface']
         self.appendToolbar("Surface Tools",list)
+
+        #Create Section Toolbar
+        list = ['Create Guide Lines']
+        self.appendToolbar("Section Tools",list)
 
         #Create Menu
         #menu = ["Test &Commands","TestToolsGui"]
@@ -70,6 +75,12 @@ class GeomaticWorkbench ( Workbench ):
             App.ActiveDocument.Surfaces
         except:
             FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
+
+        #Create Alignments Group
+        try:
+            App.ActiveDocument.Alignments
+        except:
+            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Alignments')
 
         return
 
