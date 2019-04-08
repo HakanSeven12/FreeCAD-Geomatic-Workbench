@@ -50,8 +50,7 @@ class ImportPointFile:
         listItems=self.IPFui.SelectedFilesLW.selectedItems() 
         head, tail = os.path.split(listItems[0].text())
         self.IPFui.FileNameL.setText(tail)
-        #self.IPFui.PreviewLW.clear()
-        self.IPFui.PreviewLW.setRowCount(0)
+        self.IPFui.PreviewTW.setRowCount(0)
 
         PointName = self.IPFui.PointNameLE.text()
         Northing = self.IPFui.NorthingLE.text()
@@ -68,14 +67,14 @@ class ImportPointFile:
             Z = int(Elevation)-1
             D = int(Description)-1
 
-            numRows = self.IPFui.PreviewLW.rowCount()
-            self.IPFui.PreviewLW.insertRow(numRows)
+            numRows = self.IPFui.PreviewTW.rowCount()
+            self.IPFui.PreviewTW.insertRow(numRows)
 
-            self.IPFui.PreviewLW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
-            self.IPFui.PreviewLW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
-            self.IPFui.PreviewLW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
-            self.IPFui.PreviewLW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
-            self.IPFui.PreviewLW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
+            self.IPFui.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
+            self.IPFui.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
+            self.IPFui.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
+            self.IPFui.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
+            self.IPFui.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
 
    def CreateNewGroup(self):
         if self.IPFui.CreateGroupChB.isChecked():
@@ -115,7 +114,7 @@ class ImportPointFile:
                 E = int(Easting)-1
                 Z = int(Elevation)-1
 
-                Point = Draft.makePoint(X = float(row[N])*1000, Y = float(row[E])*1000, Z = float(row[Z])*1000, color = (0.37,0.69,0.22) , name = "Point", point_size = 3)
+                Point = Draft.makePoint(X = float(row[E])*1000, Y = float(row[N])*1000, Z = float(row[Z])*1000, color = (0.37,0.69,0.22) , name = "Point", point_size = 3)
                 Point.Label = str(row[PN])
                 SubGroup.addObject(Point)
         FreeCADGui.SendMsgToActiveView("ViewFit")
