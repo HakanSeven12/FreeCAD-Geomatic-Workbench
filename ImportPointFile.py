@@ -59,7 +59,10 @@ class ImportPointFile:
         Description = self.IPFui.DescriptionLE.text()
 
         File=open(listItems[0].text(), 'r')
-        reader = csv.reader(File, delimiter=" ")
+        if self.IPFui.DelimiterCB.currentText() == "Space":
+            reader = csv.reader(File, delimiter = ' ')
+        elif self.IPFui.DelimiterCB.currentText() == "Comma":
+            reader = csv.reader(File, delimiter=',')
         for i, row in enumerate( reader ):
             PN = int(PointName)-1
             N = int(Northing)-1
@@ -107,7 +110,10 @@ class ImportPointFile:
         Labels = [i.text() for i in Items]
         for FilePath in Labels:
             File=open(FilePath, 'r')
-            reader = csv.reader(File, delimiter=" ")
+            if self.IPFui.DelimiterCB.currentText() == "Space":
+                reader = csv.reader(File, delimiter = ' ')
+            elif self.IPFui.DelimiterCB.currentText() == "Comma":
+                reader = csv.reader(File, delimiter=',')
             for i, row in enumerate( reader ):
                 PN = int(PointName)-1
                 N = int(Northing)-1
