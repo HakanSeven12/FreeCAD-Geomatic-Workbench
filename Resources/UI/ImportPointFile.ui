@@ -148,7 +148,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>2</string>
+    <string>3</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="EastingLE">
@@ -161,7 +161,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>3</string>
+    <string>2</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="ElevationLE">
@@ -323,7 +323,7 @@
     <enum>QAbstractItemView::SingleSelection</enum>
    </property>
   </widget>
-  <widget class="QTableWidget" name="PreviewLW">
+  <widget class="QTableWidget" name="PreviewTW">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -331,6 +331,13 @@
      <width>461</width>
      <height>311</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
    <property name="rowCount">
     <number>0</number>
