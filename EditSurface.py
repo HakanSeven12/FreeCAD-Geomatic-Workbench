@@ -1,12 +1,14 @@
 import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
+import os
 import Mesh
 
 class EditSurface:
    def __init__(self):
         #Import *.ui file(s)
-        self.IPFui = FreeCADGui.PySideUic.loadUi(FreeCAD.getHomePath() + "Mod/Geomatic/Resources/UI/EditSurface.ui")
+        self.Path = os.path.dirname(os.path.abspath(__file__))
+        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/EditSurface.ui")
         self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         #To Do List
         self.IPFui.AddTriangleB.clicked.connect(self.AddTriangle)
