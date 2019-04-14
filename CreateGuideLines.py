@@ -2,13 +2,15 @@ import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
 import Draft, Part
+import os
 
 class CreateGuideLines:
    def __init__(self):
         #Import *.ui file(s)
-        self.IPFui = FreeCADGui.PySideUic.loadUi(FreeCAD.getHomePath() + "Mod/Geomatic/Resources/UI/CreateGuideLines.ui")
+        self.Path = os.path.dirname(os.path.abspath(__file__))
+        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/CreateGuideLines.ui")
         self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        
+
         #To Do List
         self.IPFui.CreateB.clicked.connect(self.CreateGuideLines)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
@@ -17,7 +19,7 @@ class CreateGuideLines:
 
    def GetResources(self):
         return {'MenuText': 'Create Guide Lines', 'ToolTip': 'Create guide lines for sections.'}
-  
+
    def Activated(self):
         self.IPFui.show()
 
