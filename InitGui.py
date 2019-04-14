@@ -17,19 +17,17 @@
 #*   You should have received a copy of the GNU Library General Public     *
 #*   License along with FreeCAD; if not, write to the Free Software        *
 #*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
-#*   USA                                                                   *                                                  *
+#*   USA                                                                   *
 #***************************************************************************/
 
-
-
-class GeomaticWorkbench ( Workbench ):
-    "Geomatic workbench object"
+class GeomaticsWorkbench ( Workbench ):
+    "Geomatics Workbench Object"
     def __init__(self):
-        #self.__class__.Icon = FreeCAD.getHomePath() + "Mod/Geomatic/Resources/icons/GeomaticWorkbench.svg"
-        self.__class__.MenuText = "Geomatic"
-        self.__class__.ToolTip = "Geomatic"
+        #self.__class__.Icon = self.Path + "/Resources/icons/GeomaticsWorkbench.svg"
+        self.__class__.MenuText = "Geomatics"
+        self.__class__.ToolTip = "Geomatics"
 
-    def Initialize(self): #This function is executed when FreeCAD starts
+    def Initialize(self):
         import ImportPointFile
         import CreateSurface
         import EditSurface
@@ -54,8 +52,6 @@ class GeomaticWorkbench ( Workbench ):
         #self.appendMenu(menu,list)
 
     def Activated(self):
-        #This function is executed when the workbench is activated
-
         #Create Point Groups
         try:
             App.ActiveDocument.Point_Groups
@@ -84,5 +80,4 @@ class GeomaticWorkbench ( Workbench ):
 
         return
 
-Gui.addWorkbench(GeomaticWorkbench())
-
+Gui.addWorkbench(GeomaticsWorkbench())
