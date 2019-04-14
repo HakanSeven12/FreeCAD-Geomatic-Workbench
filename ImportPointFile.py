@@ -1,17 +1,16 @@
 import FreeCAD
 import FreeCADGui
-import Draft
-import csv
-import os
 from PySide import QtCore, QtGui
-
+import Draft
+import csv, os
 
 class ImportPointFile:
    def __init__(self):
         #Import *.ui file(s)
-        self.IPFui = FreeCADGui.PySideUic.loadUi(FreeCAD.getHomePath() + "Mod/Geomatic/Resources/UI/ImportPointFile.ui")
+        self.Path = os.path.dirname(os.path.abspath(__file__))
+        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/ImportPointFile.ui")
         self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        
+
         #To Do List
         self.IPFui.AddB.clicked.connect(self.AddFile)
         self.IPFui.RemoveB.clicked.connect(self.RemoveFile)
@@ -102,7 +101,7 @@ class ImportPointFile:
             FreeCAD.ActiveDocument.Point_Groups.addObject(SubGroup)
         else:
             SubGroup = FreeCAD.ActiveDocument.getObject(SPG)
-			
+
         #Read Points from file
         Items = []
         for i in range(self.IPFui.SelectedFilesLW.count()):
