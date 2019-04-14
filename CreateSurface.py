@@ -1,17 +1,19 @@
 import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
-import Mesh
+import os
 import numpy as np
 import scipy.spatial
 from scipy.spatial import Delaunay
+import Mesh
 
 class CreateSurface:
    def __init__(self):
         #Import *.ui file(s)
-        self.IPFui = FreeCADGui.PySideUic.loadUi(FreeCAD.getHomePath() + "Mod/Geomatic/Resources/UI/CreateSurface.ui")
+        self.Path = os.path.dirname(os.path.abspath(__file__))
+        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/CreateSurface.ui")
         self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        
+
         #To Do List
         self.IPFui.CreateB.clicked.connect(self.CreateSurface)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
