@@ -1,83 +1,79 @@
-#***************************************************************************
-#*   (c) Hakan Seven (hakanseven12@gmail.com) 2019                         *
-#*                                                                         *
-#*   This file is part of the FreeCAD CAx development system.              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*   FreeCAD is distributed in the hope that it will be useful,            *
-#*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
-#*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
-#*   GNU Lesser General Public License for more details.                   *
-#*                                                                         *
-#*   You should have received a copy of the GNU Library General Public     *
-#*   License along with FreeCAD; if not, write to the Free Software        *
-#*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
-#*   USA                                                                   *
-#***************************************************************************/
+import NewProject
+import ImportPointFile
+import CreateSurface
+import EditSurface
+import CreateGuideLines
 
 class GeomaticsWorkbench ( Workbench ):
     "Geomatics Workbench Object"
+    MenuText = 'Geomatics'
+    ToolTip = 'Geomatic/Survey Engineering Workbench'
+    Icon = App.__path__[3] + '/Geomatics/Resources/Icons/GeomaticsWorkbench.svg'
+		
     def __init__(self):
-        #self.__class__.Icon = self.Path + "/Resources/icons/GeomaticsWorkbench.svg"
-        self.__class__.MenuText = "Geomatics"
-        self.__class__.ToolTip = "Geomatics"
+
+        self.menu = 1
+        self.toolbar = 2
+        self.context = 4
+
+        self.command_ui = {
+
+            'Project Tools': {
+                'gui': self.toolbar,
+                'cmd': ['New Project']
+            },
+            'Data Tools': {
+                'gui': self.menu + self.toolbar,
+                'cmd': ['Import Point File']
+            },
+
+            'Surface Tools': {
+                'gui': self.menu + self.toolbar + self.context,
+                'cmd': ['Create Surface',
+                        'Edit Surface',
+                       ]
+			},
+			
+            'Section Tools': {
+                'gui': self.menu,
+                'cmd': ['Create Guide Lines']
+            },
+        }
 
     def Initialize(self):
-        import ImportPointFile
-        import CreateSurface
-        import EditSurface
-        import CreateGuideLines
 
-        #Create Point Toolbar
-        list = ['Import Point File']
-        self.appendToolbar("Point Tools",list)
+        for _k, _v in self.command_ui.items():
 
-        #Create Surface Toolbar
-        list = ['Create Surface','Edit Surface']
-        self.appendToolbar("Surface Tools",list)
+            if _v['gui'] & self.toolbar:
+                self.appendToolbar(_k, _v['cmd'])
 
-        #Create Section Toolbar
-        list = ['Create Guide Lines']
-        self.appendToolbar("Section Tools",list)
+            if _v['gui'] & self.menu:
+                self.appendMenu(_k, _v['cmd'])
 
-        #Create Menu
-        #menu = ["Test &Commands","TestToolsGui"]
-        #list = ["Std_TestQM","Std_TestReloadQM","Test_Test","Test_TestAll","Test_TestDoc","Test_TestBase"]
-        #self.appendCommandbar("TestToolsGui",list)
-        #self.appendMenu(menu,list)
+    def ContextMenu(self, recipient):
+        """
+        Right-click menu options
+        """
+        # "recipient" will be either "view" or "tree"
+
+        for _k, _v in self.fn.items():
+            if _v['gui'] & self.context:
+                self.appendContextMenu(_k, _v['cmds'])
+
+    def GetClassName(self):
+
+        return 'Gui::PythonWorkbench'
 
     def Activated(self):
-        #Create Point Groups
-        try:
-            App.ActiveDocument.Point_Groups
-        except:
-            PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
-            PointGroups.Label = "Point Groups"
+        """
+        Called when switching to this workbench
+        """
+        pass
 
-        try:
-            App.ActiveDocument.All_Points
-        except:
-            SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'All_Points')
-            SubGroup.Label = "All Points"
-            FreeCAD.ActiveDocument.Point_Groups.addObject(SubGroup)
-
-        #Create Surfaces Group
-        try:
-            App.ActiveDocument.Surfaces
-        except:
-            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
-
-        #Create Alignments Group
-        try:
-            App.ActiveDocument.Alignments
-        except:
-            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Alignments')
-
-        return
+    def Deactivated(self):
+        """
+        Called when switiching away from this workbench
+        """
+        pass
 
 Gui.addWorkbench(GeomaticsWorkbench())
