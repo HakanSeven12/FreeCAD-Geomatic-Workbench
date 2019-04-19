@@ -7,7 +7,7 @@ class NewProject:
         import os
 
    def GetResources(self):
-        return {'MenuText': 'New Porject', 'ToolTip': 'Create new project.'}
+        return {'MenuText': 'New Project', 'ToolTip': 'Create new project.'}
 
    def Activated(self):
         #Create Point Groups
