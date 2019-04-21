@@ -8,9 +8,20 @@ from scipy.spatial import Delaunay
 import Mesh
 
 class CreateSurface:
-   def __init__(self):
+    """
+    Command to create a new surface
+    """
+
+    Path = os.path.dirname(__file__)
+
+    resources = {
+        'Pixmap'  : Path + '/Resources/Icons/CreateSurface.svg',
+        'MenuText': "Create Surface",
+        'ToolTip' : "Create surface from selected point group(s)."
+    }
+
+    def __init__(self):
         #Import *.ui file(s)
-        self.Path = os.path.dirname(os.path.abspath(__file__))
         self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/CreateSurface.ui")
         self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
 
@@ -18,10 +29,13 @@ class CreateSurface:
         self.IPFui.CreateB.clicked.connect(self.CreateSurface)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
 
-   def GetResources(self):
-        return {'MenuText': 'Create Surface', 'ToolTip': 'Create surface from selected point group(s).'}
+    def GetResources(self):
+        """
+        Return the command resources dictionary
+        """
+        return self.resources
 
-   def Activated(self):
+    def Activated(self):
         self.IPFui.show()
         model = QtGui.QStandardItemModel()
         self.IPFui.PointGroupsLV.setModel(model)
@@ -38,7 +52,7 @@ class CreateSurface:
             model.appendRow(item)
             Count = Count + 1
 
-   def CreateSurface(self):
+    def CreateSurface(self):
         #Import UI variables
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
         trp = []
