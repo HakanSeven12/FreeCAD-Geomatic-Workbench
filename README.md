@@ -1,4 +1,4 @@
-# FreeCAD Geomatic Workbench
+# FreeCAD Geomatics Workbench
 This workbench is being developed to provide functionality specific to Geomatic/Survey engineering.
 
 ## Functions
@@ -6,8 +6,10 @@ Import Point Files
 
 Create Surface
 
+Edit Surface
+
 ## Installation
-Clone the project into the `~/.FreeCAD/Mod/Geomatic` folder.
+Clone the project into the `~/.FreeCAD/Mod/Geomatics` folder.
 
 Go to "Edit -> Preferences -> General -> Units" set "Number of decimals = 6".
 
