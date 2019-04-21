@@ -43,7 +43,11 @@ class ImportPointFile:
 
     def Activated(self):
         self.IPFui.show()
+        self.IPFui.FileNameL.setText("")
         self.IPFui.SubGroupListCB.clear()
+        self.IPFui.SelectedFilesLW.clear()
+        self.IPFui.PreviewTW.setRowCount(0)
+        self.IPFui.PointGroupChB.setChecked(False)
         SG = FreeCAD.ActiveDocument.Point_Groups.Group
         OutList = FreeCAD.ActiveDocument.Point_Groups.OutList
         self.GroupList = []
