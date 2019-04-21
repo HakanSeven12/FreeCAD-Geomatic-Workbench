@@ -5,9 +5,20 @@ import os
 import Mesh
 
 class EditSurface:
-   def __init__(self):
+    """
+    Command to edit surface
+    """
+
+    Path = os.path.dirname(__file__)
+
+    resources = {
+        'Pixmap'  : Path + '/Resources/Icons/EditSurface.svg',
+        'MenuText': "Edit Surface",
+        'ToolTip' : "Delete triangles, add a triangle or swap an edge of surface."
+    }
+
+    def __init__(self):
         #Import *.ui file(s)
-        self.Path = os.path.dirname(os.path.abspath(__file__))
         self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/EditSurface.ui")
         self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         #To Do List
@@ -15,10 +26,13 @@ class EditSurface:
         self.IPFui.DeleteTriangleB.clicked.connect(self.DeleteTriangle)
         self.IPFui.SwapEdgeB.clicked.connect(self.SwapEdge)
 
-   def GetResources(self):
-        return {'MenuText': 'Edit Surface', 'ToolTip': 'Delete a triangle, add a triangle or swap an edge of surface.'}
+    def GetResources(self):
+        """
+        Return the command resources dictionary
+        """
+        return self.resources
 
-   def Activated(self):
+    def Activated(self):
         self.IPFui.show()
         self.IPFui.SelectSurfaceCB.clear()
         SS = FreeCAD.ActiveDocument.Surfaces.Group
@@ -32,7 +46,7 @@ class EditSurface:
             self.IPFui.SelectSurfaceCB.addItem(str(SubSurfaceName))
             Count = Count + 1
 
-   def AddTriangle(self):
+    def AddTriangle(self):
         Index = self.IPFui.SelectSurfaceCB.currentIndex()
         SS = self.GroupList[Index]
         Surface = FreeCAD.ActiveDocument.getObject(SS)
@@ -41,14 +55,14 @@ class EditSurface:
 
         FreeCADGui.runCommand("Mesh_AddFacet")
 
-   def DeleteTriangle(self):
+    def DeleteTriangle(self):
         '''Index = self.IPFui.SelectSurfaceCB.currentIndex()
         SS = self.GroupList[Index]
         Surface = FreeCAD.ActiveDocument.getObject(SS)'''
 
         FreeCADGui.runCommand("Mesh_RemoveComponents")
 
-   def SwapEdge(self):
+    def SwapEdge(self):
         Index = self.IPFui.SelectSurfaceCB.currentIndex()
         SS = self.GroupList[Index]
         Surface = FreeCAD.ActiveDocument.getObject(SS)
