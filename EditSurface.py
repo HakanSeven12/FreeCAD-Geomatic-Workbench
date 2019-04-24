@@ -65,6 +65,8 @@ class EditSurface:
 
     def mouseClick(self,cb):
         event = cb.getEvent()
+        if event.getButton() == coin.SoMouseButtonEvent.BUTTON2 and event.getState() == coin.SoMouseButtonEvent.DOWN:
+            FreeCADGui.ActiveDocument.ActiveView.removeEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.MC)
         if event.getButton() == coin.SoMouseButtonEvent.BUTTON1 and event.getState() == coin.SoMouseButtonEvent.DOWN:
             pp = cb.getPickedPoint()
             if not pp is None:
@@ -85,9 +87,6 @@ class EditSurface:
 
     def SwapEdge(self):
         self.list_of_indexes = []
-        MC = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.mouseClick)
-        #FreeCADGui.ActiveDocument.ActiveView.removeEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), MC)
-
-        print ("Swap")
+        self.MC = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.mouseClick)
 
 FreeCADGui.addCommand('Edit Surface',EditSurface()) 
