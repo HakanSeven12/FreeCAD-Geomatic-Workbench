@@ -3,6 +3,7 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 import os
 import Mesh
+from pivy import coin
 
 class EditSurface:
     """
@@ -62,10 +63,30 @@ class EditSurface:
 
         FreeCADGui.runCommand("Mesh_RemoveComponents")
 
+    def mouseClick(self,cb):
+        event = cb.getEvent()
+        if event.getButton() == coin.SoMouseButtonEvent.BUTTON1 and event.getState() == coin.SoMouseButtonEvent.DOWN:
+            pp = cb.getPickedPoint()
+            if not pp is None:
+                detail = pp.getDetail()
+                if detail.isOfType(coin.SoFaceDetail.getClassTypeId()):
+                    face_detail = coin.cast(detail, str(detail.getTypeId().getName()))
+                    index = face_detail.getFaceIndex()
+                    self.list_of_indexes.append(index)
+                    if len(self.list_of_indexes) == 2:
+                        Index = self.IPFui.SelectSurfaceCB.currentIndex()
+                        SS = self.GroupList[Index]
+                        Surface = FreeCADGui.ActiveDocument.getObject(SS)
+                        MeshObj = Surface.Object
+                        facets=MeshObj.Mesh.Facets
+                        print (self.list_of_indexes)
+                        MeshObj.Mesh.swapEdge(facets[self.list_of_indexes[0]],facets[self.list_of_indexes[1]])
+                        self.list_of_indexes.clear()
+
     def SwapEdge(self):
-        Index = self.IPFui.SelectSurfaceCB.currentIndex()
-        SS = self.GroupList[Index]
-        Surface = FreeCAD.ActiveDocument.getObject(SS)
+        self.list_of_indexes = []
+        MC = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.mouseClick)
+        #FreeCADGui.ActiveDocument.ActiveView.removeEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), MC)
 
         print ("Swap")
 
