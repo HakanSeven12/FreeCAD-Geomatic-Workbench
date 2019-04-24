@@ -78,9 +78,9 @@ class EditSurface:
                         SS = self.GroupList[Index]
                         Surface = FreeCADGui.ActiveDocument.getObject(SS)
                         MeshObj = Surface.Object
-                        facets=MeshObj.Mesh.Facets
-                        print (self.list_of_indexes)
-                        MeshObj.Mesh.swapEdge(facets[self.list_of_indexes[0]],facets[self.list_of_indexes[1]])
+                        CopyMesh = MeshObj.Mesh.copy()
+                        CopyMesh.swapEdge(self.list_of_indexes[0],self.list_of_indexes[1])
+                        MeshObj.Mesh = CopyMesh
                         self.list_of_indexes.clear()
 
     def SwapEdge(self):
