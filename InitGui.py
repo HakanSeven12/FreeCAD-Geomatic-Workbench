@@ -3,6 +3,7 @@ import ImportPointFile
 import CreateSurface
 import EditSurface
 import CreateGuideLines
+import ExportPoints
 
 class GeomaticsWorkbench ( Workbench ):
     "Geomatics Workbench Object"
@@ -24,7 +25,9 @@ class GeomaticsWorkbench ( Workbench ):
             },
             'Data Tools': {
                 'gui': self.menu + self.toolbar,
-                'cmd': ['Import Point File']
+                'cmd': ['Import Point File',
+                        'Export Points',
+                       ]
             },
 
             'Surface Tools': {
