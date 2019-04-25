@@ -68,37 +68,43 @@ class ImportPointFile:
     def Preview(self):
         #Import UI variables.
         listItems=self.IPFui.SelectedFilesLW.selectedItems() 
-        head, tail = os.path.split(listItems[0].text())
-        self.IPFui.FileNameL.setText(tail)
-        self.IPFui.PreviewTW.setRowCount(0)
+        try:
+            head, tail = os.path.split(listItems[0].text())
+            self.IPFui.FileNameL.setText(tail)
+            self.IPFui.PreviewTW.setRowCount(0)
 
-        PointName = self.IPFui.PointNameLE.text()
-        Northing = self.IPFui.NorthingLE.text()
-        Easting = self.IPFui.EastingLE.text()
-        Elevation = self.IPFui.ElevationLE.text()
-        Description = self.IPFui.DescriptionLE.text()
+            PointName = self.IPFui.PointNameLE.text()
+            Northing = self.IPFui.NorthingLE.text()
+            Easting = self.IPFui.EastingLE.text()
+            Elevation = self.IPFui.ElevationLE.text()
+            Description = self.IPFui.DescriptionLE.text()
 
-        #Show selected file preview.
-        File=open(listItems[0].text(), 'r')
-        if self.IPFui.DelimiterCB.currentText() == "Space":
-            reader = csv.reader(File, delimiter = ' ')
-        elif self.IPFui.DelimiterCB.currentText() == "Comma":
-            reader = csv.reader(File, delimiter=',')
-        for i, row in enumerate( reader ):
-            PN = int(PointName)-1
-            N = int(Northing)-1
-            E = int(Easting)-1
-            Z = int(Elevation)-1
-            D = int(Description)-1
+            #Show selected file preview.
+            File=open(listItems[0].text(), 'r')
+            if self.IPFui.DelimiterCB.currentText() == "Space":
+                reader = csv.reader(File, delimiter = ' ')
+            elif self.IPFui.DelimiterCB.currentText() == "Comma":
+                reader = csv.reader(File, delimiter=',')
+            for i, row in enumerate( reader ):
+                PN = int(PointName)-1
+                N = int(Northing)-1
+                E = int(Easting)-1
+                Z = int(Elevation)-1
+                D = int(Description)-1
 
-            numRows = self.IPFui.PreviewTW.rowCount()
-            self.IPFui.PreviewTW.insertRow(numRows)
+                numRows = self.IPFui.PreviewTW.rowCount()
+                self.IPFui.PreviewTW.insertRow(numRows)
 
-            self.IPFui.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
-            self.IPFui.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
-            self.IPFui.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
-            self.IPFui.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
-            self.IPFui.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
+                self.IPFui.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
+                self.IPFui.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
+                self.IPFui.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
+                self.IPFui.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
+                try:
+                    self.IPFui.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
+                except:
+                    pass
+        except:
+            pass
 
     def ActivatePointGroups(self):
         #When QCheckBox status changed do fallowing options.
