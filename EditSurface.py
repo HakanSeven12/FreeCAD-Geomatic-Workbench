@@ -21,7 +21,6 @@ class EditSurface:
     def __init__(self):
         #Import *.ui file(s)
         self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/EditSurface.ui")
-        self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         #To Do List
         self.IPFui.AddTriangleB.clicked.connect(self.AddTriangle)
         self.IPFui.DeleteTriangleB.clicked.connect(self.DeleteTriangle)
@@ -34,6 +33,8 @@ class EditSurface:
         return self.resources
 
     def Activated(self):
+        self.IPFui.setParent(FreeCADGui.getMainWindow())
+        self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
         self.IPFui.SelectSurfaceCB.clear()
         SS = FreeCAD.ActiveDocument.Surfaces.Group
@@ -74,19 +75,21 @@ class EditSurface:
                 if detail.isOfType(coin.SoFaceDetail.getClassTypeId()):
                     face_detail = coin.cast(detail, str(detail.getTypeId().getName()))
                     index = face_detail.getFaceIndex()
-                    self.list_of_indexes.append(index)
-                    if len(self.list_of_indexes) == 2:
+                    self.FaceIndexes.append(index)
+                    if len(self.FaceIndexes) == 2:
                         Index = self.IPFui.SelectSurfaceCB.currentIndex()
                         SS = self.GroupList[Index]
-                        Surface = FreeCADGui.ActiveDocument.getObject(SS)
-                        MeshObj = Surface.Object
-                        CopyMesh = MeshObj.Mesh.copy()
-                        CopyMesh.swapEdge(self.list_of_indexes[0],self.list_of_indexes[1])
-                        MeshObj.Mesh = CopyMesh
-                        self.list_of_indexes.clear()
+                        Surface = FreeCAD.ActiveDocument.getObject(SS)
+                        CopyMesh = Surface.Mesh.copy()
+                        try:
+                            CopyMesh.swapEdge(self.FaceIndexes[0],self.FaceIndexes[1])
+                        except:
+                            print ("The selected triangles can not be swapped.")
+                        Surface.Mesh = CopyMesh
+                        self.FaceIndexes.clear()
 
     def SwapEdge(self):
-        self.list_of_indexes = []
+        self.FaceIndexes = []
         self.MC = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.mouseClick)
 
 FreeCADGui.addCommand('Edit Surface',EditSurface()) 
