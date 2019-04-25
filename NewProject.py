@@ -20,16 +20,18 @@ class NewProject:
 
     def Activated(self):
         #Create Point Groups
-        try:
-            FreeCAD.ActiveDocument.Points
-        except:
-            PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
 
         try:
             FreeCAD.ActiveDocument.Point_Groups
         except:
             PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
             PointGroups.Label = "Point Groups"
+
+        try:
+            FreeCAD.ActiveDocument.Points
+        except:
+            Points = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+            PointGroups.addObject(Points)
 
         #Create Surfaces Group
         try:
