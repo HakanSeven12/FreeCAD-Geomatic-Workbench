@@ -9,7 +9,6 @@ class CreateGuideLines:
         #Import *.ui file(s)
         self.Path = os.path.dirname(os.path.abspath(__file__))
         self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/CreateGuideLines.ui")
-        self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
 
         #To Do List
         self.IPFui.CreateB.clicked.connect(self.CreateGuideLines)
@@ -21,6 +20,8 @@ class CreateGuideLines:
         return {'MenuText': 'Create Guide Lines', 'ToolTip': 'Create guide lines for sections.'}
 
    def Activated(self):
+        self.IPFui.setParent(FreeCADGui.getMainWindow())
+        self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
 
         #List Alignments.
