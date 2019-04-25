@@ -23,7 +23,6 @@ class CreateSurface:
     def __init__(self):
         #Import *.ui file(s)
         self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/CreateSurface.ui")
-        self.IPFui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
 
         #To Do List
         self.IPFui.CreateB.clicked.connect(self.CreateSurface)
@@ -36,6 +35,8 @@ class CreateSurface:
         return self.resources
 
     def Activated(self):
+        self.IPFui.setParent(FreeCADGui.getMainWindow())
+        self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
         model = QtGui.QStandardItemModel()
         self.IPFui.PointGroupsLV.setModel(model)
