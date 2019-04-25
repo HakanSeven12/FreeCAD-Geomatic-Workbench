@@ -77,10 +77,10 @@ class ExportPoints:
 
             for i in limits:
                 pn = GroupName[Count].Label
-                xx = int(GroupName[Count].X)/1000
-                yy = int(GroupName[Count].Y)/1000
-                zz = int(GroupName[Count].Z)/1000
-                File.write(str(pn)+Delimiter+str(xx)+Delimiter+str(yy)+Delimiter+str(zz)+"\n")
+                xx = float(GroupName[Count].X)
+                yy = float(GroupName[Count].Y)
+                zz = float(GroupName[Count].Z)
+                File.write(str(pn)+Delimiter+str(round(xx)/1000)+Delimiter+str(round(yy)/1000)+Delimiter+str(round(zz)/1000)+"\n")
                 Count = Count + 1
         File.close()
 
