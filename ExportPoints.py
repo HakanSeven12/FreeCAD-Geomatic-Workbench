@@ -8,7 +8,7 @@ class ExportPoints:
     Path = os.path.dirname(__file__)
 
     Resources = {
-        'Pixmap'  : Path + '/Resources/Icons/ImportPointFile.svg',
+        'Pixmap'  : Path + '/Resources/Icons/ExportPoints.svg',
         'MenuText': "Export Points",
         'ToolTip' : "Export points to point file."
     }
