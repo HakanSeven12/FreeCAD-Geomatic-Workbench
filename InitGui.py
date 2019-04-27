@@ -5,6 +5,21 @@ import EditSurface
 import CreateGuideLines
 import ExportPoints
 
+class GeomaticsCommandGroup:
+    def __init__(self, cmdlist, menu, tooltip = None):
+        self.cmdlist = cmdlist
+        self.menu = menu
+        if tooltip is None:
+            self.tooltip = menu
+        else:
+            self.tooltip = tooltip
+
+    def GetCommands(self):
+        return tuple(self.cmdlist)
+
+    def GetResources(self):
+        return { 'MenuText': self.menu, 'ToolTip': self.tooltip }
+
 class GeomaticsWorkbench ( Workbench ):
     "Geomatics Workbench Object"
     MenuText = 'Geomatics'
@@ -34,6 +49,7 @@ class GeomaticsWorkbench ( Workbench ):
                 'gui': self.menu + self.toolbar + self.context,
                 'cmd': ['Create Surface',
                         'Edit Surface',
+                        'Surface Editor'
                        ]
 			},
 			
@@ -44,6 +60,7 @@ class GeomaticsWorkbench ( Workbench ):
         }
 
     def Initialize(self):
+        global GeomaticsCommandGroup
 
         for _k, _v in self.command_ui.items():
 
@@ -52,6 +69,9 @@ class GeomaticsWorkbench ( Workbench ):
 
             if _v['gui'] & self.menu:
                 self.appendMenu(_k, _v['cmd'])
+
+    threedopcmdlist = ['Edit Surface']
+    FreeCADGui.addCommand('Surface Editor', GeomaticsCommandGroup(threedopcmdlist, 'Edit Surface'))
 
     def ContextMenu(self, recipient):
         """
