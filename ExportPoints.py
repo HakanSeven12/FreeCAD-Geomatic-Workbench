@@ -56,6 +56,7 @@ class ExportPoints:
         Easting = self.IPFui.EastingLE.text()
         Elevation = self.IPFui.ElevationLE.text()
         Description = self.IPFui.DescriptionLE.text()
+        Format = ["","","","",""]
         FileDestinationLE = self.IPFui.FileDestinationLE.text()
         if self.IPFui.DelimiterCB.currentText() == "Space":
             Delimiter = ' '
@@ -76,11 +77,17 @@ class ExportPoints:
             Count = 0
 
             for i in limits:
-                pn = GroupName[Count].Label
-                xx = float(GroupName[Count].X)
-                yy = float(GroupName[Count].Y)
-                zz = float(GroupName[Count].Z)
-                File.write(str(pn)+Delimiter+str(round(xx)/1000)+Delimiter+str(round(yy)/1000)+Delimiter+str(round(zz)/1000)+"\n")
+                pn = str(GroupName[Count].Label)
+                xx = str(round(float(GroupName[Count].X))/1000)
+                yy = str(round(float(GroupName[Count].Y))/1000)
+                zz = str(round(float(GroupName[Count].Z))/1000)
+                Format[int(PointName)-1] = pn
+                Format[int(Easting)-1] = xx
+                Format[int(Northing)-1] = yy
+                Format[int(Elevation)-1] = zz
+                Format[int(Description)-1] = ""
+
+                File.write(Format[0]+Delimiter+Format[1]+Delimiter+Format[2]+Delimiter+Format[3]+Delimiter+Format[4]+"\n")
                 Count = Count + 1
         File.close()
 

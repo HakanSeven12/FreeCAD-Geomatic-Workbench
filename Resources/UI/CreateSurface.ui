@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Create Surface</string>
   </property>
-  <widget class="QLabel" name="MaxLenghL">
+  <widget class="QLabel" name="MaxlengthL">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Maximum Triangle Lengh</string>
+    <string>Maximum Triangle length</string>
    </property>
   </widget>
   <widget class="QLabel" name="OtherValueL">
@@ -39,7 +39,7 @@
     <string>Maximum Triangle Angle</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="TLenghLE">
+  <widget class="QLineEdit" name="MaxlengthLE">
    <property name="geometry">
     <rect>
      <x>150</x>

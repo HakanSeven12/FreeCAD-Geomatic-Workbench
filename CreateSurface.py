@@ -53,6 +53,20 @@ class CreateSurface:
             model.appendRow(item)
             Count = Count + 1
 
+    def MaxLength(self,P1,P2,P3):
+        MaxlengthLE = self.IPFui.MaxlengthLE.text()
+        List = [[P1,P2],[P2,P3],[P3,P1]]
+        Result = []
+        for i,j in List:
+            DeltaX = i[0] - j[0]
+            DeltaY = i[1] - j[1]
+            Length = (DeltaX**2+DeltaY**2)**0.5
+            Result.append(Length)
+        if Result[0] <= int(MaxlengthLE)*1000 and Result[1] <= int(MaxlengthLE)*1000 and Result[2] <= int(MaxlengthLE)*1000:
+            return True
+        else:
+            return False
+
     def CreateSurface(self):
         #Import UI variables
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
@@ -77,7 +91,7 @@ class CreateSurface:
                 trp.append([xx,yy,zz])
                 Count = Count + 1
 
-        data = np.array(trp)
+        self.data = np.array(trp)
         test = np.array(trp)
         test -= test.mean(axis=0)
         tri = scipy.spatial.Delaunay( test[:,:2]) 
@@ -85,18 +99,19 @@ class CreateSurface:
         plotMesh = []
 
         for i in tri.vertices:
+            first = int(i[0])
+            second = int(i[1])
+            third = int(i[2])
 
-           first = int(i[0])
-           second = int(i[1])
-           third = int(i[2])
-
-           plotMesh.append(data[first])
-           plotMesh.append(data[second])
-           plotMesh.append(data[third])
+            if self.MaxLength(self.data[first], self.data[second], self.data[third]):
+                plotMesh.append(self.data[first])
+                plotMesh.append(self.data[second])
+                plotMesh.append(self.data[third])
 
         plotMeshObject = Mesh.Mesh(plotMesh)
         Surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", SurfaceNameLE)
         Surface.Mesh = plotMeshObject
+        Surface.Label = SurfaceNameLE
         FreeCAD.ActiveDocument.Surfaces.addObject(Surface)
 
 FreeCADGui.addCommand('Create Surface',CreateSurface()) 

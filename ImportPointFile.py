@@ -68,7 +68,7 @@ class ImportPointFile:
     def Preview(self):
         #Import UI variables.
         listItems=self.IPFui.SelectedFilesLW.selectedItems() 
-        try:
+        if listItems:
             head, tail = os.path.split(listItems[0].text())
             self.IPFui.FileNameL.setText(tail)
             self.IPFui.PreviewTW.setRowCount(0)
@@ -103,8 +103,6 @@ class ImportPointFile:
                     self.IPFui.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
                 except:
                     pass
-        except:
-            pass
 
     def ActivatePointGroups(self):
         #When QCheckBox status changed do fallowing options.
@@ -168,5 +166,6 @@ class ImportPointFile:
                 Point.Label = str(row[PN])
                 SubGroup.addObject(Point)
         FreeCADGui.SendMsgToActiveView("ViewFit")
+        self.IPFui.close()
 
 FreeCADGui.addCommand('Import Point File',ImportPointFile()) 
