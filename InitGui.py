@@ -70,8 +70,8 @@ class GeomaticsWorkbench ( Workbench ):
             if _v['gui'] & self.menu:
                 self.appendMenu(_k, _v['cmd'])
 
-    threedopcmdlist = ['Edit Surface']
-    FreeCADGui.addCommand('Surface Editor', GeomaticsCommandGroup(threedopcmdlist, 'Edit Surface'))
+    EditSurfaceSub = ['Edit Surface']
+    FreeCADGui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface'))
 
     def ContextMenu(self, recipient):
         """
