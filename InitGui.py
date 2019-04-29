@@ -48,7 +48,6 @@ class GeomaticsWorkbench ( Workbench ):
             'Surface Tools': {
                 'gui': self.menu + self.toolbar + self.context,
                 'cmd': ['Create Surface',
-                        'Edit Surface',
                         'Surface Editor'
                        ]
 			},
@@ -70,7 +69,7 @@ class GeomaticsWorkbench ( Workbench ):
             if _v['gui'] & self.menu:
                 self.appendMenu(_k, _v['cmd'])
 
-    EditSurfaceSub = ['Edit Surface']
+    EditSurfaceSub = ['Add Triangle','Delete Triangle','Swap Edge','Smooth Surface']
     FreeCADGui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface'))
 
     def ContextMenu(self, recipient):

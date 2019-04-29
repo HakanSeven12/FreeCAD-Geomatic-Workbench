@@ -5,66 +5,70 @@ import os
 import Mesh
 from pivy import coin
 
-class EditSurface:
-    """
-    Command to edit surface
-    """
-
+class AddTriangle:
     Path = os.path.dirname(__file__)
 
     resources = {
         'Pixmap'  : Path + '/Resources/Icons/EditSurface.svg',
-        'MenuText': "Edit Surface",
-        'ToolTip' : "Delete triangles, add a triangle or swap an edge of surface."
+        'MenuText': "Add Triangle",
+        'ToolTip' : "Add a triangle to selected surface."
     }
 
     def __init__(self):
-        #Import *.ui file(s)
-        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/Resources/UI/EditSurface.ui")
-        #To Do List
-        self.IPFui.AddTriangleB.clicked.connect(self.AddTriangle)
-        self.IPFui.DeleteTriangleB.clicked.connect(self.DeleteTriangle)
-        self.IPFui.SwapEdgeB.clicked.connect(self.SwapEdge)
+        print ("Add Triangle Added")
 
     def GetResources(self):
-        """
-        Return the command resources dictionary
-        """
+        #Return the command resources dictionary
         return self.resources
 
     def Activated(self):
-        self.IPFui.setParent(FreeCADGui.getMainWindow())
-        self.IPFui.setWindowFlags(QtCore.Qt.Window)
-        self.IPFui.show()
-        self.IPFui.SelectSurfaceCB.clear()
-        SS = FreeCAD.ActiveDocument.Surfaces.Group
-        OutList = FreeCAD.ActiveDocument.Surfaces.OutList
-        self.GroupList = []
-        Count = 0
-
-        for i in OutList:
-            self.GroupList.append(SS[Count].Name)
-            SubSurfaceName = SS[Count].Label
-            self.IPFui.SelectSurfaceCB.addItem(str(SubSurfaceName))
-            Count = Count + 1
-
-    def AddTriangle(self):
-        Index = self.IPFui.SelectSurfaceCB.currentIndex()
-        SS = self.GroupList[Index]
-        Surface = FreeCAD.ActiveDocument.getObject(SS)
-        FreeCADGui.Selection.clearSelection()
-        FreeCADGui.Selection.addSelection(Surface)
-
         FreeCADGui.runCommand("Mesh_AddFacet")
 
-    def DeleteTriangle(self):
-        '''Index = self.IPFui.SelectSurfaceCB.currentIndex()
-        SS = self.GroupList[Index]
-        Surface = FreeCAD.ActiveDocument.getObject(SS)'''
+FreeCADGui.addCommand('Add Triangle',AddTriangle())
 
+class DeleteTriangle:
+    Path = os.path.dirname(__file__)
+
+    resources = {
+        'Pixmap'  : Path + '/Resources/Icons/EditSurface.svg',
+        'MenuText': "Delete Triangle",
+        'ToolTip' : "Delete triangles from selected surface."
+    }
+
+    def __init__(self):
+        print ("Delete Triangle Added")
+
+    def GetResources(self):
+        #Return the command resources dictionary
+        return self.resources
+
+    def Activated(self):
         FreeCADGui.runCommand("Mesh_RemoveComponents")
 
-    def mouseClick(self,cb):
+FreeCADGui.addCommand('Delete Triangle',DeleteTriangle())
+
+class SwapEdge:
+    Path = os.path.dirname(__file__)
+
+    resources = {
+        'Pixmap'  : Path + '/Resources/Icons/EditSurface.svg',
+        'MenuText': "Swap Edge",
+        'ToolTip' : "Swap Edge of selected surface."
+    }
+
+    def __init__(self):
+
+        print ("Swap Edge Added")
+
+    def GetResources(self):
+        #Return the command resources dictionary
+        return self.resources
+
+    def Activated(self):
+        self.FaceIndexes = []
+        self.MC = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.SwapEdge)
+
+    def SwapEdge(self,cb):
         event = cb.getEvent()
         if event.getButton() == coin.SoMouseButtonEvent.BUTTON2 and event.getState() == coin.SoMouseButtonEvent.DOWN:
             FreeCADGui.ActiveDocument.ActiveView.removeEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.MC)
@@ -77,19 +81,36 @@ class EditSurface:
                     index = face_detail.getFaceIndex()
                     self.FaceIndexes.append(index)
                     if len(self.FaceIndexes) == 2:
-                        Index = self.IPFui.SelectSurfaceCB.currentIndex()
-                        SS = self.GroupList[Index]
-                        Surface = FreeCAD.ActiveDocument.getObject(SS)
+                        Surface = FreeCADGui.Selection.getSelection()[-1]
                         CopyMesh = Surface.Mesh.copy()
                         try:
                             CopyMesh.swapEdge(self.FaceIndexes[0],self.FaceIndexes[1])
                         except:
-                            print ("The selected triangles can not be swapped.")
+                            pass
                         Surface.Mesh = CopyMesh
                         self.FaceIndexes.clear()
 
-    def SwapEdge(self):
-        self.FaceIndexes = []
-        self.MC = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(), self.mouseClick)
+FreeCADGui.addCommand('Swap Edge',SwapEdge())
 
-FreeCADGui.addCommand('Edit Surface',EditSurface()) 
+class SmoothSurface:
+    Path = os.path.dirname(__file__)
+
+    resources = {
+        'Pixmap'  : Path + '/Resources/Icons/EditSurface.svg',
+        'MenuText': "Smooth Surface",
+        'ToolTip' : "Smooth selected surface."
+    }
+
+    def __init__(self):
+
+        print ("Smooth Surface Added")
+
+    def GetResources(self):
+        #Return the command resources dictionary
+        return self.resources
+
+    def Activated(self):
+        Surface = FreeCADGui.Selection.getSelection()[0]
+        Surface.Mesh.smooth()
+
+FreeCADGui.addCommand('Smooth Surface',SmoothSurface())
