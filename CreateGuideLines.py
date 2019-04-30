@@ -1,7 +1,7 @@
 import FreeCAD
 import FreeCADGui
 from PySide import QtCore, QtGui
-import Draft, Part
+import Draft
 import os
 
 class CreateGuideLines:
@@ -41,27 +41,28 @@ class CreateGuideLines:
     def CreateGuideLines(self):
         L = self.IPFui.LeftLengthLE.text()
         R = self.IPFui.RightLengthLE.text()
-        LL = int(L)*(-1000)
-        RL = int(R)*1000
-
         Index = self.IPFui.AlignmentCB.currentIndex()
         AlignmentName = self.AlignmentList[Index]
         Alignment = FreeCAD.ActiveDocument.getObject(AlignmentName)
+        Increment = self.IPFui.IncrementLE.text()
 
-        pointsDirection  = []
-        pointsDirection = Alignment.Proxy.model.discretize_geometry()
-        for i in range(len(pointsDirection)-1):
-            print (pointsDirection[i],pointsDirection[i+1])
-            v=pointsDirection[i].sub(pointsDirection[i+1])
-            r=FreeCAD.Rotation(FreeCAD.Vector(0,0,1),v)
+        Stations = []
+        Start = Alignment.Proxy.model.data['meta']['StartStation']
+        End = Start + Alignment.Proxy.model.data['meta']['Length']
+        Stations.append(Start/1000)
+        for i in range(round(Start/1000), round(End/1000)):
+            if i % int(Increment) == 0:
+                Stations.append(i)
+        Stations.append(End/1000)
 
-            pl=FreeCAD.Placement()
-            pl.Rotation.Q = r.Q
-            pl.Base = pointsDirection[i].Add(Alignment.Placement.Base)
-            print (pl.Base)
-            points = [FreeCAD.Vector(LL, 0.0, 0.0),FreeCAD.Vector(0.0,0.0,0.0),FreeCAD.Vector(RL, 0.0, 0.0)]
-            GuideLine = Draft.makeWire(points,closed=False,face=False,support=None)
-            GuideLine.Placement = pl
+        for Station in Stations:
+            coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
+            LeftEnd = coord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
 
+            coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Right")
+            RightEnd = coord.add(FreeCAD.Vector(vec).multiply(int(R)*1000))
+
+            GuideLine = Draft.makeWire([LeftEnd,RightEnd])
+            GuideLine.Label = str(Station)
 
 FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines()) 
