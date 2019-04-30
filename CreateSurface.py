@@ -36,21 +36,9 @@ class CreateSurface:
 
     def Activated(self):
         try:
-            FreeCAD.ActiveDocument.Point_Groups
+            self.Surfaces = FreeCAD.ActiveDocument.Surfaces
         except:
-            PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
-            PointGroups.Label = "Point Groups"
-
-        try:
-            FreeCAD.ActiveDocument.Points
-        except:
-            Points = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
-            PointGroups.addObject(Points)
-
-        try:
-            FreeCAD.ActiveDocument.Surfaces
-        except:
-            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
+            self.Surfaces = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
 
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
@@ -129,6 +117,6 @@ class CreateSurface:
         Surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", SurfaceNameLE)
         Surface.Mesh = plotMeshObject
         Surface.Label = SurfaceNameLE
-        FreeCAD.ActiveDocument.Surfaces.addObject(Surface)
+        self.Surfaces.addObject(Surface)
 
 FreeCADGui.addCommand('Create Surface',CreateSurface()) 

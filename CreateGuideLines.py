@@ -22,10 +22,10 @@ class CreateGuideLines:
 
     def Activated(self):
         try:
-            FreeCAD.ActiveDocument.Guide_Lines
+            self.GLGroups = FreeCAD.ActiveDocument.Guide_Lines
         except:
-            GLGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Guide_Lines')
-            GLGroups.Label = "Guide Lines"
+            self.GLGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Guide_Lines')
+            self.GLGroups.Label = "Guide Lines"
 
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
@@ -71,5 +71,6 @@ class CreateGuideLines:
 
             GuideLine = Draft.makeWire([LeftEnd,RightEnd])
             GuideLine.Label = str(Station)
+            self.GLGroups.addObject(GuideLine)
 
 FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines())
