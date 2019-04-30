@@ -39,24 +39,6 @@ class NewProject:
         except:
             FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
 
-        #Create Alignments Group
-        try:
-            FreeCAD.ActiveDocument.Alignments
-        except:
-            Alignments = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroupPython",'Alignments')
-            Alignments.Proxy = self
-            self.Type = "AlignmentGroup"
-            self.Object = Alignments
-
-            Alignments.addProperty('App::PropertyString', 'ID', 'Base', 'Alignment group name')
-            Alignments.setEditorMode('ID', 1)
-
-            Alignments.addProperty('App::PropertyString', 'Description', 'Base', 'Alignment group description')
-            Alignments.setEditorMode('Description', 1)
-
-            Alignments.addProperty('App::PropertyFileIncluded', 'Xml_Path', 'Base', '')
-            Alignments.setEditorMode('Xml_Path', 2)
-
         return
 
 FreeCADGui.addCommand('New Project',NewProject())
