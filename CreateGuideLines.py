@@ -48,12 +48,13 @@ class CreateGuideLines:
 
         Stations = []
         Start = Alignment.Proxy.model.data['meta']['StartStation']
-        End = Start + Alignment.Proxy.model.data['meta']['Length']
-        Stations.append(Start/1000)
-        for i in range(round(Start/1000), round(End/1000)):
+        Length = Alignment.Proxy.model.data['meta']['Length']
+        End = Start + Length/1000
+        Stations.append(Start)
+        for i in range(round(Start), round(End)):
             if i % int(Increment) == 0:
                 Stations.append(i)
-        Stations.append(End/1000)
+        Stations.append(End)
 
         for Station in Stations:
             coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
@@ -65,4 +66,4 @@ class CreateGuideLines:
             GuideLine = Draft.makeWire([LeftEnd,RightEnd])
             GuideLine.Label = str(Station)
 
-FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines()) 
+FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines())
