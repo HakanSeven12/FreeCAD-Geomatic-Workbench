@@ -1,4 +1,3 @@
-import NewProject
 import ImportPointFile
 import CreateSurface
 import EditSurface
@@ -34,10 +33,6 @@ class GeomaticsWorkbench ( Workbench ):
 
         self.command_ui = {
 
-            'Project Tools': {
-                'gui': self.toolbar,
-                'cmd': ['New Project']
-            },
             'Data Tools': {
                 'gui': self.menu + self.toolbar,
                 'cmd': ['Import Point File',

@@ -35,6 +35,18 @@ class ImportPointFile:
         return self.Resources
 
     def Activated(self):
+        try:
+            FreeCAD.ActiveDocument.Point_Groups
+        except:
+            PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
+            PointGroups.Label = "Point Groups"
+
+        try:
+            FreeCAD.ActiveDocument.Points
+        except:
+            Points = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+            PointGroups.addObject(Points)
+
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()

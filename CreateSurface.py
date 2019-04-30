@@ -35,6 +35,23 @@ class CreateSurface:
         return self.resources
 
     def Activated(self):
+        try:
+            FreeCAD.ActiveDocument.Point_Groups
+        except:
+            PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
+            PointGroups.Label = "Point Groups"
+
+        try:
+            FreeCAD.ActiveDocument.Points
+        except:
+            Points = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+            PointGroups.addObject(Points)
+
+        try:
+            FreeCAD.ActiveDocument.Surfaces
+        except:
+            FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
+
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()

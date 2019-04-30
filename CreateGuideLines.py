@@ -21,6 +21,12 @@ class CreateGuideLines:
         return {'MenuText': 'Create Guide Lines', 'ToolTip': 'Create guide lines for sections.'}
 
     def Activated(self):
+        try:
+            FreeCAD.ActiveDocument.Guide_Lines
+        except:
+            GLGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Guide_Lines')
+            GLGroups.Label = "Guide Lines"
+
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
