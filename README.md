@@ -28,6 +28,7 @@ Hakan Seven with inspiration and help from the FreeCAD community.
 
 ## Screenshots
 
-![add point](https://user-images.githubusercontent.com/3831435/55716231-20014f00-59ff-11e9-9d35-c6f7d6649806.png)
-![wire](https://user-images.githubusercontent.com/3831435/53573372-6224ae80-3b7e-11e9-94d0-30ede898710d.png)
-![model](https://user-images.githubusercontent.com/3831435/53573380-651f9f00-3b7e-11e9-90c3-f6bdafdbba83.png)
+![IPF](https://user-images.githubusercontent.com/3831435/57193645-0d1e6380-6f46-11e9-8f5a-8f9a5c66435b.png)
+![EP](https://user-images.githubusercontent.com/3831435/57193646-0d1e6380-6f46-11e9-94d4-4f57023e2791.png)
+![CS](https://user-images.githubusercontent.com/3831435/57193647-0db6fa00-6f46-11e9-92bf-0709ddb9cffb.png)
+![ES](https://user-images.githubusercontent.com/3831435/57193648-0db6fa00-6f46-11e9-985d-d9376269be28.png)
