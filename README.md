@@ -13,7 +13,7 @@ Edit Surface
 Create Guide Lines
 
 ## Installation
-Clone the project into the `~/.FreeCAD/Mod/Geomatics` folder.
+Download and extract the ZIP file into the .FreeCAD/Mod folder or use git to clone into .FreeCAD/Mod.
 
 Go to "Edit -> Preferences -> General -> Units" set "Number of decimals = 6".
 
