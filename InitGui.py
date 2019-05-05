@@ -19,11 +19,15 @@ class GeomaticsCommandGroup:
     def GetResources(self):
         return { 'MenuText': self.menu, 'ToolTip': self.tooltip }
 
-class GeomaticsWorkbench ( Workbench ):
+class GeomaticsWorkbench ( Gui.Workbench ):
+
+    from Init import ICONPATH
+    import os
+
     "Geomatics Workbench Object"
     MenuText = 'Geomatics'
     ToolTip = 'Geomatic/Survey Engineering Workbench'
-    Icon = App.__path__[3] + '/Geomatics/Resources/Icons/GeomaticsWorkbench.svg'
+    Icon = os.path.join(ICONPATH, 'GeomaticsWorkbench.svg')
 		
     def __init__(self):
 
