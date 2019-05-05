@@ -1,8 +1,8 @@
-import ImportPointFile
-import CreateSurface
-import EditSurface
-import CreateGuideLines
-import ExportPoints
+from Data import ImportPointFile
+from Data import ExportPoints
+from Surfaces import CreateSurface
+from Surfaces import EditSurface
+from Section import CreateGuideLines
 
 class GeomaticsCommandGroup:
     def __init__(self, cmdlist, menu, tooltip = None):
@@ -65,7 +65,7 @@ class GeomaticsWorkbench ( Workbench ):
                 self.appendMenu(_k, _v['cmd'])
 
     EditSurfaceSub = ['Add Triangle','Delete Triangle','Swap Edge','Smooth Surface']
-    FreeCADGui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface'))
+    Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface'))
 
     def ContextMenu(self, recipient):
         """
