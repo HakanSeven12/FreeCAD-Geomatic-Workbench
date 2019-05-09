@@ -67,15 +67,18 @@ class CreateGuideLines:
 
         Stations.append(round(End,3))
         Stations.sort()
+        Pl = Alignment.Placement.Base
 
         for Station in Stations:
             coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
-            LeftEnd = coord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
+            StaCoord = coord.add(FreeCAD.Vector(Pl))
+            LeftEnd = StaCoord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
 
             coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Right")
-            RightEnd = coord.add(FreeCAD.Vector(vec).multiply(int(R)*1000))
+            StaCoord = coord.add(FreeCAD.Vector(Pl))
+            RightEnd = StaCoord.add(FreeCAD.Vector(vec).multiply(int(R)*1000))
 
-            GuideLine = Draft.makeWire([LeftEnd,RightEnd])
+            GuideLine = Draft.makeWire([LeftEnd,StaCoord,RightEnd])
             GuideLine.Label = str(round(Station,3))
             self.GLGroups.addObject(GuideLine)
 

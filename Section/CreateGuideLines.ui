@@ -82,7 +82,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>80</string>
+    <string>20</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="RightLengthLE">
@@ -95,7 +95,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>80</string>
+    <string>20</string>
    </property>
   </widget>
   <widget class="QLabel" name="LeftLengthL">
