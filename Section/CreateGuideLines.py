@@ -73,10 +73,7 @@ class CreateGuideLines:
             coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
             StaCoord = coord.add(FreeCAD.Vector(Pl))
             LeftEnd = StaCoord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
-
-            coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Right")
-            StaCoord = coord.add(FreeCAD.Vector(Pl))
-            RightEnd = StaCoord.add(FreeCAD.Vector(vec).multiply(int(R)*1000))
+            RightEnd = StaCoord.add(vec.negative().multiply(int(R)*1000))
 
             GuideLine = Draft.makeWire([LeftEnd,StaCoord,RightEnd])
             GuideLine.Label = str(round(Station,3))
