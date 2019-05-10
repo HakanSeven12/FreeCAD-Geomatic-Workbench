@@ -2,6 +2,7 @@ from Data import ImportPointFile
 from Data import ExportPoints
 from Surfaces import CreateSurface
 from Surfaces import EditSurface
+from Surfaces import Contours
 from Section import CreateGuideLines
 
 class GeomaticsCommandGroup:
@@ -47,7 +48,8 @@ class GeomaticsWorkbench ( Gui.Workbench ):
             'Surface Tools': {
                 'gui': self.menu + self.toolbar + self.context,
                 'cmd': ['Create Surface',
-                        'Surface Editor'
+                        'Surface Editor',
+                        'Create Contour'
                        ]
 			},
 			
