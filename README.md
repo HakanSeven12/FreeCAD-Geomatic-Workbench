@@ -15,6 +15,9 @@ Create Contours
 Create Guide Lines
 
 ## Installation
+
+Firstly you must install Scipy.
+
 Download and extract the ZIP file into the .FreeCAD/Mod folder or use git to clone into .FreeCAD/Mod.
 
 Go to "Edit -> Preferences -> General -> Units" set "Number of decimals = 6".
