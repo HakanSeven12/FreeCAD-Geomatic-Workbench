@@ -16,7 +16,7 @@ Create Guide Lines
 
 ## Installation
 
-Firstly you must install Scipy.
+Firstly you must install Python 3.6 and Scipy.
 
 Download and extract the ZIP file into the .FreeCAD/Mod folder or use git to clone into .FreeCAD/Mod.
 
