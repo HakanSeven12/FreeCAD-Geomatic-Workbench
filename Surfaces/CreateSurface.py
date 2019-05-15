@@ -1,4 +1,5 @@
 import FreeCAD, FreeCADGui
+from FreeCAD import Base
 from PySide import QtCore, QtGui
 import scipy.spatial
 import numpy as np
@@ -73,7 +74,7 @@ class CreateSurface:
     def CreateSurface(self):
         #Import UI variables
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
-        trp = []
+        Test = []
         GroupCounter = 0
 
         #Create surface
@@ -91,29 +92,31 @@ class CreateSurface:
                 xx = float(GroupName[Count].X)
                 yy = float(GroupName[Count].Y)
                 zz = float(GroupName[Count].Z)
-                trp.append([xx,yy,zz])
+                Test.append([xx,yy,zz])
                 Count = Count + 1
 
-        self.data = np.array(trp)
-        test = np.array(trp)
-        test -= test.mean(axis=0)
-        tri = scipy.spatial.Delaunay( test[:,:2]) 
+        Data = np.array(Test)
+        DataOn = Data.mean(axis=0)
+        Basex = FreeCAD.Vector(DataOn[0], DataOn[1], DataOn[2])
+        Data -= DataOn
+        tri = scipy.spatial.Delaunay(Data[:,:2])
 
-        plotMesh = []
+        MeshList = []
 
         for i in tri.vertices:
             first = int(i[0])
             second = int(i[1])
             third = int(i[2])
 
-            if self.MaxLength(self.data[first], self.data[second], self.data[third]):
-                plotMesh.append(self.data[first])
-                plotMesh.append(self.data[second])
-                plotMesh.append(self.data[third])
+            if self.MaxLength(Data[first], Data[second], Data[third]):
+                MeshList.append(Data[first])
+                MeshList.append(Data[second])
+                MeshList.append(Data[third])
 
-        plotMeshObject = Mesh.Mesh(plotMesh)
+        MeshObject = Mesh.Mesh(MeshList)
+        MeshObject.Placement.move(Basex)
         Surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", SurfaceNameLE)
-        Surface.Mesh = plotMeshObject
+        Surface.Mesh = MeshObject
         Surface.Label = SurfaceNameLE
         self.Surfaces.addObject(Surface)
 
