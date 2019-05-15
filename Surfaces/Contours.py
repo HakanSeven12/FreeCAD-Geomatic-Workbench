@@ -20,27 +20,26 @@ class CreateContour:
 
     def Activated(self):
         Surface = FreeCADGui.Selection.getSelection()[-1]
+        Base = Surface.Mesh.Placement.Base
+        CopyMesh = Surface.Mesh.copy()
         try:
             self.Contours = FreeCAD.ActiveDocument.Contours
         except:
             self.Contours = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Contours')
 
-        self.CreateContour(Surface)
+        self.CreateContour(CopyMesh,Base)
 
-    def CreateContour(self,Surface):
-        zmax = Surface.Mesh.BoundBox.ZMax
-        zmin = Surface.Mesh.BoundBox.ZMin
-        h = 0
-        dh =1000
+    def CreateContour(self,Mesh,Base):
+        zmax = Mesh.BoundBox.ZMax
+        zmin = Mesh.BoundBox.ZMin
+        DeltaH =1000
 
-        while h < zmax:
-            if h>zmin:
-                CrossSections = Surface.Mesh.crossSections([((0,0,h),(0,0,1))],0.000001)
+        for H in range(round(zmin), round(zmax)):
+            if H % int(DeltaH) == 0:
+                CrossSections = Mesh.crossSections([((0,0,H),(0,0,1))],0.000001)
                 for i in CrossSections[0]:
                     Contour = Draft.makeWire(i)
+                    Contour.Placement.Base = Contour.Placement.Base.add(Base)
                     self.Contours.addObject(Contour)
-                h += dh
-            else:
-                h += dh
 
 FreeCADGui.addCommand('Create Contour',CreateContour())
