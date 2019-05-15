@@ -38,7 +38,7 @@ class CreateContour:
             if H % int(DeltaH) == 0:
                 CrossSections = Mesh.crossSections([((0,0,H),(0,0,1))],0.000001)
                 for i in CrossSections[0]:
-                    Contour = Draft.makeWire(i)
+                    Contour = Draft.makeWire(i, face=False)
                     Contour.Placement.Base = Contour.Placement.Base.add(Base)
                     self.Contours.addObject(Contour)
 
