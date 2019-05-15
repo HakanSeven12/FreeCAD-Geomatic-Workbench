@@ -52,10 +52,17 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                         'Create Contour'
                        ]
 			},
-			
+
             'Section Tools': {
                 'gui': self.menu,
                 'cmd': ['Create Guide Lines']
+            },
+
+            'Draft Tools': {
+                'gui': self.toolbar,
+                'cmd': ['Draw Tools',
+                        'Edit Tools',
+                       ]
             },
         }
 
@@ -72,6 +79,23 @@ class GeomaticsWorkbench ( Gui.Workbench ):
 
     EditSurfaceSub = ['Add Triangle','Delete Triangle','Swap Edge','Smooth Surface']
     Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface'))
+
+    DraftDraw = ["Draft_Line","Draft_Wire","Draft_Circle","Draft_Arc","Draft_Ellipse",
+                 "Draft_Polygon","Draft_Rectangle", "Draft_Text", "Draft_Dimension",
+                 "Draft_BSpline","Draft_Point", "Draft_ShapeString","Draft_Facebinder",
+                 "Draft_BezCurve","Draft_Label"
+                ]
+    Gui.addCommand('Draw Tools', GeomaticsCommandGroup(DraftDraw, 'Draft Draw Tools'))
+
+    DraftEdit = ["Draft_Move", "Draft_Rotate", "Draft_Offset",
+                 "Draft_Trimex", "Draft_Join", "Draft_Split", "Draft_Upgrade",
+                 "Draft_Downgrade", "Draft_Scale", "Draft_Edit", "Draft_WireToBSpline",
+                 "Draft_AddPoint", "Draft_DelPoint", "Draft_Shape2DView", "Draft_Draft2Sketch",
+                 "Draft_Array", "Draft_PathArray", "Draft_PointArray", "Draft_Clone",
+                 "Draft_Drawing", "Draft_Mirror", "Draft_Stretch"
+                ]
+
+    Gui.addCommand('Edit Tools', GeomaticsCommandGroup(DraftEdit, 'Draft Snap Tools'))
 
     def ContextMenu(self, recipient):
         """
