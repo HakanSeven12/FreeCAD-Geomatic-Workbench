@@ -176,6 +176,7 @@ class ImportPointFile:
                 Point = Draft.makePoint(X = float(row[E])*1000, Y = float(row[N])*1000, Z = float(row[Z])*1000, color = (0.37,0.69,0.22) , name = "Point", point_size = 3)
                 Point.Label = str(row[PN])
                 SubGroup.addObject(Point)
+        FreeCAD.ActiveDocument.recompute()
         FreeCADGui.SendMsgToActiveView("ViewFit")
         self.IPFui.close()
 

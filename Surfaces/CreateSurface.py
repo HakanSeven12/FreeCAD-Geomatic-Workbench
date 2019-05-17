@@ -1,7 +1,6 @@
 import FreeCAD, FreeCADGui
 from FreeCAD import Base
 from PySide import QtCore, QtGui
-import scipy.spatial
 import numpy as np
 import Mesh
 import os
@@ -72,6 +71,8 @@ class CreateSurface:
             return False
 
     def CreateSurface(self):
+        import scipy.spatial
+
         #Import UI variables
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
         Test = []
