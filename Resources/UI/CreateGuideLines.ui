@@ -134,7 +134,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Increment Along Aligment:</string>
+    <string>Increment Along Alignment:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="IncrementLE">

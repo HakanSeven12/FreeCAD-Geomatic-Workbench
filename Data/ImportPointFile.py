@@ -4,13 +4,13 @@ import csv, os
 import Draft
 
 class ImportPointFile:
-    #Command to import point file which include survey data.
+    #Command to import point file which includes survey data.
     Path = os.path.dirname(__file__)
 
     Resources = {
         'Pixmap'  : Path + '/../Resources/Icons/ImportPointFile.svg',
         'MenuText': "Import Point File",
-        'ToolTip' : "Import point file which include survey data."
+        'ToolTip' : "Import point file which includes survey data."
     }
 
     def __init__(self):
@@ -112,7 +112,7 @@ class ImportPointFile:
                     pass
 
     def ActivatePointGroups(self):
-        #When QCheckBox status changed do fallowing options.
+        #When QCheckBox status changed do the following options.
         if self.IPFui.PointGroupChB.isChecked():
             self.IPFui.SubGroupListCB.setEnabled(True)
             self.IPFui.CreateGroupB.setEnabled(True)
@@ -175,4 +175,4 @@ class ImportPointFile:
         FreeCADGui.SendMsgToActiveView("ViewFit")
         self.IPFui.close()
 
-FreeCADGui.addCommand('Import Point File',ImportPointFile()) 
+FreeCADGui.addCommand('Import Point File',ImportPointFile())
