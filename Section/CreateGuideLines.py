@@ -70,13 +70,15 @@ class CreateGuideLines:
         Pl = Alignment.Placement.Base
 
         for Station in Stations:
-            coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
-            StaCoord = coord.add(FreeCAD.Vector(Pl))
-            LeftEnd = StaCoord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
-            RightEnd = StaCoord.add(vec.negative().multiply(int(R)*1000))
+            Coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
+            StaCoord = Coord.add(FreeCAD.Vector(Pl))
+            LeftEnd = Coord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
+            RightEnd = Coord.add(vec.negative().multiply(int(R)*1000))
 
-            GuideLine = Draft.makeWire([LeftEnd,StaCoord,RightEnd])
+            GuideLine = Draft.makeWire([LeftEnd,Coord,RightEnd])
+            GuideLine.Placement.move(Pl)
             GuideLine.Label = str(round(Station,3))
             self.GLGroups.addObject(GuideLine)
+            FreeCAD.ActiveDocument.recompute()
 
 FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines())

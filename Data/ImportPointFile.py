@@ -54,16 +54,13 @@ class ImportPointFile:
         self.IPFui.SelectedFilesLW.clear()
         self.IPFui.PreviewTW.setRowCount(0)
         self.IPFui.PointGroupChB.setChecked(False)
-        SG = FreeCAD.ActiveDocument.Point_Groups.Group
-        OutList = FreeCAD.ActiveDocument.Point_Groups.OutList
+        PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
         self.GroupList = []
-        Count = 0
 
-        for i in OutList:
-            self.GroupList.append(SG[Count].Name)
-            SubGroupName = SG[Count].Label
+        for PointGroup in PointGroups:
+            self.GroupList.append(PointGroup.Name)
+            SubGroupName = PointGroup.Label
             self.IPFui.SubGroupListCB.addItem(str(SubGroupName))
-            Count = Count + 1
 
     def AddFile(self):
         #Add point files to the list.
@@ -72,13 +69,12 @@ class ImportPointFile:
 
     def RemoveFile(self):
         #Remove point files from list.
-        listItems=self.IPFui.SelectedFilesLW.selectedItems() 
-        for item in listItems:
+        for item in self.IPFui.SelectedFilesLW.selectedItems():
            self.IPFui.SelectedFilesLW.takeItem(self.IPFui.SelectedFilesLW.row(item))
 
     def Preview(self):
         #Import UI variables.
-        listItems=self.IPFui.SelectedFilesLW.selectedItems() 
+        listItems=self.IPFui.SelectedFilesLW.selectedItems()
         if listItems:
             head, tail = os.path.split(listItems[0].text())
             self.IPFui.FileNameL.setText(tail)
@@ -132,13 +128,12 @@ class ImportPointFile:
 
     def CreatePointGroup(self):
         #Create new point group.
-        CNG = self.CPGui.PointGroupNameLE.text()
-        SubGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",CNG)
-        FreeCAD.ActiveDocument.Point_Groups.addObject(SubGroup)
-        SubGroup.Label = self.CPGui.PointGroupNameLE.text()
-        self.GroupList.append(SubGroup.Name)
-        SubGroupName = SubGroup.Label
-        self.IPFui.SubGroupListCB.addItem(str(SubGroupName))
+        NewGroupName = self.CPGui.PointGroupNameLE.text()
+        NewGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",NewGroupName)
+        FreeCAD.ActiveDocument.Point_Groups.addObject(NewGroup)
+        self.IPFui.SubGroupListCB.addItem(NewGroupName)
+        self.GroupList.append(NewGroup.Name)
+        NewGroup.Label = NewGroupName
         self.CPGui.close()
 
     def ImportFile(self):
