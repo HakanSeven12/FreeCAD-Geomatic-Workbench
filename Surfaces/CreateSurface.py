@@ -44,17 +44,14 @@ class CreateSurface:
         model = QtGui.QStandardItemModel()
         self.IPFui.PointGroupsLV.setModel(model)
 
-        SG = FreeCAD.ActiveDocument.Point_Groups.Group
-        OutList = FreeCAD.ActiveDocument.Point_Groups.OutList
+        PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
         self.GroupList = []
-        Count = 0
 
-        for i in OutList:
-            self.GroupList.append(SG[Count].Name)
-            SubGroupName = SG[Count].Label
+        for PointGroup in PointGroups:
+            self.GroupList.append(PointGroup.Name)
+            SubGroupName = PointGroup.Label
             item = QtGui.QStandardItem(SubGroupName)
             model.appendRow(item)
-            Count = Count + 1
 
     def MaxLength(self,P1,P2,P3):
         MaxlengthLE = self.IPFui.MaxlengthLE.text()
@@ -73,28 +70,18 @@ class CreateSurface:
     def CreateSurface(self):
         import scipy.spatial
 
-        #Import UI variables
-        SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
         Test = []
-        GroupCounter = 0
 
         #Create surface
-        for i in self.IPFui.PointGroupsLV.selectedIndexes():
-            Selections = self.IPFui.PointGroupsLV.selectedIndexes()[GroupCounter]
-            Index = int(Selections.row())
-            SPG = self.GroupList[Index]
-            GroupName = FreeCAD.ActiveDocument.getObject(SPG).Group
-            OutList = FreeCAD.ActiveDocument.getObject(SPG).OutList
-            limits = range(1,int(len(OutList)+1))
-            GroupCounter = GroupCounter + 1
-            Count = 0
+        for SelectedIndex in self.IPFui.PointGroupsLV.selectedIndexes():
+            Index = self.GroupList[SelectedIndex.row()]
+            PointGroup = FreeCAD.ActiveDocument.getObject(Index).Group
 
-            for i in limits:
-                xx = float(GroupName[Count].X)
-                yy = float(GroupName[Count].Y)
-                zz = float(GroupName[Count].Z)
+            for Point in PointGroup:
+                xx = float(Point.X)
+                yy = float(Point.Y)
+                zz = float(Point.Z)
                 Test.append([xx,yy,zz])
-                Count = Count + 1
 
         Data = np.array(Test)
         DataOn = Data.mean(axis=0)
@@ -116,6 +103,7 @@ class CreateSurface:
 
         MeshObject = Mesh.Mesh(MeshList)
         MeshObject.Placement.move(Basex)
+        SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
         Surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", SurfaceNameLE)
         Surface.Mesh = MeshObject
         Surface.Label = SurfaceNameLE

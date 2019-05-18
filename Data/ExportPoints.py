@@ -32,16 +32,13 @@ class ExportPoints:
 
         self.IPFui.FileDestinationLE.clear()
         self.IPFui.PointGroupsLW.clear()
-        SG = FreeCAD.ActiveDocument.Point_Groups.Group
-        OutList = FreeCAD.ActiveDocument.Point_Groups.OutList
+        PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
         self.GroupList = []
-        Count = 0
 
-        for i in OutList:
-            self.GroupList.append(SG[Count].Name)
-            SubGroupName = SG[Count].Label
+        for PointGroup in PointGroups:
+            self.GroupList.append(PointGroup.Name)
+            SubGroupName = PointGroup.Label
             self.IPFui.PointGroupsLW.addItem(SubGroupName)
-            Count = Count + 1
 
     def FileDestination(self):
         #Get file destination.
@@ -61,25 +58,19 @@ class ExportPoints:
             Delimiter = ' '
         elif self.IPFui.DelimiterCB.currentText() == "Comma":
             Delimiter=','
-        GroupCounter = 0
 
         #Create point file.
         File = open(FileDestinationLE, 'w')
-        for i in self.IPFui.PointGroupsLW.selectedIndexes():
-            Selections = self.IPFui.PointGroupsLW.selectedIndexes()[GroupCounter]
-            Index = int(Selections.row())
-            SPG = self.GroupList[Index]
-            GroupName = FreeCAD.ActiveDocument.getObject(SPG).Group
-            OutList = FreeCAD.ActiveDocument.getObject(SPG).OutList
-            limits = range(1,int(len(OutList)+1))
-            GroupCounter = GroupCounter + 1
-            Count = 0
 
-            for i in limits:
-                pn = str(GroupName[Count].Label)
-                xx = str(round(float(GroupName[Count].X))/1000)
-                yy = str(round(float(GroupName[Count].Y))/1000)
-                zz = str(round(float(GroupName[Count].Z))/1000)
+        for SelectedIndex in self.IPFui.PointGroupsLW.selectedIndexes():
+            Index = self.GroupList[SelectedIndex.row()]
+            PointGroup = FreeCAD.ActiveDocument.getObject(Index).Group
+
+            for Point in PointGroup:
+                pn = str(Point.Label)
+                xx = str(round(float(Point.X))/1000)
+                yy = str(round(float(Point.Y))/1000)
+                zz = str(round(float(Point.Z))/1000)
                 Format[int(PointName)-1] = pn
                 Format[int(Easting)-1] = xx
                 Format[int(Northing)-1] = yy
@@ -87,7 +78,6 @@ class ExportPoints:
                 Format[int(Description)-1] = ""
 
                 File.write(Format[0]+Delimiter+Format[1]+Delimiter+Format[2]+Delimiter+Format[3]+Delimiter+Format[4]+"\n")
-                Count = Count + 1
         File.close()
 
 FreeCADGui.addCommand('Export Points',ExportPoints()) 

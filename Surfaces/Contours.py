@@ -48,6 +48,7 @@ class CreateContour:
             Draft.select(WireObj)
             self.Contours.addObject(WireObj)
         FreeCAD.ActiveDocument.recompute()
+        return WireObj
 
     def CreateContour(self, Mesh, Base):
         zmax = Mesh.BoundBox.ZMax
@@ -58,7 +59,7 @@ class CreateContour:
             if H % int(DeltaH) == 0:
                 CrossSections = Mesh.crossSections([((0,0,H),(0,0,1))],0.000001)
                 for i in CrossSections[0]:
-                    print(str(int(H/1000)))
-                    self.Wire(H, i, Base)
+                    Contour = self.Wire(H, i, Base)
+                    Contour.Label = str(H/1000)
 
 FreeCADGui.addCommand('Create Contour',CreateContour())
