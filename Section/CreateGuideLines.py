@@ -21,10 +21,10 @@ class CreateGuideLines:
 
     def Activated(self):
         try:
-            self.GLGroups = FreeCAD.ActiveDocument.Guide_Lines
+            self.GuideLineGroup = FreeCAD.ActiveDocument.Guide_Lines
         except:
-            self.GLGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Guide_Lines')
-            self.GLGroups.Label = "Guide Lines"
+            self.GuideLineGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Guide_Lines')
+            self.GuideLineGroup.Label = "Guide Lines"
 
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
@@ -32,16 +32,13 @@ class CreateGuideLines:
 
         #List Alignments.
         self.IPFui.AlignmentCB.clear()
-        SelectedAG = FreeCAD.ActiveDocument.Alignments.Group
-        AGOutList = FreeCAD.ActiveDocument.Alignments.OutList
+        AlignmentGroup = FreeCAD.ActiveDocument.Alignments.Group
         self.AlignmentList = []
-        Count = 0
 
-        for i in AGOutList:
-             self.AlignmentList.append(SelectedAG[Count].Name)
-             AlignmentName = SelectedAG[Count].Label
-             self.IPFui.AlignmentCB.addItem(str(AlignmentName))
-             Count = Count + 1
+        for Object in AlignmentGroup:
+            if Object.TypeId == 'Part::Part2DObjectPython':
+                self.AlignmentList.append(Object.Name)
+                self.IPFui.AlignmentCB.addItem(Object.Label)
 
     def CreateGuideLines(self):
         L = self.IPFui.LeftLengthLE.text()
@@ -50,6 +47,7 @@ class CreateGuideLines:
         AlignmentName = self.AlignmentList[Index]
         Alignment = FreeCAD.ActiveDocument.getObject(AlignmentName)
         Increment = self.IPFui.IncrementLE.text()
+        Pl = Alignment.Placement.Base
 
         Stations = []
         Start = Alignment.Proxy.model.data['meta']['StartStation']
@@ -64,21 +62,18 @@ class CreateGuideLines:
         Geometry = Alignment.Proxy.model.data['geometry']
         for Geo in Geometry:
             Stations.append(Geo.get('StartStation'))
-
         Stations.append(round(End,3))
         Stations.sort()
-        Pl = Alignment.Placement.Base
 
         for Station in Stations:
             Coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
-            StaCoord = Coord.add(FreeCAD.Vector(Pl))
             LeftEnd = Coord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
             RightEnd = Coord.add(vec.negative().multiply(int(R)*1000))
 
             GuideLine = Draft.makeWire([LeftEnd,Coord,RightEnd])
             GuideLine.Placement.move(Pl)
             GuideLine.Label = str(round(Station,3))
-            self.GLGroups.addObject(GuideLine)
+            self.GuideLineGroup.addObject(GuideLine)
             FreeCAD.ActiveDocument.recompute()
 
 FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines())

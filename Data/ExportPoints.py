@@ -66,18 +66,19 @@ class ExportPoints:
             Index = self.GroupList[SelectedIndex.row()]
             PointGroup = FreeCAD.ActiveDocument.getObject(Index).Group
 
-            for Point in PointGroup:
-                pn = str(Point.Label)
-                xx = str(round(float(Point.X))/1000)
-                yy = str(round(float(Point.Y))/1000)
-                zz = str(round(float(Point.Z))/1000)
-                Format[int(PointName)-1] = pn
-                Format[int(Easting)-1] = xx
-                Format[int(Northing)-1] = yy
-                Format[int(Elevation)-1] = zz
-                Format[int(Description)-1] = ""
+            for Item in PointGroup:
+                if Item == 'Part::FeaturePython':
+                    pn = str(Item.Label)
+                    xx = str(round(float(Item.X)/1000,3))
+                    yy = str(round(float(Item.Y)/1000,3))
+                    zz = str(round(float(Item.Z)/1000,3))
+                    Format[int(PointName)-1] = pn
+                    Format[int(Easting)-1] = xx
+                    Format[int(Northing)-1] = yy
+                    Format[int(Elevation)-1] = zz
+                    Format[int(Description)-1] = ""
 
-                File.write(Format[0]+Delimiter+Format[1]+Delimiter+Format[2]+Delimiter+Format[3]+Delimiter+Format[4]+"\n")
+                    File.write(Format[0]+Delimiter+Format[1]+Delimiter+Format[2]+Delimiter+Format[3]+Delimiter+Format[4]+"\n")
         File.close()
 
-FreeCADGui.addCommand('Export Points',ExportPoints()) 
+FreeCADGui.addCommand('Export Points',ExportPoints())

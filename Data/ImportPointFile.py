@@ -64,7 +64,7 @@ class ImportPointFile:
 
     def AddFile(self):
         #Add point files to the list.
-        self.FileList = QtGui.QFileDialog.getOpenFileNames(None, "Select one or more files to open", os.getenv("HOME"),'All Files (*.*)')
+        self.FileList = QtGui.QFileDialog.getOpenFileNames(None, "Select one or more files to open", os.getenv("HOME"), 'All Files (*.*)')
         self.IPFui.SelectedFilesLW.addItems(self.FileList[0])
 
     def RemoveFile(self):
@@ -74,7 +74,7 @@ class ImportPointFile:
 
     def Preview(self):
         #Import UI variables.
-        listItems=self.IPFui.SelectedFilesLW.selectedItems()
+        listItems = self.IPFui.SelectedFilesLW.selectedItems()
         if listItems:
             head, tail = os.path.split(listItems[0].text())
             self.IPFui.FileNameL.setText(tail)
@@ -89,10 +89,10 @@ class ImportPointFile:
             #Show selected file preview.
             File=open(listItems[0].text(), 'r')
             if self.IPFui.DelimiterCB.currentText() == "Space":
-                reader = csv.reader(File, delimiter = ' ')
+                reader = csv.reader(File, delimiter=' ')
             elif self.IPFui.DelimiterCB.currentText() == "Comma":
                 reader = csv.reader(File, delimiter=',')
-            for i, row in enumerate( reader ):
+            for i, row in enumerate(reader):
                 PN = int(PointName)-1
                 N = int(Northing)-1
                 E = int(Easting)-1
@@ -157,18 +157,18 @@ class ImportPointFile:
             Items.append(self.IPFui.SelectedFilesLW.item(i))
         Labels = [i.text() for i in Items]
         for FilePath in Labels:
-            File=open(FilePath, 'r')
+            File = open(FilePath, 'r')
             if self.IPFui.DelimiterCB.currentText() == "Space":
-                reader = csv.reader(File, delimiter = ' ')
+                reader = csv.reader(File, delimiter=' ')
             elif self.IPFui.DelimiterCB.currentText() == "Comma":
                 reader = csv.reader(File, delimiter=',')
-            for i, row in enumerate( reader ):
+            for i, row in enumerate(reader):
                 PN = int(PointName)-1
                 N = int(Northing)-1
                 E = int(Easting)-1
                 Z = int(Elevation)-1
 
-                Point = Draft.makePoint(X = float(row[E])*1000, Y = float(row[N])*1000, Z = float(row[Z])*1000, color = (0.37,0.69,0.22) , name = "Point", point_size = 3)
+                Point = Draft.makePoint(X=float(row[E])*1000, Y=float(row[N])*1000, Z=float(row[Z])*1000, color=(0.37, 0.69, 0.22), name="Point", point_size=3)
                 Point.Label = str(row[PN])
                 SubGroup.addObject(Point)
         FreeCAD.ActiveDocument.recompute()
