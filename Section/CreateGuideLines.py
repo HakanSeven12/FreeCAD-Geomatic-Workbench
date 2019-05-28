@@ -46,7 +46,8 @@ class CreateGuideLines:
         Index = self.IPFui.AlignmentCB.currentIndex()
         AlignmentName = self.AlignmentList[Index]
         Alignment = FreeCAD.ActiveDocument.getObject(AlignmentName)
-        Increment = self.IPFui.IncrementLE.text()
+        TangentIncrement = self.IPFui.TIncrementLE.text()
+        CurveSpiralIncrement = self.IPFui.CSIncrementLE.text()
         Pl = Alignment.Placement.Base
 
         Stations = []
@@ -54,14 +55,21 @@ class CreateGuideLines:
         Length = Alignment.Proxy.model.data['meta']['Length']
         End = Start + Length/1000
 
-        for i in range(round(Start), round(End)):
-            if i % int(Increment) == 0:
-                Stations.append(i)
-        Stations.pop(0)
-
         Geometry = Alignment.Proxy.model.data['geometry']
         for Geo in Geometry:
-            Stations.append(Geo.get('StartStation'))
+            StartStation = Geo.get('StartStation')
+            EndStation = Geo.get('StartStation')+Geo.get('Length')/1000
+            if StartStation != 0: Stations.append(StartStation)
+
+            if Geo.get('Type') == 'Line':
+                for i in range(round(float(StartStation)), round(float(EndStation))):
+                    if i % int(TangentIncrement) == 0:
+                        Stations.append(i)
+
+            elif Geo.get('Type') == 'Curve' or Geo["Type"] == 'Spiral':
+                for i in range(round(float(StartStation)), round(float(EndStation))):
+                    if i % int(CurveSpiralIncrement) == 0:
+                        Stations.append(i)
         Stations.append(round(End,3))
         Stations.sort()
 
