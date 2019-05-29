@@ -2,27 +2,33 @@
 This workbench is being developed to provide functionality specific to Geomatics/Survey engineering.
 
 ## Functions
-Import Point Files
+* Import Point Files  
+* Export Points  
+* Create Surface  
+* Edit Surface  
+* Create Contours  
+* Create Guide Lines  
 
-Export Points
-
-Create Surface
-
-Edit Surface
-
-Create Contours
-
-Create Guide Lines
+## Requirements
+* FreeCAD >= v0.X.Z  
+* python >= v3.6  
+* scipy >=  
 
 ## Installation
 
-Firstly you must install Python 3.6 and Scipy.
+### Manual Installation
+2 methods to install manually. 
+* Download and extract the ZIP file into the `~/.FreeCAD/Mod/` folder  
+OR   
+* git: `cd ~/.FreeCAD/Mod; git clone https://github.com/HakanSeven12/FreeCAD-Geomatics-Workbench`
 
-Download and extract the ZIP file into the .FreeCAD/Mod folder or use git to clone into .FreeCAD/Mod.
+* Go to **Edit** :arrow_forward: **Preferences** :arrow_forward: **General** :arrow_forward: **Units**  
+  * Set `Number of decimals = 6`.  
 
-Go to "Edit -> Preferences -> General -> Units" set "Number of decimals = 6".
+* Go to **Edit** :arrow_forward: **Preferences** :arrow_forward: **General** :arrow_forward: **Document**  
+  * Check `Allow duplicate object labels in one document`.  
 
-Go to "Edit -> Preferences -> General -> Document" check "Allow dublicade object labels in one document".
+* Restart FreeCAD
 
 ## Feedback 
 Discuss this Workbench on the FreeCAD forum thread dedicated to this topic: 
@@ -39,3 +45,4 @@ Hakan Seven with inspiration and help from the FreeCAD community.
 ![ES](https://user-images.githubusercontent.com/3831435/57193648-0db6fa00-6f46-11e9-985d-d9376269be28.png)
 ![Contours](https://user-images.githubusercontent.com/3831435/58474068-e3c2b300-8152-11e9-8681-d4fe065150ec.png)
 
+## License
