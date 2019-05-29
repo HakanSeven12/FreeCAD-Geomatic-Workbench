@@ -10,9 +10,9 @@ This workbench is being developed to provide functionality specific to Geomatics
 * Create Guide Lines  
 
 ## Requirements
-* FreeCAD >= v0.X.Z  
+* FreeCAD >= v0.19  
 * python >= v3.6  
-* scipy >=  
+* scipy >= v1.2.1
 
 ## Installation
 
@@ -46,3 +46,10 @@ Hakan Seven with inspiration and help from the FreeCAD community.
 ![Contours](https://user-images.githubusercontent.com/3831435/58474068-e3c2b300-8152-11e9-8681-d4fe065150ec.png)
 
 ## License
+Copyright (c) 2019 Hakan Seven <hakanseven12@gmail.com>
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL) as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. For detail see the LICENCE text file.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.
+
+License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
