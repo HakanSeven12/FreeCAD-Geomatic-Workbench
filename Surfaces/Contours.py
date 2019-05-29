@@ -18,6 +18,13 @@ class CreateContour:
         #Return the command resources dictionary
         return self.resources
 
+    def IsActive(self):
+        if FreeCADGui.Selection.getSelection() != None:
+            Selection = FreeCADGui.Selection.getSelection()[-1]
+            if Selection.TypeId == 'Mesh::Feature':
+                return True
+        return False
+
     def Activated(self):
         Surface = FreeCADGui.Selection.getSelection()[-1]
         Base = Surface.Mesh.Placement.Base

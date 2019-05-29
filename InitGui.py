@@ -6,9 +6,10 @@ from Surfaces import Contours
 from Section import CreateGuideLines
 
 class GeomaticsCommandGroup:
-    def __init__(self, cmdlist, menu, tooltip = None):
+    def __init__(self, cmdlist, menu, TypeId = None, tooltip = None):
         self.cmdlist = cmdlist
         self.menu = menu
+        self.TypeId = TypeId
         if tooltip is None:
             self.tooltip = menu
         else:
@@ -19,6 +20,15 @@ class GeomaticsCommandGroup:
 
     def GetResources(self):
         return { 'MenuText': self.menu, 'ToolTip': self.tooltip }
+
+    def IsActive(self):
+        if self.TypeId != None:
+            if FreeCADGui.Selection.getSelection() != None:
+                Selection = FreeCADGui.Selection.getSelection()[-1]
+                if Selection.TypeId == self.TypeId:
+                    return True
+            return False
+        return True
 
 class GeomaticsWorkbench ( Gui.Workbench ):
 
@@ -78,7 +88,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                 self.appendMenu(_k, _v['cmd'])
 
     EditSurfaceSub = ['Add Triangle','Delete Triangle','Swap Edge','Smooth Surface']
-    Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface'))
+    Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface', TypeId = 'Mesh::Feature'))
 
     DraftDraw = ["Draft_Line","Draft_Wire","Draft_Circle","Draft_Arc","Draft_Ellipse",
                  "Draft_Polygon","Draft_Rectangle", "Draft_Text", "Draft_Dimension",
