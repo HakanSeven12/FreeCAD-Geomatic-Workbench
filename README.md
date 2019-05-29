@@ -17,10 +17,13 @@ This workbench is being developed to provide functionality specific to Geomatics
 ## Installation
 
 ### Manual Installation
-2 methods to install manually. 
-* Download and extract the ZIP file into the `~/.FreeCAD/Mod/` folder  
-OR   
-* git: `cd ~/.FreeCAD/Mod; git clone https://github.com/HakanSeven12/FreeCAD-Geomatics-Workbench`
+There are two methods to install manually:  
+* **First Method:** Download the ZIP file of this repo from Github and extract into the `~/.FreeCAD/Mod/` directory.  
+
+* **Second Method:** *(preferred)* Using `git clone` you clone the repo in to `~/.FreeCAD/Mod/` directory.  
+  `cd ~/.FreeCAD/Mod; git clone https://github.com/HakanSeven12/FreeCAD-Geomatics-Workbench`  
+  **Note:** to stay up to date with the development of this repo:  
+  `cd ~/.FreeCAD/Mod/FreeCAD-Geomatics-Workbench; git fetch`
 
 * Go to **Edit** :arrow_forward: **Preferences** :arrow_forward: **General** :arrow_forward: **Units**  
   * Set `Number of decimals = 6`.  
