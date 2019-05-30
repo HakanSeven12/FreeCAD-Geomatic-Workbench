@@ -26,6 +26,8 @@ class CreateGuideLines:
         self.CPGui.OkB.clicked.connect(self.CreateNewGroup)
         self.CPGui.CancelB.clicked.connect(self.CPGui.close)
         self.IPFui.AlignmentCB.currentIndexChanged.connect(self.ListGuideLinesGroups)
+        self.IPFui.FromAlgStartChB.stateChanged.connect(self.ActivateStations)
+        self.IPFui.ToAlgEndChB.stateChanged.connect(self.ActivateStations)
 
     def GetResources(self):
         #Return the command resources dictionary
@@ -55,6 +57,17 @@ class CreateGuideLines:
 
         self.ListGuideLinesGroups()
 
+    def getAlignmentInfos(self):
+        AlignmentIndex = self.IPFui.AlignmentCB.currentIndex()
+        AlignmentName = self.AlignmentList[AlignmentIndex]
+
+        Alignment = FreeCAD.ActiveDocument.getObject(AlignmentName)
+        Start = Alignment.Proxy.model.data['meta']['StartStation']
+        Length = Alignment.Proxy.model.data['meta']['Length']
+        End = Start + Length/1000
+
+        return Alignment, Start, End
+
     def ListGuideLinesGroups(self):
         #List Guide Lines Groups.
         self.IPFui.GLGroupCB.clear()
@@ -65,6 +78,10 @@ class CreateGuideLines:
             if Object.TypeId == 'App::DocumentObjectGroup':
                 self.GLGList.append(Object.Name)
                 self.IPFui.GLGroupCB.addItem(Object.Label)
+        Alignment, Start, End =self.getAlignmentInfos()
+
+        self.IPFui.StartStationLE.setText(str(round(Start,3)))
+        self.IPFui.EndStationLE.setText(str(round(End,3)))
 
     def LoadCGLGui(self):
         #Load Create Guide Lines Group UI.
@@ -83,28 +100,42 @@ class CreateGuideLines:
         NewGroup.Label = NewGroupName
         self.CPGui.close()
 
+    def ActivateStations(self):
+        #When QCheckBox status changed do the following options.
+        Alignment, Start, End = self.getAlignmentInfos()
+        if self.IPFui.FromAlgStartChB.isChecked():
+            self.IPFui.StartStationLE.setEnabled(False)
+            self.IPFui.StartStationLE.setText(str(round(Start,3)))
+        else:
+            self.IPFui.StartStationLE.setEnabled(True)
+
+        if self.IPFui.ToAlgEndChB.isChecked():
+            self.IPFui.EndStationLE.setEnabled(False)
+            self.IPFui.EndStationLE.setText(str(round(End, 3)))
+        else:
+            self.IPFui.EndStationLE.setEnabled(True)
+
     def CreateGuideLines(self):
         L = self.IPFui.LeftLengthLE.text()
         R = self.IPFui.RightLengthLE.text()
-        AlignmentIndex = self.IPFui.AlignmentCB.currentIndex()
-        AlignmentName = self.AlignmentList[AlignmentIndex]
+        FirstStation = self.IPFui.StartStationLE.text()
+        LastStation = self.IPFui.EndStationLE.text()
         GLGIndex = self.IPFui.GLGroupCB.currentIndex()
         GLGIndexName = self.GLGList[GLGIndex]
-        Alignment = FreeCAD.ActiveDocument.getObject(AlignmentName)
         TangentIncrement = self.IPFui.TIncrementLE.text()
         CurveSpiralIncrement = self.IPFui.CSIncrementLE.text()
+
+        Alignment, Start, End = self.getAlignmentInfos()
         Pl = Alignment.Placement.Base
 
         Stations = []
-        Start = Alignment.Proxy.model.data['meta']['StartStation']
-        Length = Alignment.Proxy.model.data['meta']['Length']
-        End = Start + Length/1000
-
         Geometry = Alignment.Proxy.model.data['geometry']
         for Geo in Geometry:
             StartStation = Geo.get('StartStation')
             EndStation = Geo.get('StartStation')+Geo.get('Length')/1000
-            if StartStation != 0: Stations.append(StartStation)
+            if StartStation != 0:
+                if self.IPFui.HorGeoPointsChB.isChecked():
+                    Stations.append(StartStation)
 
             if Geo.get('Type') == 'Line':
                 for i in range(round(float(StartStation)), round(float(EndStation))):
@@ -116,9 +147,14 @@ class CreateGuideLines:
                     if i % int(CurveSpiralIncrement) == 0:
                         Stations.append(i)
         Stations.append(round(End,3))
-        Stations.sort()
 
+        Result = []
         for Station in Stations:
+            if float(FirstStation) <= Station <= float(LastStation):
+                Result.append(Station)
+        Result.sort()
+
+        for Station in Result:
             Coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
             LeftEnd = Coord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
             RightEnd = Coord.add(vec.negative().multiply(int(R)*1000))
