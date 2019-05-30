@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>641</width>
+    <width>311</width>
     <height>381</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="GuideLinesCB">
+  <widget class="QComboBox" name="GLGroupCB">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -46,7 +46,7 @@
     <string>Select Alignment:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="SelectGuideLinesL">
+  <widget class="QLabel" name="SelectGLGroupL">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -163,7 +163,7 @@
     <string>Cancel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="AddGuideLineGroupB">
+  <widget class="QPushButton" name="AddGLGroupB">
    <property name="geometry">
     <rect>
      <x>280</x>
@@ -174,29 +174,6 @@
    </property>
    <property name="text">
     <string>+</string>
-   </property>
-  </widget>
-  <widget class="QListWidget" name="SelectSurfaceLW">
-   <property name="geometry">
-    <rect>
-     <x>360</x>
-     <y>30</y>
-     <width>271</width>
-     <height>341</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="SelectSurfaceL">
-   <property name="geometry">
-    <rect>
-     <x>360</x>
-     <y>10</y>
-     <width>81</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Select Surfaces:</string>
    </property>
   </widget>
   <widget class="QLabel" name="CSIncrementL">
@@ -286,7 +263,7 @@
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QCheckBox" name="FASChB">
+  <widget class="QCheckBox" name="FromAlgStartChB">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -302,7 +279,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QCheckBox" name="TAEChB">
+  <widget class="QCheckBox" name="ToAlgEndChB">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -318,7 +295,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QCheckBox" name="TAEChB_2">
+  <widget class="QCheckBox" name="HorGeoPointsChB">
    <property name="geometry">
     <rect>
      <x>10</x>
