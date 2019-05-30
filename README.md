@@ -47,6 +47,7 @@ Hakan Seven with inspiration and help from the FreeCAD community.
 ![CS](https://user-images.githubusercontent.com/3831435/57193647-0db6fa00-6f46-11e9-92bf-0709ddb9cffb.png)
 ![ES](https://user-images.githubusercontent.com/3831435/57193648-0db6fa00-6f46-11e9-985d-d9376269be28.png)
 ![Contours](https://user-images.githubusercontent.com/3831435/58474068-e3c2b300-8152-11e9-8681-d4fe065150ec.png)
+![CGL](https://user-images.githubusercontent.com/3831435/58638005-76eb1c80-82fc-11e9-83bd-49dbb06d9202.png)
 
 ## License
 Copyright (c) 2019 Hakan Seven <hakanseven12@gmail.com>
