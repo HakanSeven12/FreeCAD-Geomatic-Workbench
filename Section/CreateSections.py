@@ -1,6 +1,6 @@
 import FreeCAD, FreeCADGui
 from PySide import QtCore, QtGui
-import Draft
+import MeshPart, Part, Draft
 import os
 
 class CreateGuideLines:
@@ -31,7 +31,24 @@ class CreateGuideLines:
         self.IPFui.show()
 
     def CreateSections(self):
+        SectionGroup = FreeCAD.ActiveDocument.getObject("Group")
+        Surface = FreeCAD.ActiveDocument.getObject("YY202")
+        GuideLinesGroup = FreeCAD.ActiveDocument.getObject("Guide_Lines").Group
+        ProjectionDirection = FreeCAD.Vector(0, 0, 1)
 
+        Base = Surface.Mesh.Placement.Base
+        CopyMesh = Surface.Mesh.copy()
+        CopyMesh.Placement.Base = FreeCAD.Vector(0, 0, Base.z)
+
+        for Wire in GuideLinesGroup:
+            Wire.Placement.Base = Wire.Placement.Base.add(Base.negative())
+            ProjectedWires = MeshPart.projectShapeOnMesh(Wire.Shape, CopyMesh, ProjectionDirection)
+            Wire.Placement.Base = Wire.Placement.Base.add(Base)
+
+            for ProjectedWire in ProjectedWires:
+                Section = Draft.makeWire(ProjectedWire)
+                Section.Placement.Base = Section.Placement.Base.add(FreeCAD.Vector(Base.x, Base.y, 0))
+                SectionGroup.addObject(Section)
         FreeCAD.ActiveDocument.recompute()
 
 FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines())
