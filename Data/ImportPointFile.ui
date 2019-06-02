@@ -77,7 +77,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Preview:</string>
+         <string>preview:</string>
         </property>
        </widget>
       </item>
