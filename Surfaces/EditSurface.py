@@ -25,7 +25,7 @@ class AddTriangle:
 
 
 # todo : does not make sense
-FreeCADGui.addCommand('Add Triangle',AddTriangle())
+FreeCADGui.addCommand('Add Triangle', AddTriangle())
 
 
 class DeleteTriangle:
