@@ -1,8 +1,5 @@
-from Data import ImportPointFile
-from Data import ExportPoints
-from Surfaces import CreateSurface
-from Surfaces import EditSurface
-from Surfaces import Contours
+from Data import ImportPointFile, ExportPoints
+from Surfaces import CreateSurface, EditSurface, Contours
 from Section import CreateGuideLines
 
 class GeomaticsCommandGroup:
@@ -37,7 +34,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
 
     "Geomatics Workbench Object"
     MenuText = 'Geomatics'
-    ToolTip = 'Geomatic/Survey Engineering Workbench'
+    ToolTip = 'Geomatics/Survey Engineering Workbench'
     Icon = os.path.join(ICONPATH, 'GeomaticsWorkbench.svg')
 		
     def __init__(self):
@@ -64,7 +61,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
 			},
 
             'Section Tools': {
-                'gui': self.menu,
+                'gui': self.menu + self.toolbar,
                 'cmd': ['Create Guide Lines']
             },
 
@@ -88,7 +85,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                 self.appendMenu(_k, _v['cmd'])
 
     EditSurfaceSub = ['Add Triangle','Delete Triangle','Swap Edge','Smooth Surface']
-    Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface', TypeId = 'Mesh::Feature'))
+    Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit selected surface.', TypeId = 'Mesh::Feature'))
 
     DraftDraw = ["Draft_Line","Draft_Wire","Draft_Circle","Draft_Arc","Draft_Ellipse",
                  "Draft_Polygon","Draft_Rectangle", "Draft_Text", "Draft_Dimension",
