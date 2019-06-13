@@ -1,97 +1,143 @@
 import FreeCAD, FreeCADGui
 from PySide import QtCore, QtGui
-import csv, os
 import Draft
+import csv, os
 
 class ImportPointFile:
-    #Command to import point file which includes survey data.
-    Path = os.path.dirname(__file__)
-
-    Resources = {
-        'Pixmap'  : Path + '/../Resources/Icons/ImportPointFile.svg',
-        'MenuText': "Import Point File",
-        'ToolTip' : "Import point file which includes survey data."
-    }
-
+    """
+    Command to import point file which includes survey data.
+    """
     def __init__(self):
-        #Import *.ui file(s).
+        """
+        Constructor
+        """
+        # Get file path.
+        self.Path = os.path.dirname(__file__)
+
+        # Get *.ui files.
         self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/ImportPointFile.ui")
         self.CPGui = FreeCADGui.PySideUic.loadUi(self.Path + "/CreatePointGroup.ui")
 
-        #To Do List.
-        self.IPFui.AddB.clicked.connect(self.AddFile)
-        self.IPFui.RemoveB.clicked.connect(self.RemoveFile)
-        self.IPFui.SelectedFilesLW.itemSelectionChanged.connect(self.Preview)
-        self.IPFui.PointGroupChB.stateChanged.connect(self.ActivatePointGroups)
-        self.IPFui.CreateGroupB.clicked.connect(self.LoadCPGui)
-        self.IPFui.OKB.clicked.connect(self.ImportFile)
-        self.IPFui.CancelB.clicked.connect(self.IPFui.close)
-        self.CPGui.OkB.clicked.connect(self.CreatePointGroup)
-        self.CPGui.CancelB.clicked.connect(self.CPGui.close)
+        # Set icon,  menu text and tooltip.
+        self.Resources = {
+            'Pixmap'  : self.Path + '/../Resources/Icons/ImportPointFile.svg',
+            'MenuText': "Import Point File",
+            'ToolTip' : "Import point file which includes survey data."
+        }
+
+        # To do.
+        UI = self.IPFui
+        UI.AddB.clicked.connect(self.AddFile)
+        UI.RemoveB.clicked.connect(self.RemoveFile)
+        UI.SelectedFilesLW.itemSelectionChanged.connect(self.Preview)
+        UI.PointGroupChB.stateChanged.connect(self.ActivatePointGroups)
+        UI.CreateGroupB.clicked.connect(self.LoadCPGui)
+        UI.ImportB.clicked.connect(self.ImportFile)
+        UI.CancelB.clicked.connect(UI.close)
+
+        # Create empty point group names list.
+        self.GroupList = []
 
     def GetResources(self):
-        #Return the command resources dictionary.
+        """
+        Return the command resources dictionary.
+        """
+
         return self.Resources
 
     def Activated(self):
+        """
+        Command activation method
+        """
+
+        # Get or create "Point_Groups".
         try:
-            FreeCAD.ActiveDocument.Point_Groups
+            PointGroups = FreeCAD.ActiveDocument.Point_Groups
         except:
             PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
             PointGroups.Label = "Point Groups"
 
+        # Get or create "Points".
         try:
             FreeCAD.ActiveDocument.Points
         except:
             Points = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
             PointGroups.addObject(Points)
 
-        self.IPFui.setParent(FreeCADGui.getMainWindow())
-        self.IPFui.setWindowFlags(QtCore.Qt.Window)
-        self.IPFui.show()
-        self.IPFui.FileNameL.setText("")
-        self.IPFui.SubGroupListCB.clear()
-        self.IPFui.SelectedFilesLW.clear()
-        self.IPFui.PreviewTW.setRowCount(0)
-        self.IPFui.PointGroupChB.setChecked(False)
-        PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
-        self.GroupList = []
+        # Show UI.
+        UI = self.IPFui
+        UI.setParent(FreeCADGui.getMainWindow())
+        UI.setWindowFlags(QtCore.Qt.Window)
+        UI.show()
 
-        for PointGroup in PointGroups:
-            self.GroupList.append(PointGroup.Name)
-            SubGroupName = PointGroup.Label
-            self.IPFui.SubGroupListCB.addItem(str(SubGroupName))
+        # Clear previous operation.
+        UI.FileNameL.setText("")
+        UI.SubGroupListCB.clear()
+        UI.SelectedFilesLW.clear()
+        UI.PreviewTW.setRowCount(0)
+        UI.PointGroupChB.setChecked(False)
+
+        # Add point groups to combo box.
+        PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
+
+        for Item in PointGroups:
+            if Item.TypeId == "App::DocumentObjectGroup":
+                self.GroupList.append(Item.Name)
+                UI.SubGroupListCB.addItem(Item.Label)
 
     def AddFile(self):
-        #Add point files to the list.
-        self.FileList = QtGui.QFileDialog.getOpenFileNames(None, "Select one or more files to open", os.getenv("HOME"), 'All Files (*.*)')
-        self.IPFui.SelectedFilesLW.addItems(self.FileList[0])
+        """
+        Add selected point files to the list view.
+        """
+
+        UI = self.IPFui
+
+        FileList = QtGui.QFileDialog.getOpenFileNames(None, "Select one or more files to open",
+                                                      os.getenv("HOME"), 'All Files (*.*)')
+        UI.SelectedFilesLW.addItems(FileList[0])
 
     def RemoveFile(self):
-        #Remove point files from list.
-        for item in self.IPFui.SelectedFilesLW.selectedItems():
-           self.IPFui.SelectedFilesLW.takeItem(self.IPFui.SelectedFilesLW.row(item))
+        """
+        Remove selected point file from list view.
+        """
+
+        UI = self.IPFui
+
+        for item in UI.SelectedFilesLW.selectedItems():
+           UI.SelectedFilesLW.takeItem(UI.SelectedFilesLW.row(item))
 
     def Preview(self):
-        #Import UI variables.
-        listItems = self.IPFui.SelectedFilesLW.selectedItems()
+        """
+        Show a preview for selected point file in list view.
+        """
+
+        UI = self.IPFui
+
+        # Get *.ui variables.
+        PointName = UI.PointNameLE.text()
+        Northing = UI.NorthingLE.text()
+        Easting = UI.EastingLE.text()
+        Elevation = UI.ElevationLE.text()
+        Description = UI.DescriptionLE.text()
+
+        # Get selected file.
+        listItems = UI.SelectedFilesLW.selectedItems()
+
+        # Separate path and file name.
         if listItems:
             head, tail = os.path.split(listItems[0].text())
-            self.IPFui.FileNameL.setText(tail)
-            self.IPFui.PreviewTW.setRowCount(0)
+            UI.FileNameL.setText(tail)
+            UI.PreviewTW.setRowCount(0)
 
-            PointName = self.IPFui.PointNameLE.text()
-            Northing = self.IPFui.NorthingLE.text()
-            Easting = self.IPFui.EastingLE.text()
-            Elevation = self.IPFui.ElevationLE.text()
-            Description = self.IPFui.DescriptionLE.text()
-
-            #Show selected file preview.
+            # Show selected point file preview in table view.
             File=open(listItems[0].text(), 'r')
-            if self.IPFui.DelimiterCB.currentText() == "Space":
+
+            if UI.DelimiterCB.currentText() == "Space":
                 reader = csv.reader(File, delimiter=' ')
-            elif self.IPFui.DelimiterCB.currentText() == "Comma":
+
+            if UI.DelimiterCB.currentText() == "Comma":
                 reader = csv.reader(File, delimiter=',')
+
             for i, row in enumerate(reader):
                 PN = int(PointName)-1
                 N = int(Northing)-1
@@ -99,53 +145,84 @@ class ImportPointFile:
                 Z = int(Elevation)-1
                 D = int(Description)-1
 
-                numRows = self.IPFui.PreviewTW.rowCount()
-                self.IPFui.PreviewTW.insertRow(numRows)
+                numRows = UI.PreviewTW.rowCount()
+                UI.PreviewTW.insertRow(numRows)
 
-                self.IPFui.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
-                self.IPFui.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
-                self.IPFui.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
-                self.IPFui.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
+                UI.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
+                UI.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
+                UI.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
+                UI.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
+
                 try:
-                    self.IPFui.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
+                    UI.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
                 except:
                     pass
 
     def ActivatePointGroups(self):
-        #When QCheckBox status changed do the following options.
-        if self.IPFui.PointGroupChB.isChecked():
-            self.IPFui.SubGroupListCB.setEnabled(True)
-            self.IPFui.CreateGroupB.setEnabled(True)
+        """
+        If check box status changed, enable or disable combo box and push button.
+        """
+
+        UI = self.IPFui
+
+        if UI.PointGroupChB.isChecked():
+            UI.SubGroupListCB.setEnabled(True)
+            UI.CreateGroupB.setEnabled(True)
+
         else:
-            self.IPFui.SubGroupListCB.setEnabled(False)
-            self.IPFui.CreateGroupB.setEnabled(False)
+            UI.SubGroupListCB.setEnabled(False)
+            UI.CreateGroupB.setEnabled(False)
 
     def LoadCPGui(self):
-        #Load Create Point Group UI.
-        self.CPGui.setParent(self.IPFui)
-        self.CPGui.setWindowFlags(QtCore.Qt.Window)
-        self.CPGui.show()
+        """
+        Load Create Point Group UI.
+        """
+
+        UI = self.IPFui
+        CPG = self.CPGui
+
+        # Show UI.
+        CPG.setParent(UI)
+        CPG.setWindowFlags(QtCore.Qt.Window)
+        CPG.show()
+
+        # To do.
+        CPG.OkB.clicked.connect(self.CreatePointGroup)
+        CPG.CancelB.clicked.connect(CPG.close)
 
     def CreatePointGroup(self):
-        #Create new point group.
-        NewGroupName = self.CPGui.PointGroupNameLE.text()
+        """
+        When Ok button clicked, create new point group.
+        """
+
+        UI = self.IPFui
+        CPG = self.CPGui
+
+        NewGroupName = CPG.PointGroupNameLE.text()
         NewGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",NewGroupName)
         FreeCAD.ActiveDocument.Point_Groups.addObject(NewGroup)
-        self.IPFui.SubGroupListCB.addItem(NewGroupName)
+        UI.SubGroupListCB.addItem(NewGroupName)
         self.GroupList.append(NewGroup.Name)
         NewGroup.Label = NewGroupName
-        self.CPGui.close()
+        CPG.close()
 
     def ImportFile(self):
-        #Import UI variables.
-        PointName = self.IPFui.PointNameLE.text()
-        Northing = self.IPFui.NorthingLE.text()
-        Easting = self.IPFui.EastingLE.text()
-        Elevation = self.IPFui.ElevationLE.text()
-        Description = self.IPFui.DescriptionLE.text()
-        Index = self.IPFui.SubGroupListCB.currentIndex()
+        """
+        When Import button clicked, create new point group.
+        """
 
-        if self.IPFui.PointGroupChB.isChecked():
+        UI = self.IPFui
+
+        # Get *.ui variables.
+        PointName = UI.PointNameLE.text()
+        Northing = UI.NorthingLE.text()
+        Easting = UI.EastingLE.text()
+        Elevation = UI.ElevationLE.text()
+        Description = UI.DescriptionLE.text()
+        Index = UI.SubGroupListCB.currentIndex()
+
+        # If check box is checked get selected item in combo box.
+        if UI.PointGroupChB.isChecked():
             SPG = self.GroupList[Index]
             SubGroup = FreeCAD.ActiveDocument.getObject(SPG)
         else:
@@ -153,14 +230,14 @@ class ImportPointFile:
 
         #Read Points from file.
         Items = []
-        for i in range(self.IPFui.SelectedFilesLW.count()):
-            Items.append(self.IPFui.SelectedFilesLW.item(i))
+        for i in range(UI.SelectedFilesLW.count()):
+            Items.append(UI.SelectedFilesLW.item(i))
         Labels = [i.text() for i in Items]
         for FilePath in Labels:
             File = open(FilePath, 'r')
-            if self.IPFui.DelimiterCB.currentText() == "Space":
+            if UI.DelimiterCB.currentText() == "Space":
                 reader = csv.reader(File, delimiter=' ')
-            elif self.IPFui.DelimiterCB.currentText() == "Comma":
+            elif UI.DelimiterCB.currentText() == "Comma":
                 reader = csv.reader(File, delimiter=',')
             for i, row in enumerate(reader):
                 PN = int(PointName)-1
@@ -168,11 +245,12 @@ class ImportPointFile:
                 E = int(Easting)-1
                 Z = int(Elevation)-1
 
-                Point = Draft.makePoint(X=float(row[E])*1000, Y=float(row[N])*1000, Z=float(row[Z])*1000, color=(0.37, 0.69, 0.22), name="Point", point_size=3)
+                Point = Draft.makePoint(X=float(row[E])*1000, Y=float(row[N])*1000, Z=float(row[Z])*1000,
+                                        color=(0.37, 0.69, 0.22), name="Point", point_size=3)
                 Point.Label = str(row[PN])
                 SubGroup.addObject(Point)
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.SendMsgToActiveView("ViewFit")
-        self.IPFui.close()
+        UI.close()
 
 FreeCADGui.addCommand('Import Point File',ImportPointFile())
