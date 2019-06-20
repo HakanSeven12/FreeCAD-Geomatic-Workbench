@@ -1,6 +1,5 @@
 import FreeCAD, FreeCADGui
 from PySide import QtCore, QtGui
-import Draft, Points
 import csv, os
 
 class ImportPointFile:
@@ -108,58 +107,6 @@ class ImportPointFile:
         for item in UI.SelectedFilesLW.selectedItems():
            UI.SelectedFilesLW.takeItem(UI.SelectedFilesLW.row(item))
 
-    def Preview(self):
-        """
-        Show a preview for selected point file in list view.
-        """
-
-        UI = self.IPFui
-
-        # Get *.ui variables.
-        PointName = UI.PointNameLE.text()
-        Northing = UI.NorthingLE.text()
-        Easting = UI.EastingLE.text()
-        Elevation = UI.ElevationLE.text()
-        Description = UI.DescriptionLE.text()
-
-        # Get selected file.
-        listItems = UI.SelectedFilesLW.selectedItems()
-
-        # Separate path and file name.
-        if listItems:
-            head, tail = os.path.split(listItems[0].text())
-            UI.FileNameL.setText(tail)
-            UI.PreviewTW.setRowCount(0)
-
-            # Show selected point file preview in table view.
-            File=open(listItems[0].text(), 'r')
-
-            if UI.DelimiterCB.currentText() == "Space":
-                reader = csv.reader(File, delimiter=' ')
-
-            if UI.DelimiterCB.currentText() == "Comma":
-                reader = csv.reader(File, delimiter=',')
-
-            for i, row in enumerate(reader):
-                PN = int(PointName)-1
-                N = int(Northing)-1
-                E = int(Easting)-1
-                Z = int(Elevation)-1
-                D = int(Description)-1
-
-                numRows = UI.PreviewTW.rowCount()
-                UI.PreviewTW.insertRow(numRows)
-
-                UI.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
-                UI.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
-                UI.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
-                UI.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
-
-                try:
-                    UI.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
-                except:
-                    pass
-
     def ActivatePointGroups(self):
         """
         If check box status changed, enable or disable combo box and push button.
@@ -208,13 +155,13 @@ class ImportPointFile:
         NewGroup.Label = NewGroupName
         CPG.close()
 
-    def ImportFile(self):
+    def FileReader(self, File, Operation):
         """
-        When Import button clicked, create new point group.
+        Read selected files point name, x, y, z and description.
         """
 
         UI = self.IPFui
-        PointList = []
+        self.PointList = []
 
         # Get *.ui variables.
         PointName = UI.PointNameLE.text()
@@ -222,6 +169,68 @@ class ImportPointFile:
         Easting = UI.EastingLE.text()
         Elevation = UI.ElevationLE.text()
         Description = UI.DescriptionLE.text()
+
+        # Set delimiter.
+        if UI.DelimiterCB.currentText() == "Space":
+            reader = csv.reader(File, delimiter=' ')
+
+        if UI.DelimiterCB.currentText() == "Comma":
+            reader = csv.reader(File, delimiter=',')
+
+        # Read files.
+        for i, row in enumerate(reader):
+            PN = int(PointName) - 1
+            N = int(Northing) - 1
+            E = int(Easting) - 1
+            Z = int(Elevation) - 1
+            D = int(Description) - 1
+
+            if Operation == "Preview":
+                numRows = UI.PreviewTW.rowCount()
+                UI.PreviewTW.insertRow(numRows)
+
+                UI.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
+                UI.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
+                UI.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
+                UI.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
+
+                try:
+                    UI.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
+                except:
+                    pass
+
+            elif Operation == "Import":
+                    self.PointList.append((float(row[E]) * 1000, float(row[N]) * 1000, float(row[Z]) * 1000))
+
+
+    def Preview(self):
+        """
+        Show a preview for selected point file in list view.
+        """
+
+        UI = self.IPFui
+
+        # Get selected file.
+        listItems = UI.SelectedFilesLW.selectedItems()
+
+        # Separate path and file name.
+        if listItems:
+            head, tail = os.path.split(listItems[0].text())
+            UI.FileNameL.setText(tail)
+            UI.PreviewTW.setRowCount(0)
+
+            # Show selected point file preview in table view.
+            File=open(listItems[0].text(), 'r')
+            self.FileReader(File, "Preview")
+
+    def ImportFile(self):
+        """
+        When Import button clicked, create new point group.
+        """
+
+        UI = self.IPFui
+
+        # Get *.ui variables.
         Index = UI.SubGroupListCB.currentIndex()
 
         # If check box is checked get selected item in combo box.
@@ -238,21 +247,10 @@ class ImportPointFile:
         Labels = [i.text() for i in Items]
         for FilePath in Labels:
             File = open(FilePath, 'r')
-            if UI.DelimiterCB.currentText() == "Space":
-                reader = csv.reader(File, delimiter=' ')
-            elif UI.DelimiterCB.currentText() == "Comma":
-                reader = csv.reader(File, delimiter=',')
-            for i, row in enumerate(reader):
-                PN = int(PointName)-1
-                N = int(Northing)-1
-                E = int(Easting)-1
-                Z = int(Elevation)-1
-
-                PointList.append((float(row[E])*1000, float(row[N])*1000, float(row[Z])*1000))
-
+            self.FileReader(File, "Import")
 
         PointObject = PointGroup.Points.copy()
-        PointObject.addPoints(PointList)
+        PointObject.addPoints(self.PointList)
         PointGroup.Points = PointObject
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.SendMsgToActiveView("ViewFit")
