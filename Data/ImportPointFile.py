@@ -178,7 +178,7 @@ class ImportPointFile:
             reader = csv.reader(File, delimiter=',')
 
         # Read files.
-        for i, row in enumerate(reader):
+        for row in reader:
             PN = int(PointName) - 1
             N = int(Northing) - 1
             E = int(Easting) - 1
