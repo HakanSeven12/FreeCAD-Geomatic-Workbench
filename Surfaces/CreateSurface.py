@@ -75,12 +75,12 @@ class CreateSurface:
         #Create surface
         for SelectedIndex in self.IPFui.PointGroupsLV.selectedIndexes():
             Index = self.GroupList[SelectedIndex.row()]
-            PointGroup = FreeCAD.ActiveDocument.getObject(Index).Group
+            PointGroup = FreeCAD.ActiveDocument.getObject(Index)
 
-            for Point in PointGroup:
-                xx = float(Point.X)
-                yy = float(Point.Y)
-                zz = float(Point.Z)
+            for Point in PointGroup.Points.Points:
+                xx = float(Point.x)
+                yy = float(Point.y)
+                zz = float(Point.z)
                 Test.append([xx,yy,zz])
 
         Data = np.array(Test)

@@ -100,11 +100,11 @@ class ExportPoints:
             Index = self.GroupList[SelectedIndex.row()]
             PointGroup = FreeCAD.ActiveDocument.getObject(Index)
 
-            for Item in PointGroup.Points.Points:
+            for Point in PointGroup.Points.Points:
                 pn = str(Counter)
-                xx = str(round(float(Item.x)/1000,3))
-                yy = str(round(float(Item.y)/1000,3))
-                zz = str(round(float(Item.z)/1000,3))
+                xx = str(round(float(Point.x)/1000,3))
+                yy = str(round(float(Point.y)/1000,3))
+                zz = str(round(float(Point.z)/1000,3))
                 Format[int(PointName)-1] = pn
                 Format[int(Easting)-1] = xx
                 Format[int(Northing)-1] = yy
