@@ -3,42 +3,64 @@ from PySide import QtCore, QtGui
 import os
 
 class ExportPoints:
-    #Command to export points to point file.
-    Path = os.path.dirname(__file__)
-
-    Resources = {
-        'Pixmap'  : Path + '/../Resources/Icons/ExportPoints.svg',
-        'MenuText': "Export Points",
-        'ToolTip' : "Export points to point file."
-    }
+    """
+    Command to export points to point file.
+    """
 
     def __init__(self):
-        #Import *.ui file.
-        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/ExportPoints.ui")
+        """
+        Constructor
+        """
 
-        #To Do List.
-        self.IPFui.BrowseB.clicked.connect(self.FileDestination)
-        self.IPFui.ExportB.clicked.connect(self.ExportPointsToFile)
-        self.IPFui.CancelB.clicked.connect(self.IPFui.close)
+        # Get file path.
+        self.Path = os.path.dirname(__file__)
+
+        # Get *.ui files.
+        self.EP = FreeCADGui.PySideUic.loadUi(self.Path + "/ExportPoints.ui")
+
+        # Set icon,  menu text and tooltip.
+        self.Resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/ExportPoints.svg',
+            'MenuText': "Export Points",
+            'ToolTip': "Export points to point file."
+        }
+
+        # To do.
+        UI = self.EP
+        UI.BrowseB.clicked.connect(self.FileDestination)
+        UI.ExportB.clicked.connect(self.ExportPointsToFile)
+        UI.CancelB.clicked.connect(UI.close)
+
+        # Create empty point group names list.
+        self.GroupList = []
 
     def GetResources(self):
-        #Return the command resources dictionary
+        """
+        Return the command resources dictionary.
+        """
+
         return self.Resources
 
     def Activated(self):
-        self.IPFui.setParent(FreeCADGui.getMainWindow())
-        self.IPFui.setWindowFlags(QtCore.Qt.Window)
-        self.IPFui.show()
+        """
+        Command activation method
+        """
 
-        self.IPFui.FileDestinationLE.clear()
-        self.IPFui.PointGroupsLW.clear()
+        # Show UI.
+        UI = self.EP
+        UI.setParent(FreeCADGui.getMainWindow())
+        UI.setWindowFlags(QtCore.Qt.Window)
+        UI.show()
+
+        # Clear previous operation.
+        UI.FileDestinationLE.clear()
+        UI.PointGroupsLW.clear()
         PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
-        self.GroupList = []
 
         for PointGroup in PointGroups:
             self.GroupList.append(PointGroup.Name)
             SubGroupName = PointGroup.Label
-            self.IPFui.PointGroupsLW.addItem(SubGroupName)
+            UI.PointGroupsLW.addItem(SubGroupName)
 
     def FileDestination(self):
         #Get file destination.

@@ -1,16 +1,18 @@
 import FreeCAD, FreeCADGui
 from PySide import QtCore, QtGui
-import Draft
+import Draft, Points
 import csv, os
 
 class ImportPointFile:
     """
     Command to import point file which includes survey data.
     """
+
     def __init__(self):
         """
         Constructor
         """
+
         # Get file path.
         self.Path = os.path.dirname(__file__)
 
@@ -61,7 +63,7 @@ class ImportPointFile:
         try:
             FreeCAD.ActiveDocument.Points
         except:
-            Points = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Points')
+            Points = FreeCAD.ActiveDocument.addObject('Points::Feature', "Points")
             PointGroups.addObject(Points)
 
         # Show UI.
@@ -81,7 +83,7 @@ class ImportPointFile:
         PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
 
         for Item in PointGroups:
-            if Item.TypeId == "App::DocumentObjectGroup":
+            if Item.TypeId == 'Points::Feature':
                 self.GroupList.append(Item.Name)
                 UI.SubGroupListCB.addItem(Item.Label)
 
@@ -199,7 +201,7 @@ class ImportPointFile:
         CPG = self.CPGui
 
         NewGroupName = CPG.PointGroupNameLE.text()
-        NewGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",NewGroupName)
+        NewGroup = FreeCAD.ActiveDocument.addObject('Points::Feature', "Point_Group")
         FreeCAD.ActiveDocument.Point_Groups.addObject(NewGroup)
         UI.SubGroupListCB.addItem(NewGroupName)
         self.GroupList.append(NewGroup.Name)
@@ -212,6 +214,7 @@ class ImportPointFile:
         """
 
         UI = self.IPFui
+        PointList = []
 
         # Get *.ui variables.
         PointName = UI.PointNameLE.text()
@@ -224,9 +227,9 @@ class ImportPointFile:
         # If check box is checked get selected item in combo box.
         if UI.PointGroupChB.isChecked():
             SPG = self.GroupList[Index]
-            SubGroup = FreeCAD.ActiveDocument.getObject(SPG)
+            PointGroup = FreeCAD.ActiveDocument.getObject(SPG)
         else:
-            SubGroup = FreeCAD.ActiveDocument.Points
+            PointGroup = FreeCAD.ActiveDocument.Points
 
         #Read Points from file.
         Items = []
@@ -245,10 +248,12 @@ class ImportPointFile:
                 E = int(Easting)-1
                 Z = int(Elevation)-1
 
-                Point = Draft.makePoint(X=float(row[E])*1000, Y=float(row[N])*1000, Z=float(row[Z])*1000,
-                                        color=(0.37, 0.69, 0.22), name="Point", point_size=3)
-                Point.Label = str(row[PN])
-                SubGroup.addObject(Point)
+                PointList.append((float(row[E])*1000, float(row[N])*1000, float(row[Z])*1000))
+
+
+        PointObject = PointGroup.Points.copy()
+        PointObject.addPoints(PointList)
+        PointGroup.Points = PointObject
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.SendMsgToActiveView("ViewFit")
         UI.close()
