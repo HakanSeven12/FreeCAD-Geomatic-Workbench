@@ -63,44 +63,56 @@ class ExportPoints:
             UI.PointGroupsLW.addItem(SubGroupName)
 
     def FileDestination(self):
-        #Get file destination.
+        """
+        Get file destination.
+        """
+
+        UI = self.EP
         fileName = QtGui.QFileDialog.getSaveFileName(None, 'Save File', os.getenv("HOME"), Filter='*.txt')
-        self.IPFui.FileDestinationLE.setText(fileName[0]+".txt")
+        UI.FileDestinationLE.setText(fileName[0]+".txt")
 
     def ExportPointsToFile(self):
-        #Import UI variables.
-        PointName = self.IPFui.PointNameLE.text()
-        Northing = self.IPFui.NorthingLE.text()
-        Easting = self.IPFui.EastingLE.text()
-        Elevation = self.IPFui.ElevationLE.text()
-        Description = self.IPFui.DescriptionLE.text()
+        """
+        Export selected point group(s).
+        """
+
+        #Get UI variables.
+        UI = self.EP
+        PointName = UI.PointNameLE.text()
+        Northing = UI.NorthingLE.text()
+        Easting = UI.EastingLE.text()
+        Elevation = UI.ElevationLE.text()
+        Description = UI.DescriptionLE.text()
         Format = ["","","","",""]
-        FileDestinationLE = self.IPFui.FileDestinationLE.text()
-        if self.IPFui.DelimiterCB.currentText() == "Space":
+        FileDestinationLE = UI.FileDestinationLE.text()
+
+        #Set delimiter.
+        if UI.DelimiterCB.currentText() == "Space":
             Delimiter = ' '
-        elif self.IPFui.DelimiterCB.currentText() == "Comma":
+        elif UI.DelimiterCB.currentText() == "Comma":
             Delimiter=','
 
         #Create point file.
         File = open(FileDestinationLE, 'w')
+        Counter = 1
 
-        for SelectedIndex in self.IPFui.PointGroupsLW.selectedIndexes():
+        for SelectedIndex in UI.PointGroupsLW.selectedIndexes():
             Index = self.GroupList[SelectedIndex.row()]
-            PointGroup = FreeCAD.ActiveDocument.getObject(Index).Group
+            PointGroup = FreeCAD.ActiveDocument.getObject(Index)
 
-            for Item in PointGroup:
-                if Item == 'Part::FeaturePython':
-                    pn = str(Item.Label)
-                    xx = str(round(float(Item.X)/1000,3))
-                    yy = str(round(float(Item.Y)/1000,3))
-                    zz = str(round(float(Item.Z)/1000,3))
-                    Format[int(PointName)-1] = pn
-                    Format[int(Easting)-1] = xx
-                    Format[int(Northing)-1] = yy
-                    Format[int(Elevation)-1] = zz
-                    Format[int(Description)-1] = ""
+            for Item in PointGroup.Points.Points:
+                pn = str(Counter)
+                xx = str(round(float(Item.x)/1000,3))
+                yy = str(round(float(Item.y)/1000,3))
+                zz = str(round(float(Item.z)/1000,3))
+                Format[int(PointName)-1] = pn
+                Format[int(Easting)-1] = xx
+                Format[int(Northing)-1] = yy
+                Format[int(Elevation)-1] = zz
+                Format[int(Description)-1] = ""
+                Counter += 1
 
-                    File.write(Format[0]+Delimiter+Format[1]+Delimiter+Format[2]+Delimiter+Format[3]+Delimiter+Format[4]+"\n")
+                File.write(Format[0]+Delimiter+Format[1]+Delimiter+Format[2]+Delimiter+Format[3]+Delimiter+Format[4]+"\n")
         File.close()
 
 FreeCADGui.addCommand('Export Points',ExportPoints())
