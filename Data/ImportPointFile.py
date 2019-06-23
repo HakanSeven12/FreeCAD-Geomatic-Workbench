@@ -162,6 +162,7 @@ class ImportPointFile:
 
         UI = self.IPFui
         self.PointList = []
+        Counter = 1
 
         # Get *.ui variables.
         PointName = UI.PointNameLE.text()
@@ -198,6 +199,12 @@ class ImportPointFile:
                     UI.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
                 except:
                     pass
+
+                if Counter == 500:
+                    break
+                else:
+                    Counter +=1
+
 
             elif Operation == "Import":
                     self.PointList.append((float(row[E]) * 1000, float(row[N]) * 1000, float(row[Z]) * 1000))

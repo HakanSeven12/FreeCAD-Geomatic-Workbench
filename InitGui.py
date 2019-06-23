@@ -1,3 +1,4 @@
+import GeoData
 from Data import ImportPointFile, ExportPoints
 from Surfaces import CreateSurface, EditSurface, Contours
 from Section import CreateGuideLines
@@ -49,6 +50,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                 'gui': self.menu + self.toolbar,
                 'cmd': ['Import Point File',
                         'Export Points',
+                        'GeoData Tools'
                        ]
             },
 
@@ -103,6 +105,13 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                 ]
 
     Gui.addCommand('Edit Tools', GeomaticsCommandGroup(DraftEdit, 'Draft Snap Tools'))
+	
+    GeoData = ['Import OSM Map', 'Import CSV', 'Import GPX', 'Import Heights',
+                'Import SRTM', 'Import XYZ', 'Import LatLonZ',  'Import Image', 'Import ASTER', 
+                'Import LIDAR', 'Create House', 'Navigator','ElevationGrid', 'Import EMIR',
+                ]
+
+    Gui.addCommand('GeoData Tools', GeomaticsCommandGroup(GeoData, 'GeoData WB Tools'))
 
     def ContextMenu(self, recipient):
         """
