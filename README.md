@@ -4,6 +4,7 @@ This workbench is being developed to provide functionality specific to Geomatics
 ## Functions
 * Import Point Files  
 * Export Points  
+* GeoDataWB Tools
 * Create Surface  
 * Edit Surface  
 * Create Contours  
@@ -11,9 +12,13 @@ This workbench is being developed to provide functionality specific to Geomatics
 * Create Sections (WIP)
 
 ## Requirements
-* FreeCAD >= v0.19  
-* python >= v3.6  
-* scipy >= v1.2.1
+* FreeCAD 0.19  
+* python 3.6  
+* scipy 1.2.1
+* cv2
+* gdal
+* gdalconst
+* requests (urllib3, chardet, certifi, idna)
 
 ## Installation
 
@@ -49,6 +54,9 @@ Hakan Seven with inspiration and help from the FreeCAD community.
 ![ES](https://user-images.githubusercontent.com/3831435/57193648-0db6fa00-6f46-11e9-985d-d9376269be28.png)
 ![CC](https://user-images.githubusercontent.com/3831435/58474068-e3c2b300-8152-11e9-8681-d4fe065150ec.png)
 ![CGL](https://user-images.githubusercontent.com/3831435/58638005-76eb1c80-82fc-11e9-83bd-49dbb06d9202.png)
+![GeoData](https://user-images.githubusercontent.com/3831435/59973802-212d2b80-95ad-11e9-919f-8cf3f75cb375.png)
+![OSM](https://user-images.githubusercontent.com/3831435/59843173-ad96de80-9360-11e9-9c6a-153449516a7f.png)
+![Surface](https://user-images.githubusercontent.com/3831435/59920075-fff40000-9431-11e9-8411-b13032364f28.gif)
 
 ## License
 Copyright (c) 2019 Hakan Seven <hakanseven12@gmail.com>
