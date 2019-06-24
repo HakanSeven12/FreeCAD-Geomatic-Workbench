@@ -74,7 +74,7 @@ def getShape(pts):
 			try:dists[dist] += 1
 			except: dists[dist]=1
 	say(dists.keys())
-	mm=np.mean(dists.keys())
+	mm=np.mean(list(dists.keys()))
 
 	tts=[]
 	ia=-1
@@ -422,7 +422,7 @@ class MyApp(object):
 #		lu,lv = getShape(self.pts)
 		say("update")
 		lu=int(self.root.ids['lu'].text())
-		lv=int(self.root.ids['lv'].text())
+		lv=float(self.root.ids['lv'].text())
 		say("dd,ud,vd",self.root.ids['dd'].value(),self.root.ids['ud'].value(),self.root.ids['vd'].value())
 
 		dmax = min(lu - self.root.ids['ud'].value(), lv - self.root.ids['vd'].value(),101) -1
@@ -496,7 +496,7 @@ class MyApp(object):
 		v=self.root.ids['vd'].value()
 		d=self.root.ids['dd'].value()
 		lu=int(self.root.ids['lu'].text())
-		lv=int(self.root.ids['lv'].text())
+		lv=float(self.root.ids['lv'].text())
 
 		showFrame(self.pts,u,v,d,lu,lv)
 
@@ -508,7 +508,7 @@ class MyApp(object):
 		d=self.root.ids['dd'].value()
 #		lu,lv = getShape(self.pts)
 		lu=int(self.root.ids['lu'].text())
-		lv=int(self.root.ids['lv'].text())
+		lv=float(self.root.ids['lv'].text())
 
 		say(("create nurbs for subset",u,v,d,lu,lv))
 		suv(self,u,v,d,lu,lv)
@@ -521,7 +521,7 @@ class MyApp(object):
 		d=self.root.ids['dd'].value()
 #		lu,lv = getShape(self.pts)
 		lu=int(self.root.ids['lu'].text())
-		lv=int(self.root.ids['lv'].text())
+		lv=float(self.root.ids['lv'].text())
 
 		muv(self,u,v,d+1,lu,lv)
 
