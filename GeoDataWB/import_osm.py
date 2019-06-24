@@ -118,7 +118,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 	content = ''
 
 	bk = 0.5*bk
-	dn = FreeCAD.ConfigGet("UserAppData") + "/geodat3/"
+	dn = FreeCAD.ConfigGet("UserAppData") + "geodat3/"
 	fn = dn+str(b)+'-'+str(l)+'-'+str(bk)
 	import os
 	if not os.path.isdir(dn):

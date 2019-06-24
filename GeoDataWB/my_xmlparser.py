@@ -91,7 +91,7 @@ def getData(fn,pb=None):
 
 	say("Read data from cache file ...")
 	say(fn)
-	f=open(fn,"r")
+	f=open(fn,"r", encoding="utf8")
 	content=f.readlines()
 
 	c2=[]

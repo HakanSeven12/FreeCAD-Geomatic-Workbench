@@ -130,7 +130,7 @@ class import_lidar:
 
 	def GetResources(self):
 		return {
-#			'Pixmap'  : 'Std_Tool3', 
+			'Pixmap'  : 'Std_Tool3',
 			'MenuText': 'Import LIDAR ', 
 			'ToolTip': 'Import LIDAR'
 		}
@@ -154,23 +154,13 @@ class navigator:
 		}
 
 
-class mydialog:
+class import_osm:
 
 	def Activated(self):
 		import GeoDataWB.import_osm
 		from importlib import reload
 		reload(GeoDataWB.import_osm)
 		GeoDataWB.import_osm.mydialog()
-
-	# logger version for paulee
-	def XXXActivated(self):
-		import GeoDataWB.import_osm_logger
-		from importlib import reload
-
-		reload(GeoDataWB.import_osm_logger)
-		GeoDataWB.import_osm_logger.mydialog()
-
-
 
 	def GetResources(self):
 		return {
@@ -254,7 +244,7 @@ class ElevationGrid:
 
 
 
-FreeCADGui.addCommand('Import OSM Map', mydialog())
+FreeCADGui.addCommand('Import OSM Map', import_osm())
 FreeCADGui.addCommand('Import CSV', import_csv())
 FreeCADGui.addCommand('Import GPX', import_gpx())
 FreeCADGui.addCommand('Import Heights', importheights())
