@@ -12,18 +12,11 @@ if sys.version_info[0] !=2:
 	from importlib import reload
 
 
-from geodat.say import *
+from GeoDataWB.say import *
 
-import FreeCAD,FreeCADGui, Part
+import FreeCAD, FreeCADGui, Part
 App=FreeCAD
 Gui=FreeCADGui
-
-import geodat.transversmercator
-from  geodat.transversmercator import TransverseMercator
-
-import csv,re
-
-# https://forum.freecadweb.org/viewtopic.php?f=8&t=6973&p=230428#p230428
 
 import numpy as np
 data='''ncols        5
@@ -42,21 +35,23 @@ cellsize     10.000000000000
 def parsedata(lines):
 	
 	print(lines)
-	a=lines[0].split()
 	dat={}
-	a=lines[0].split()
-	dat[a[0]]=int(a[1])
-	a=lines[1].split()
+	a=lines[0].decode().split()
 	dat[a[0]]=int(a[1])
 
-	a=lines[2].split()
+	a=lines[1].decode().split()
+	dat[a[0]]=int(a[1])
+
+	a=lines[2].decode().split()
 	dat[a[0]]=float(a[1])
 
-	a=lines[3].split()
+	a=lines[3].decode().split()
 	dat[a[0]]=float(a[1])
 
-	a=lines[4].split()
+	a=lines[4].decode().split()
 	dat[a[0]]=float(a[1])
+
+	print(dat)
 
 	a=[]
 	for i in range(dat['ncols']):
@@ -90,6 +85,8 @@ def parsedata(lines):
 
 	for i in range(dat['nrows']):
 		Draft.makeBSpline([FreeCAD.Vector(p) for  p in a[:,i]])
+
+	FreeCAD.ActiveDocument.recompute()
 
 	return a
 
@@ -173,8 +170,7 @@ class MyApp(object):
 def mydialog():
 	app=MyApp()
 
-	import geodat
-	import geodat.miki as miki
+	import GeoDataWB.miki as miki
 	reload(miki)
 
 	miki=miki.Miki()

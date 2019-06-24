@@ -8,7 +8,7 @@
 #-------------------------------------------------
 
 
-from geodat.say import *
+from GeoDataWB.say import *
 
 import Points
 
@@ -443,8 +443,7 @@ class MyApp(object):
 def mydialog(run=True):
 	'''the gui startup'''
 
-	import geodat
-	import geodat.miki as miki
+	import GeoDataWB.miki as miki
 	reload(miki)
 
 	app=MyApp()

@@ -769,8 +769,7 @@ def suv(app,u=3,v=5,d=10,la=100,lb=100):
 	return tt
 
 
-'''
-alt - kann weg
+
 def suv2(label,pts,u=3,v=5,d=10,la=100,lb=100):
 
 	try:
@@ -802,7 +801,7 @@ def suv2(label,pts,u=3,v=5,d=10,la=100,lb=100):
 	pu=[]
 	say([ "(wb,eb,sb,nb,du,dv)", (wb,eb,sb,nb,du,dv)])
 	for k in range(dv):
-		pu += pts[u+v*la+la*k:u+v*la+du+la*k]
+		pu.append(pts[u+v*la+la*k:u+v*la+du+la*k])
 		uu.append(pts[u+v*la+la*k:u+v*la+du+la*k])
 
 	color=(1-0.5*random.random(),1-0.5*random.random(),1-0.5*random.random())
@@ -850,7 +849,7 @@ def suv2(label,pts,u=3,v=5,d=10,la=100,lb=100):
 
 	# return tt
 	return a
-'''
+
 
 
 # generate 100 quads with each 100 interpolation points

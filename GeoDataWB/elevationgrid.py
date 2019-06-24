@@ -33,7 +33,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.interpolate
 import Points
-from say import say,sayErr,sayW
+from GeoDataWB.say import say,sayErr,sayW
 
 
 # test data
@@ -333,7 +333,7 @@ def createElevationGrid(mode,rbfmode=True,source=None,gridCount=20,zfactor=20,bo
 	}
 
 	say("Source",source,"mode",mode)
-	if source<>None:
+	if source!=None:
 
 		if hasattr(source,"Shape"):
 			# part object

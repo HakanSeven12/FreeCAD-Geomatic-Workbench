@@ -22,15 +22,10 @@ When presenting or publishing ASTER GDEM data, I agree to include "ASTER GDEM is
 Because there are known inaccuracies and artifacts in the data set, please use the product with awareness of its limitations. The data are provided "as is" and neither NASA nor METI/ERSDAC will be responsible for any damages resulting from use of the data.
 '''
 
-from geodat.say import *
+from GeoDataWB.say import *
 
-import geodat.transversmercator
-from  geodat.transversmercator import TransverseMercator
+from  GeoDataWB.transversmercator import TransverseMercator
 
-import geodat.import_xyz
-import geodat.geodat_lib
-
-# apt-get install python-gdal
 import gdal
 from gdalconst import * 
 
@@ -47,12 +42,14 @@ def import_ast(b=50.26,l=11.39):
 	example .../.FreeCAD/geodat/AST/ASTGTM2_N51E010_dem.tif
 	'''
 
+	import numpy as np
+
 	bs=np.floor(b)
 	ls=np.floor(l)
 
 	# the ast dataset
 	ff="N%02dE%03d" % (int(bs),int(ls))
-	fn=FreeCAD.ConfigGet("UserAppData") +'/geodat/AST/ASTGTM2_' + ff +'_dem.tif'
+	fn=FreeCAD.ConfigGet("UserAppData") +'geodat/AST/ASTGTM2_' + ff +'_dem.tif'
 	print(fn)
 
 	'''
@@ -197,8 +194,7 @@ def mydialog():
 	'''the dialog to import a gdal file'''
 
 	app=MyApp()
-	import geodat
-	import geodat.miki as gmiki
+	import GeoDataWB.miki as gmiki
 	miki=gmiki.Miki()
 
 	miki.app=app
@@ -213,17 +209,19 @@ def mydialog():
 
 def import_heights(b,l,s):
 
+	import GeoDataWB.import_xyz
+
 	ts=time.time()
 
 	pcl=import_ast(b,l)
 	pts=pcl
 	ff="N" + str(b) + " E" + str(l)
 
-	nurbs=geodat.import_xyz.suv2(ff,pts,u=0,v=0,d=140,la=140,lb=140)
+	nurbs=GeoDataWB.import_xyz.suv2(ff,pts,u=0,v=0,d=140,la=140,lb=140)
 	te=time.time()
 	print ("time to create models:",te-ts)
 
-	fn=geodat.geodat_lib.genSizeImage(size=512)
+	fn=GeoDataWB.geodat_lib.genSizeImage(size=512)
 	# geodat.geodat_lib.addImageTexture(nurbs,fn,scale=(8,3))
 	nurbs.ViewObject.Selectable = False
 

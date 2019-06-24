@@ -247,12 +247,7 @@ if sys.version_info[0] !=2:
 def mydialog():
 	app=MyApp()
 
-	import geodat
-	import geodat.miki as miki
-	
-
-	reload(geodat.miki)
-
+	import GeoDataWB.miki as miki
 
 	miki=miki.Miki()
 	miki.app=app
