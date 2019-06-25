@@ -2,7 +2,7 @@
 Import data from OpenStreetMap
 """
 
-import FreeCAD, FreeCADGui, WebGui
+import FreeCAD, FreeCADGui, WebGui, Part
 from pivy import coin
 from GeoDataWB import my_xmlparser
 from GeoDataWB.transversmercator import TransverseMercator
@@ -12,29 +12,32 @@ import json, urllib
 
 debug = False
 
+
 def getHeight(b, l):
 	"""
 	Get height of a single point with latitude b, longitude l
 	"""
 
 	anz = 0
+
 	while anz < 4:
-			source = "https://maps.googleapis.com/maps/api/elevation/json?locations="+str(b)+','+str(l)
-			response = urllib.request.urlopen(source)
-			ans = response.read()
+		source = "https://maps.googleapis.com/maps/api/elevation/json?locations="+str(b)+','+str(l)
+		response = urllib.request.urlopen(source)
+		ans = response.read()
 
-			if ans.find("OVER_QUERY_LIMIT"):
-				anz += 1
-				time.sleep(5)
+		if ans.find("OVER_QUERY_LIMIT"):
+			anz += 1
+			time.sleep(5)
 
-			else:
-				anz=10
+		else:
+			anz=10
 
 	s = json.loads(ans)
 	res = s['results']
 
 	for r in res:
 		return round(r['elevation']*1000,2)
+
 
 # Get the heights for a list of points
 def getHeights(points):
@@ -72,6 +75,7 @@ def getHeights(points):
 
 	return heights
 
+
 def organize():
 	"""
 	Create groups for the different object types
@@ -99,9 +103,10 @@ def organize():
 			pathes.addObject(oj)
 			oj.ViewObject.Visibility = False
 
+
 def import_osm2(b, l, bk, progressbar, status, elevation):
 	if progressbar:
-			progressbar.setValue(0)
+		progressbar.setValue(0)
 
 	if status:
 		status.setText("get data from openstreetmap.org ...")
@@ -113,6 +118,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 	dn = FreeCAD.ConfigGet("UserAppData") + "geodat3/"
 	fn = dn+str(b)+'-'+str(l)+'-'+str(bk)
 	import os
+
 	if not os.path.isdir(dn):
 		os.makedirs(dn)
 
@@ -137,8 +143,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 		data = response.text
 		lines = response.text.split('\n')
 		FreeCAD.t = response
-		
-		
+
 		f = open(fn, "w")
 		if response.status_code == 200:
 			with open(fn, 'wb') as f:
@@ -194,6 +199,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 	# map all points to xy-plane
 	points = {}
 	nodesbyid = {}
+
 	for n in nodes:
 		nodesbyid[n.params['id']] = n
 		ll = tm.fromGeographic(float(n.params['lat']), float(n.params['lon']))
@@ -208,6 +214,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 	area = App.ActiveDocument.addObject("Part::Plane", "area")
 	obj = FreeCAD.ActiveDocument.ActiveObject
 	say("grundflaeche erzeugt")
+
 	try:
 		viewprovider = obj.ViewObject
 		root = viewprovider.RootNode
@@ -215,6 +222,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 		myLight.color.setValue(coin.SbColor(0,1,0))
 		root.insertChild(myLight, 0)
 		say("beleuchtung auf grundobjekt eingeschaltet")
+
 	except:
 		sayexc("Beleuchtung 272")
 
@@ -244,6 +252,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 	coways = len(ways)
 	starttime = time.time()
 	refresh = 1000
+
 	for w in ways:
 		wid = w.params['id']
 		building = False
@@ -252,8 +261,10 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 		wn += 1
 
 		nowtime = time.time()
+
 		if wn != 0 and (nowtime-starttime)/wn > 0.5:
 			say(("way ---- # " + str(wn) + "/" + str(coways) + " time per house: " + str(round((nowtime-starttime)/wn, 2))))
+
 		if progressbar:
 			progressbar.setValue(int(0+100.0*wn/coways))
 
@@ -267,6 +278,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 			try:
 				if str(t.params['k']) == 'building':
 					building = True
+
 					if st == '':
 						st = 'building'
 
@@ -315,7 +327,6 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 		# Generate pointlist of the way
 		polis = []
 		height = None
-
 		llpoints = []
 
 		for n in w.getiterator('nd'):
@@ -330,9 +341,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 			p = points[str(n.params['ref'])]
 
 			if building and elevation:
-
 				if not height:
-
 					try:
 						height = heights[m.params['lat']+' '+m.params['lon']]*1000 - baseheight
 
@@ -400,8 +409,8 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 			g.Dir = (0, 0, 0.2)
 			g.Label = name
 		refresh += 1
-		if os.path.exists("/tmp/stop"):
 
+		if os.path.exists("/tmp/stop"):
 			sayErr("notbremse gezogen")
 			FreeCAD.w = w
 			raise Exception("Notbremse Manager main loop")
@@ -417,13 +426,15 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 		status.setText("import finished.")
 
 	if progressbar:
-			progressbar.setValue(100)
+		progressbar.setValue(100)
 
 	organize()
 
 	endtime = time.time()
 	say(("running time ", int(endtime-starttime),  " count ways ", coways))
+
 	return True
+
 
 # The dialog layout as miki string
 s6 = '''
@@ -573,6 +584,7 @@ MainWindow:
 
 '''
 
+
 # The gui backend
 class MyApp(object):
 	"""
@@ -645,12 +657,9 @@ class MyApp(object):
 		flag = '0'
 
 		for x in spli:
-
 			try:
 				float(x)
-
 				if x.find('.') != -1:
-
 					if flag == '0':
 						self.root.ids['lat'].setText(x)
 						flag='1'
@@ -732,6 +741,7 @@ class MyApp(object):
 		showDistanceLabel = self.root.ids['showDistanceLabel']
 		showDistanceLabel.setText('Distance is '+str(float(distance)/10)+'km.')
 
+
 # The gui startup
 def mydialog():
 	"""
@@ -749,6 +759,7 @@ def mydialog():
 	miki.run(s6)
 
 	return miki
+
 
 def importOSM():
 	mydialog()
