@@ -1,19 +1,18 @@
 """
-Import data from openstreetmap
+Import data from OpenStreetMap
 """
 
-import FreeCAD,FreeCADGui
-import WebGui
-import json, urllib
+import FreeCAD, FreeCADGui, WebGui
 from pivy import coin
-import GeoDataWB.my_xmlparser
+from GeoDataWB import my_xmlparser
 from GeoDataWB.transversmercator import TransverseMercator
 import GeoDataWB.inventortools as inventortools
-import GeoDataWB.xmltodict
-from GeoDataWB.xmltodict import parse
 from GeoDataWB.say import *
+import json, urllib
 
-def getHeight(b,l):
+debug = False
+
+def getHeight(b, l):
 	"""
 	Get height of a single point with latitude b, longitude l
 	"""
@@ -38,7 +37,6 @@ def getHeight(b,l):
 		return round(r['elevation']*1000,2)
 
 # Get the heights for a list of points
-
 def getHeights(points):
 	"""
 	Get heights for a list of points
@@ -74,7 +72,6 @@ def getHeights(points):
 
 	return heights
 
-
 def organize():
 	"""
 	Create groups for the different object types
@@ -102,12 +99,7 @@ def organize():
 			pathes.addObject(oj)
 			oj.ViewObject.Visibility = False
 
-debug = False
-
 def import_osm2(b, l, bk, progressbar, status, elevation):
-
-	debug = False
-
 	if progressbar:
 			progressbar.setValue(0)
 
@@ -171,7 +163,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 	say("------------------------------")
 	say(fn)
 
-	tree = GeoDataWB.my_xmlparser.getData(fn)
+	tree = my_xmlparser.getData(fn)
 
 	if debug:
 		say(json.dumps(sd, indent=4))
@@ -207,71 +199,6 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 		ll = tm.fromGeographic(float(n.params['lat']), float(n.params['lon']))
 		points[str(n.params['id'])] = FreeCAD.Vector(ll[0]-center[0], ll[1]-center[1], 0.0)
 
-	# hack to catch deutsche umlaute
-	def beaustring(string):
-		res = ''
-
-		for tk in zz:
-			try:
-				res += str(tk)
-
-			except:
-				if ord(tk) == 223:
-					res += 'ß'
-
-				elif ord(tk) == 246:
-					res += 'ö'
-
-				elif ord(tk) == 196:
-					res += 'Ä'
-
-				elif ord(tk) == 228:
-					res += 'ä'
-
-				elif ord(tk) == 242:
-					res += 'ü'
-
-				elif ord(tk) == 305:
-					res += 'ı'
-
-				elif ord(tk) == 231:
-					res += 'ç'
-
-				elif ord(tk) == 351:
-					res += 'ş'
-
-				elif ord(tk) == 246:
-					res += 'ö'
-
-				elif ord(tk) == 252:
-					res += 'ü'
-
-				elif ord(tk) == 287:
-					res += 'ğ'
-
-				elif ord(tk) == 304:
-					res += 'İ'
-
-				elif ord(tk) == 199:
-					res += 'Ç'
-
-				elif ord(tk) == 350:
-					res += 'Ş'
-
-				elif ord(tk) == 214:
-					res += 'Ö'
-
-				elif ord(tk) == 220:
-					res += 'Ü'
-
-				elif ord(tk) == 286:
-					res += 'Ğ'
-
-				else:
-					sayErr(["error sign", tk, ord(tk), string])
-					res += "#"
-		return res
-
 	if status:
 		status.setText("create visualizations  ...")
 		FreeCADGui.updateGui()
@@ -293,12 +220,12 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 
 	cam = '''#Inventor V2.1 ascii
 	OrthographicCamera {
-	  viewportMapping ADJUST_CAMERA
-	  orientation 0 0 -1.0001  0.001
-	  nearDistance 0
-	  farDistance 10000000000
-	  aspectRatio 100
-	  focalDistance 1
+	viewportMapping ADJUST_CAMERA
+	orientation 0 0 -1.0001  0.001
+	nearDistance 0
+	farDistance 10000000000
+	aspectRatio 100
+	focalDistance 1
 	'''
 	x = 0
 	y = 0
@@ -337,81 +264,87 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 		ci = ""
 
 		for t in w.getiterator('tag'):
-					try:
-						if str(t.params['k']) == 'building':
-							building = True
-							if st == '':
-								st = 'building'
+			try:
+				if str(t.params['k']) == 'building':
+					building = True
+					if st == '':
+						st = 'building'
 
-						if str(t.params['k']) == 'landuse':
-							landuse = True
-							st = t.params['k']
-							nr = t.params['v']
+				if str(t.params['k']) == 'landuse':
+					landuse = True
+					st = t.params['k']
+					nr = t.params['v']
 
-						if str(t.params['k']) == 'highway':
-							highway = True
-							st = t.params['k']
+				if str(t.params['k']) == 'highway':
+					highway = True
+					st = t.params['k']
 
-						if str(t.params['k']) == 'addr:city':
-							ci = t.params['v']
+				if str(t.params['k']) == 'addr:city':
+					ci = t.params['v']
 
-						if str(t.params['k']) == 'name':
-							zz = t.params['v']
-							nr = beaustring(zz)
+				if str(t.params['k']) == 'name':
+					nr = t.params['v']
 
-						if str(t.params['k']) == 'ref':
-							zz = t.params['v']
-							nr = beaustring(zz)+" /"
+				if str(t.params['k']) == 'ref':
+					nr = t.params['v']+" /"
 
-						if str(t.params['k']) == 'addr:street':
-							zz = t.params['v']
-							st2 = " "+beaustring(zz)
+				if str(t.params['k']) == 'addr:street':
+					st2 = " "+t.params['v']
 
-						if str(t.params['k']) == 'addr:housenumber':
-							nr = str(t.params['v'])
+				if str(t.params['k']) == 'addr:housenumber':
+					nr = str(t.params['v'])
 
-						if str(t.params['k']) == 'building:levels':
-							if h == 0:
-								h = int(str(t.params['v']))*1000*3
+				if str(t.params['k']) == 'building:levels':
+					if h == 0:
+						h = int(str(t.params['v']))*1000*3
 
-						if str(t.params['k']) == 'building:height':
-							h = int(str(t.params['v']))*1000
+				if str(t.params['k']) == 'building:height':
+					h = int(str(t.params['v']))*1000
 
-					except:
-						sayErr("unexpected error ######################################################")
+			except:
+				sayErr("unexpected error ######################################################")
 
 		name = str(st) + st2 + " " + str(nr)
+
 		if name == ' ':
 			name = 'landuse xyz'
+
 		if debug:
 			say(("name ", name))
 
-		#generate pointlist of the way
+		# Generate pointlist of the way
 		polis = []
 		height = None
 
-		llpoints=[]
+		llpoints = []
 
 		for n in w.getiterator('nd'):
 			m = nodesbyid[n.params['ref']]
 			llpoints.append([n.params['ref'], m.params['lat'], m.params['lon']])
+
 		if elevation:
 			say("get heights for " + str(len(llpoints)))
 			heights = getHeights(llpoints)
 
 		for n in w.getiterator('nd'):
 			p = points[str(n.params['ref'])]
+
 			if building and elevation:
+
 				if not height:
+
 					try:
 						height = heights[m.params['lat']+' '+m.params['lon']]*1000 - baseheight
+
 					except:
 						sayErr("---no height avaiable for " + m.params['lat']+' '+m.params['lon'])
 						height = 0
+
 				p.z = height
+
 			polis.append(p)
 
-		#create 2D map
+		# Create 2D map
 		pp = Part.makePolygon(polis)
 		Part.show(pp)
 		z = App.ActiveDocument.ActiveObject
@@ -473,9 +406,9 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 			FreeCAD.w = w
 			raise Exception("Notbremse Manager main loop")
 
-		if refresh >3:
+		if refresh > 3:
 			FreeCADGui.updateGui()
-			refresh=0
+			refresh = 0
 
 	FreeCADGui.updateGui()
 	FreeCAD.activeDocument().recompute()
@@ -493,9 +426,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 	return True
 
 # The dialog layout as miki string
-
-
-s6='''
+s6 = '''
 #VerticalLayoutTab:
 MainWindow:
 #DockWidget:
@@ -629,35 +560,6 @@ MainWindow:
 
 		QtGui.QLabel:
 		QtGui.QLabel:
-			setText:"P r e d e f i n e d   L o c a t i o n s"
-#		QtGui.QLabel:
-
-		QtGui.QRadioButton:
-			setText: "Sonneberg Outdoor Inn"
-			clicked.connect: app.run_sternwarte
-
-		QtGui.QRadioButton:
-			setText: "Coburg university and school "
-			clicked.connect: app.run_co2
-
-		QtGui.QRadioButton:
-			setText: "Berlin Alexanderplatz/Haus des Lehrers"
-			clicked.connect: app.run_alex
-
-		QtGui.QRadioButton:
-			setText: "Berlin Spandau"
-			clicked.connect: app.run_spandau
-
-		QtGui.QRadioButton:
-			setText: "Paris Rue de Seine"
-			clicked.connect: app.run_paris
-
-		QtGui.QRadioButton:
-			setText: "Tokyo near tower"
-			clicked.connect: app.run_tokyo
-
-		QtGui.QLabel:
-		QtGui.QLabel:
 			setText:"P r o c e s s i n g:"
 			id: "status"
 			setFixedHeight: 20
@@ -672,237 +574,181 @@ MainWindow:
 '''
 
 # The gui backend
-
 class MyApp(object):
 	"""
 	Execution layer of the Gui
 	"""
 
-	def run(self,b,l):
-		'''run(self,b,l) imports area with center coordinates latitude b, longitude l'''
+	def run(self, b, l):
+		"""
+		Run(self,b,l) imports area with center coordinates latitude b, longitude l
+		"""
+
 		s = self.root.ids['s'].value()
-		key = "%0.7f" % (b) + "," + "%0.7f" % (l)
+		key = "%0.7f" % b + "," + "%0.7f" % l
 		self.root.ids['bl'].setText(key)
 		import_osm2(b, l, float(s)/10, self.root.ids['progb'], self.root.ids['status'], False)
 
-	def run_alex(self):
-		'''imports Berlin Aleancderplatz'''
-		self.run(52.52128,l=13.41646)
-
-	def run_paris(self):
-		'''imports Paris'''
-		self.run(48.85167,2.33669)
-
-	def run_tokyo(self):
-		'''imports Tokyo near tower'''
-		self.run(35.65905,139.74991)
-
-	def run_spandau(self):
-		'''imports Berlin Spandau'''
-		self.run(52.508,13.18)
-
-	def run_co2(self):
-		'''imports  Coburg Univerity and School'''
-		self.run(50.2631171, 10.9483)
-
-	def run_sternwarte(self):
-		'''imports Sonneberg Neufang observatorium'''
-		self.run(50.3736049,11.191643)
-
-
 	def showHelpBox(self):
-		msg=PySide.QtGui.QMessageBox()
+		msg = PySide.QtGui.QMessageBox()
 		msg.setText("<b>Help</b>")
-		msg.setInformativeText("Import_osm map dialogue box can also accept links from following sites in addition to (latitude, longitude)<ul><li>OpenStreetMap</li><br>e.g. https://www.openstreetmap.org/#map=15/30.8611/75.8610<br><li>Google Maps</li><br>e.g. https://www.google.co.in/maps/@30.8611,75.8610,5z<br><li>Bing Map</li><br>e.g. https://www.bing.com/maps?osid=339f4dc6-92ea-4f25-b25c-f98d8ef9bc45&cp=30.8611~75.8610&lvl=17&v=2&sV=2&form=S00027<br><li>Here Map</li><br>e.g. https://wego.here.com/?map=30.8611,75.8610,15,normal<br><li>(latitude,longitude)</li><br>e.g. 30.8611,75.8610</ul><br>If in any case, the latitude & longitudes are estimated incorrectly, you can use different separators in separator box or can put latitude & longitude directly into their respective boxes.")
+		msg.setInformativeText(
+			"Import_osm map dialogue box can also accept links from following "
+			"sites in addition to (latitude, longitude)"
+			"<ul><li>OpenStreetMap</li><br>e.g. "
+			"https://www.openstreetmap.org/#map=15/30.8611/75.8610<br>"
+			"<li>Google Maps</li><br>e.g. "
+			"https://www.google.co.in/maps/@30.8611,75.8610,5z"
+			"<br><li>Bing Map</li><br>e.g. "
+			"https://www.bing.com/maps?osid=339f4dc6-92ea-4f25-b25c-f98d8ef9bc45&cp=30.8611~75.8610&lvl=17&v=2&sV=2&form=S00027"
+			"<br><li>Here Map</li><br>e.g. "
+			"https://wego.here.com/?map=30.8611,75.8610,15,normal"
+			"<br><li>(latitude,longitude)</li><br>e.g. 30.8611,75.8610</ul>"
+			"<br>If in any case, the latitude & longitudes are estimated incorrectly,"
+			" you can use different separators in separator box or can put latitude &"
+			" longitude directly into their respective boxes."
+		)
 		msg.exec_()
 
 	def showHelpBoxY(self):
-		#self.run_sternwarte()
 		say("showHelpBox called")
 
 	def getSeparator(self):
-		bl=self.root.ids['bl'].text()
+		bl = self.root.ids['bl'].text()
+
 		if bl.find('openstreetmap.org') != -1:
 			self.root.ids['sep'].setText('/')
+
 		elif bl.find('google.co') != -1:
 			self.root.ids['sep'].setText('@|,')
+
 		elif bl.find('bing.com') != -1:
 			self.root.ids['sep'].setText('=|~|&')
+
 		elif bl.find('wego.here.com') != -1:
 			self.root.ids['sep'].setText('=|,')
+
 		elif bl.find(',') != -1:
 			self.root.ids['sep'].setText(',')
+
 		elif bl.find(':') != -1:
 			self.root.ids['sep'].setText(':')
+
 		elif bl.find('/') != -1:
 			self.root.ids['sep'].setText('/')
 
-
-
 	def getCoordinate(self):
-		sep=self.root.ids['sep'].text()
-		bl=self.root.ids['bl'].text()
+		sep = self.root.ids['sep'].text()
+		bl = self.root.ids['bl'].text()
 		import re
-		spli=re.split(sep, bl)
-		flag='0'
+		spli = re.split(sep, bl)
+		flag = '0'
+
 		for x in spli:
+
 			try:
 				float(x)
+
 				if x.find('.') != -1:
-					if flag=='0':
+
+					if flag == '0':
 						self.root.ids['lat'].setText(x)
 						flag='1'
-					elif flag=='1':
+
+					elif flag == '1':
 						self.root.ids['long'].setText(x)
-						flag='2'
+						flag = '2'
+
 			except:
-				flag=flag
-		
-
-
+				flag = flag
 
 	def swap(self):
-		tmp1=self.root.ids['lat'].text()
-		tmp2=self.root.ids['long'].text()
+		tmp1 = self.root.ids['lat'].text()
+		tmp2 = self.root.ids['long'].text()
 		self.root.ids['long'].setText(tmp1)
 		self.root.ids['lat'].setText(tmp2)
 
-
-
 	def downloadData(self):
-		'''download data from osm'''
-		button=self.root.ids['runbl1']
+		"""
+		Download data from osm
+		"""
+
+		button = self.root.ids['runbl1']
 		button.hide()
-		br=self.root.ids['running']
+		br = self.root.ids['running']
 		br.show()
+		bl_disp = self.root.ids['lat'].text()
+		b = float(bl_disp)
+		bl_disp = self.root.ids['long'].text()
+		l = float(bl_disp)
+		s = self.root.ids['s'].value()
+		elevation = self.root.ids['elevation'].isChecked()
+		rc = import_osm2(float(b), float(l), float(s)/10, self.root.ids['progb'], self.root.ids['status'], elevation)
 
-
-		bl_disp=self.root.ids['lat'].text()
-		b=float(bl_disp)
-		bl_disp=self.root.ids['long'].text()
-		l=float(bl_disp)
-
-
-		s=self.root.ids['s'].value()
-		elevation=self.root.ids['elevation'].isChecked()
-
-		rc= import_osm2(float(b),float(l),float(s)/10,self.root.ids['progb'],self.root.ids['status'],elevation)
 		if not rc:
-			button=self.root.ids['runbl2']
+			button = self.root.ids['runbl2']
 			button.show()
+
 		else:
-			button=self.root.ids['runbl1']
+			button = self.root.ids['runbl1']
 			button.show()
+
 		br.hide()
 
-
-
 	def applyData(self):
-		'''apply downloaded or cached data to create the FreeCAD models'''
-		button=self.root.ids['runbl2']
+		"""
+		Apply downloaded or cached data to create the FreeCAD models
+		"""
+
+		button = self.root.ids['runbl2']
 		button.hide()
-		br=self.root.ids['running']
+		br = self.root.ids['running']
 		br.show()
-		
-		bl_disp=self.root.ids['lat'].text()
-		b=float(bl_disp)
-		bl_disp=self.root.ids['long'].text()
-		l=float(bl_disp)
-		
-
-		s=self.root.ids['s'].value()
-		elevation=self.root.ids['elevation'].isChecked()
-
-		import_osm2(float(b),float(l),float(s)/10,self.root.ids['progb'],self.root.ids['status'],elevation)
-		button=self.root.ids['runbl1']
+		bl_disp = self.root.ids['lat'].text()
+		b = float(bl_disp)
+		bl_disp = self.root.ids['long'].text()
+		l = float(bl_disp)
+		s = self.root.ids['s'].value()
+		elevation = self.root.ids['elevation'].isChecked()
+		import_osm2(float(b), float(l), float(s)/10, self.root.ids['progb'], self.root.ids['status'], elevation)
+		button = self.root.ids['runbl1']
 		button.show()
 		br.hide()
 
-
-
 	def showMap(self):
-		'''open a webbrowser window and display the openstreetmap presentation of the area'''
+		"""
+		Open a webbrowser window and display the openstreetmap presentation of the area
+		"""
 
-		bl_disp=self.root.ids['lat'].text()
-		b=float(bl_disp)
-		bl_disp=self.root.ids['long'].text()
-		l=float(bl_disp)
-
-		s=self.root.ids['s'].value()
-		WebGui.openBrowser( "http://www.openstreetmap.org/#map=16/"+str(b)+'/'+str(l))
+		bl_disp = self.root.ids['lat'].text()
+		b = float(bl_disp)
+		bl_disp = self.root.ids['long'].text()
+		l = float(bl_disp)
+		s = self.root.ids['s'].value()
+		WebGui.openBrowser("http://www.openstreetmap.org/#map=16/"+str(b)+'/'+str(l))
 
 	def showDistanceOnLabel(self):
-		distance=self.root.ids['s'].value()
-		showDistanceLabel=self.root.ids['showDistanceLabel']
+		distance = self.root.ids['s'].value()
+		showDistanceLabel = self.root.ids['showDistanceLabel']
 		showDistanceLabel.setText('Distance is '+str(float(distance)/10)+'km.')
 
-## the gui startup
-
+# The gui startup
 def mydialog():
-	''' starts the gui dialog '''
-	app=MyApp()
+	"""
+	Starts the gui dialog
+	"""
 
+	app = MyApp()
 	import GeoDataWB.miki as miki
 
-	miki=miki.Miki()
-	miki.app=app
-	app.root=miki
+	miki = miki.Miki()
+	miki.app = app
+	app.root = miki
 
 	miki.parse2(s6)
 	miki.run(s6)
-	return miki
 
+	return miki
 
 def importOSM():
 	mydialog()
-
-
-
-'''
-#-----------------
-# verarbeiten 
-
-import xml.etree.ElementTree as ET
-
-fn='/home/thomas/.FreeCAD//geodat3/50.340722-11.232647-0.015'
-#tree = ET.parse(fn)
-
-data_as_string=''<?xml version="1.0"?><data>
-    <country name="Liechtenstein">
-        <rank>1</rank>
-        <year>2008</year>
-        <gdppc>141100</gdppc>
-        <neighbor name="Austria" direction="E"/>
-        <neighbor name="Switzerland" direction="W"/>
-    </country>
-    <country name="Singapore">
-        <rank>4</rank>
-        <year>2011</year>
-        <gdppc>59900</gdppc>
-        <neighbor name="Malaysia" direction="N"/>
-    </country>
-    <country name="Panama">
-        <rank>68</rank>
-        <year>2011</year>
-        <gdppc>13600</gdppc>
-        <neighbor name="Costa Rica" direction="W"/>
-        <neighbor name="Colombia" direction="E"/>
-    </country>
-</data>
-''
-
-root = ET.fromstring(data_as_string)
-
-
-for element in tree.getiterator('node'):
-    print(element.attrib)
-
-
-root = tree.getroot()
-ET.dump(root)
-
-for elem in root:
-	print (elem.tag,elem.attrib)
-#----------------
-'''
-
