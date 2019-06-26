@@ -247,7 +247,7 @@ class ImportPointFile:
         else:
             PointGroup = FreeCAD.ActiveDocument.Points
 
-        #Read Points from file.
+        # Read Points from file.
         Items = []
         for i in range(UI.SelectedFilesLW.count()):
             Items.append(UI.SelectedFilesLW.item(i))

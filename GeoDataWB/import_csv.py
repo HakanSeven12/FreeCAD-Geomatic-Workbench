@@ -1,3 +1,7 @@
+"""
+CSV File importer
+"""
+
 import FreeCAD, FreeCADGui, Part, Draft
 from GeoDataWB.transversmercator import TransverseMercator
 from GeoDataWB.say import *
@@ -5,7 +9,7 @@ import csv, re
 
 
 def import_csv(fn, orig, datatext = None):
-	# lat lon
+	# Lat Lon
 	yy = orig.split(',')
 	origin = (float(yy[0]), float(yy[1]))
 

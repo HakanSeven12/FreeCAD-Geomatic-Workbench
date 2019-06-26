@@ -1,69 +1,40 @@
-'''import srtm data'''
+"""
+Import srtm data
+"""
 
-'''
-
-http://wiki.openstreetmap.org/wiki/DE:SRTM
-http://geoweb.hft-stuttgart.de/SRTM/srtm_as_osm/Lat50Lon11Lat51Lon12.osm.zip
-
-'''
-
-#\cond
-testsatz='''
-	<node id="1000213963" lat="50.0004166666667" lon="11.31925" />
-	<node id="1000213964" lat="50.00125" lon="11.3195833333333" />
-	<node id="1000213965" lat="50.00125" lon="11.3204166666667" />
-	<node id="1000213966" lat="50.0010416666667" lon="11.32125" />
-	<node id="1000213967" lat="50.0009722222222" lon="11.3220833333333" />
-	<node id="1000213968" lat="50.0004166666667" lon="11.3229166666667" />
-	<way id="1000001882">
-		<nd ref="1000213963" />
-		<nd ref="1000213964" />
-		<nd ref="1000213965" />
-		<nd ref="1000213966" />
-		<nd ref="1000213967" />
-		<nd ref="1000213968" />
-		<tag k="ele" v="480" />
-		<tag k="contour" v="elevation" />
-		<tag k="contour_ext" v="elevation_minor" />
-	</way>
-'''
-#\endcond
+import Points
+from GeoDataWB.transversmercator import TransverseMercator
+import math
 
 
-## create a QProgressBar widget for long running process
+# Create a QProgressBar widget for long running process
 def createProgressBar(label=None):
-	w=QtGui.QWidget()
+	w = QtGui.QWidget()
 	hbox = QtGui.QHBoxLayout()
 	w.setLayout(hbox)
-	pb=QtGui.QProgressBar()
+	pb = QtGui.QProgressBar()
 	w.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-	if label!=None:
-		lab=QtGui.QLabel(label)
+
+	if label != None:
+		lab = QtGui.QLabel(label)
 		hbox.addWidget(lab)
 	hbox.addWidget(pb)
 	w.show()
-	FreeCAD.w=w
+	FreeCAD.w = w
 	pb.setValue(0)
-	w.pb=pb
+	w.pb = pb
 	return w
 
-import Points
 
-import math
+# create contour curve points list
+def runfile(fn, xw, xe, ys, yn, ox=0, oy=0):
+	f = 100000000
 
-from  GeoDataWB.transversmercator import TransverseMercator
+	tm = TransverseMercator()
+	tm.lat = 0.5*(yn+ys)
+	tm.lon = 0.5*(xw+xe)
 
-## create contour curve points list
-
-def runfile(fn, xw,xe,ys,yn,ox=0,oy=0):
-	f= 100000000
-
-	tm=TransverseMercator()
-	tm.lat=0.5*(yn+ys)
-	tm.lon=0.5*(xw+xe)
-
-	center=tm.fromGeographic(tm.lat,tm.lon)
-
+	center = tm.fromGeographic(tm.lat, tm.lon)
 
 	xw *= f
 	xe *= f
@@ -71,17 +42,15 @@ def runfile(fn, xw,xe,ys,yn,ox=0,oy=0):
 	yn *= f
 	ox *= f
 	oy *= f
-	pts=[]
-	poss={}
-	nds=[]
-	elev=-1
+	pts = []
+	poss = {}
+	nds = []
+	elev = -1
 
-	c=0
+	c = 0
 
 
 	#Gui.ActiveDocument.ActiveView.setAnimationEnabled(False)
-
-
 	pb=createProgressBar(label="create Elevations " + os.path.basename(fn) )
 
 	# file = open('/home/microelly2/Downloads/Lat50Lon11Lat51Lon12.osm', 'r')
@@ -127,7 +96,7 @@ def runfile(fn, xw,xe,ys,yn,ox=0,oy=0):
 #			if len(pts)==1:
 #				d=Draft.makePoint(pts[0])
 
-			c +=1 
+			c +=1
 
 			poss={}
 			elev=0
@@ -162,10 +131,10 @@ def getdata(directory,dat):
 			targetfile=tg[0]
 			say("targetfile:"+targetfile)
 			fh = open(targetfile, 'rb')
-			
+
 		else:
 			fh = open(zipfilename, 'rb')
-			
+
 		zfile = zipfile.ZipFile(fh)
 		zfile.extractall(directory)
 		fh.close()
@@ -179,9 +148,9 @@ def run(mx,my,dx,dy):
 	yn=my+dy
 	xw=mx-dx
 	xe=mx+dx
-	
+
 	dats=[]
-	
+
 	say(xw,ys,xe,yn)
 	for ix in range(int(math.floor(xw)),int(math.floor(xe))+1):
 		for iy in range(int(math.floor(ys)),int(math.floor(yn))+1):
@@ -201,13 +170,30 @@ def run(mx,my,dx,dy):
 		fn=directory+"/"+dat+".osm"
 		pts=runfile(fn,xw,xe,ys,yn,mx,my)
 
-		p=Points.Points(pts)
-		Points.show(p)
-		Gui.updateGui()
-		Gui.SendMsgToActiveView("ViewFit")
+		# Get or create "Point_Groups".
+		try:
+			PointGroups = FreeCAD.ActiveDocument.Point_Groups
+		except:
+			PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", 'Point_Groups')
+			PointGroups.Label = "Point Groups"
 
+		# Get or create "Points".
+		try:
+			FreeCAD.ActiveDocument.Points
+		except:
+			Points = FreeCAD.ActiveDocument.addObject('Points::Feature', "Points")
+			PointGroups.addObject(Points)
 
+		PointGroup = FreeCAD.ActiveDocument.addObject('Points::Feature', "Point_Group")
+		PointGroup.Label = dat
+		FreeCAD.ActiveDocument.Point_Groups.addObject(PointGroup)
+		PointObject = PointGroup.Points.copy()
+		PointObject.addPoints(pts)
+		PointGroup.Points = PointObject
+
+	FreeCAD.ActiveDocument.recompute()
 	Gui.SendMsgToActiveView("ViewFit")
+
 	return pts
 
 
@@ -352,7 +338,7 @@ class MyApp(object):
 
 # Guayaquil Ecuador-2.1523858,-80.0501215
 
-	def run_browser(self): 
+	def run_browser(self):
 		import WebGui
 		bl=self.root.ids['bl'].text()
 		spli=bl.split(',')
@@ -360,7 +346,7 @@ class MyApp(object):
 		mx=float(spli[1])
 		WebGui.openBrowser( "http://www.openstreetmap.org/#map=12/"+str(my)+'/'+str(mx))
 
-	def run_google(self): 
+	def run_google(self):
 		import WebGui
 		bl=self.root.ids['bl'].text()
 		spli=bl.split(',')
@@ -368,7 +354,7 @@ class MyApp(object):
 		mx=float(spli[1])
 		WebGui.openBrowser( "https://www.google.de/maps/@"+str(my)+','+str(mx) +",8000m/data=!3m1!1e3")
 
-	def run_reitwander(self): 
+	def run_reitwander(self):
 		import WebGui
 		bl=self.root.ids['bl'].text()
 		spli=bl.split(',')
