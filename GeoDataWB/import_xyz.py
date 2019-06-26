@@ -175,10 +175,20 @@ def import_xyz(mode,filename="/tmp/test.xyz",label='',ku=20, kv=10,lu=0,lv=0):
 			App.ActiveDocument.grids
 		except:
 			grids=App.ActiveDocument.addObject("App::DocumentObjectGroup","grids")
+
+		# Get or create "Point_Groups".
 		try:
-			App.ActiveDocument.points
+			PointGroups = FreeCAD.ActiveDocument.Point_Groups
 		except:
-			points=App.ActiveDocument.addObject("App::DocumentObjectGroup","points")
+			PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", 'Point_Groups')
+			PointGroups.Label = "Point Groups"
+
+		# Get or create "Points".
+		try:
+			FreeCAD.ActiveDocument.Points
+		except:
+			Points = FreeCAD.ActiveDocument.addObject('Points::Feature', "Points")
+			PointGroups.addObject(Points)
 
 		objs=App.ActiveDocument.getObjectsByLabel(label)
 
@@ -206,10 +216,20 @@ def import_xyz(mode,filename="/tmp/test.xyz",label='',ku=20, kv=10,lu=0,lv=0):
 			App.ActiveDocument.grids
 		except:
 			grids=App.ActiveDocument.addObject("App::DocumentObjectGroup","grids")
+
+		# Get or create "Point_Groups".
 		try:
-			App.ActiveDocument.points
+			PointGroups = FreeCAD.ActiveDocument.Point_Groups
 		except:
-			points=App.ActiveDocument.addObject("App::DocumentObjectGroup","points")
+			PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", 'Point_Groups')
+			PointGroups.Label = "Point Groups"
+
+		# Get or create "Points".
+		try:
+			FreeCAD.ActiveDocument.Points
+		except:
+			Points = FreeCAD.ActiveDocument.addObject('Points::Feature', "Points")
+			PointGroups.addObject(Points)
 
 
 		fn=filename
@@ -245,13 +265,23 @@ def import_xyz(mode,filename="/tmp/test.xyz",label='',ku=20, kv=10,lu=0,lv=0):
 
 		if ku>1 and kv>1:
 			pts=reduceGrid(pts,ku,kv)
-		p=Points.Points(pts)
-		Points.show(p)
-		App.ActiveDocument.ActiveObject.ViewObject.ShapeColor=(1.0,.0,0.0)
-		App.ActiveDocument.ActiveObject.ViewObject.PointSize=3.0
-		Gui.updateGui()
-		Gui.SendMsgToActiveView("ViewFit")
+
+		head, tail = os.path.split(fn)
+
+		PointGroup = FreeCAD.ActiveDocument.addObject('Points::Feature', "Point_Group")
+		PointGroup.Label = tail[:-4]
+		FreeCAD.ActiveDocument.Point_Groups.addObject(PointGroup)
+		PointObject = PointGroup.Points.copy()
+		PointObject.addPoints(pts)
+		PointGroup.Points = PointObject
+
 		App.ActiveDocument.ActiveObject.ViewObject.hide()
+		PointGroup.ViewObject.ShapeColor=(1.0,.0,0.0)
+		PointGroup.ViewObject.PointSize=3.0
+
+		FreeCAD.ActiveDocument.recompute()
+		Gui.SendMsgToActiveView("ViewFit")
+
 	return pts
 
 
