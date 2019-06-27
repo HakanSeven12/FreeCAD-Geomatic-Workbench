@@ -55,14 +55,29 @@ class CreateSurface:
 
     def MaxLength(self,P1,P2,P3):
         MaxlengthLE = self.IPFui.MaxlengthLE.text()
-        List = [[P1,P2],[P2,P3],[P3,P1]]
+        List = [[P1, P2], [P2, P3], [P3, P1]]
         Result = []
-        for i,j in List:
+        for i, j in List:
             DeltaX = i[0] - j[0]
             DeltaY = i[1] - j[1]
             Length = (DeltaX**2+DeltaY**2)**0.5
             Result.append(Length)
         if Result[0] <= int(MaxlengthLE)*1000 and Result[1] <= int(MaxlengthLE)*1000 and Result[2] <= int(MaxlengthLE)*1000:
+            return True
+        else:
+            return False
+
+    def MaxAngle(self, P1, P2, P3):
+        import math
+        MaxAngleLE = self.IPFui.MaxAngleLE.text()
+        List = [[P1, P2], [P2, P3], [P3, P1]]
+        Result = []
+        for i, j in List:
+            Radian = FreeCAD.Vector(i).getAngle(FreeCAD.Vector(j))
+            Angle = math.degrees(Radian)
+            Result.append(Angle)
+            print(Angle)
+        if Result[0] <= int(MaxAngleLE)*1000 and Result[1] <= int(MaxAngleLE)*1000 and Result[2] <= int(MaxAngleLE)*1000:
             return True
         else:
             return False
@@ -96,7 +111,8 @@ class CreateSurface:
             second = int(i[1])
             third = int(i[2])
 
-            if self.MaxLength(Data[first], Data[second], Data[third]):
+            if self.MaxLength(Data[first], Data[second], Data[third])\
+            and self.MaxAngle(Data[first], Data[second], Data[third]):
                 MeshList.append(Data[first])
                 MeshList.append(Data[second])
                 MeshList.append(Data[third])

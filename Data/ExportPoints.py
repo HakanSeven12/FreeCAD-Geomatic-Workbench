@@ -69,7 +69,14 @@ class ExportPoints:
 
         UI = self.EP
         fileName = QtGui.QFileDialog.getSaveFileName(None, 'Save File', os.getenv("HOME"), Filter='*.txt')
-        UI.FileDestinationLE.setText(fileName[0]+".txt")
+
+        if fileName[0][-4:] == ".txt":
+            fn = fileName[0]
+
+        else:
+            fn = fileName[0] + ".txt"
+
+        UI.FileDestinationLE.setText(fn)
 
     def ExportPointsToFile(self):
         """
