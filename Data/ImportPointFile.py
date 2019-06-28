@@ -256,9 +256,17 @@ class ImportPointFile:
             File = open(FilePath, 'r')
             self.FileReader(File, "Import")
 
+        List = []
+        Base = self.PointList[0]
+        for Point in self.PointList:
+            print(Point)
+            Point = (Point[0]-Base[0], Point[1]-Base[1], Point[2]-Base[2])
+            List.append(Point)
+
         PointObject = PointGroup.Points.copy()
-        PointObject.addPoints(self.PointList)
+        PointObject.addPoints(List)
         PointGroup.Points = PointObject
+        PointGroup.Placement.Base = Base
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.SendMsgToActiveView("ViewFit")
         UI.close()
