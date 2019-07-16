@@ -34,7 +34,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
     import os
 
     "Geomatics Workbench Object"
-    MenuText = 'Geomatics'
+    MenuText = 'Geomatics (Alpha)'
     ToolTip = 'Geomatics/Survey Engineering Workbench'
     Icon = os.path.join(ICONPATH, 'GeomaticsWorkbench.svg')
 		
