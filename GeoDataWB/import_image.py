@@ -8,7 +8,7 @@
 #-- GNU Lesser General Public License (LGPL)
 #-------------------------------------------------
 
-from geodat.say import *
+from GeoDataWB.say import *
 import Points
 
 import sys
@@ -415,8 +415,7 @@ def mydialog(run=True):
 
 	app=MyApp()
 
-	import geodat
-	import geodat.miki as miki
+	import GeoDataWB.miki as miki
 	reload(miki)
 
 	miki=miki.Miki()
