@@ -22,6 +22,11 @@ This workbench is being developed to provide functionality specific to Geomatics
 
 ## Installation
 
+### Automatically via Addon Manager (Recommended)
+* Open **Tools** :arrow_forward: **Addon Manager**.
+* Select **Geomatics** and click `Install/update selected`.  
+* Restart FreeCAD.
+
 ### Manual Installation
 There are two methods to install manually:  
 * **First Method:** Download the ZIP file of this repo from Github and extract into the `~/.FreeCAD/Mod/` directory.  
@@ -37,7 +42,7 @@ There are two methods to install manually:
 * Go to **Edit** :arrow_forward: **Preferences** :arrow_forward: **General** :arrow_forward: **Document**  
   * Check `Allow duplicate object labels in one document`.  
 
-* Restart FreeCAD
+* Restart FreeCAD.
 
 ## Feedback 
 Discuss this Workbench on the FreeCAD forum thread dedicated to this topic: 
