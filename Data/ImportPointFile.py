@@ -178,6 +178,9 @@ class ImportPointFile:
         if UI.DelimiterCB.currentText() == "Comma":
             reader = csv.reader(File, delimiter=',')
 
+        if UI.DelimiterCB.currentText() == "Tab":
+            reader = csv.reader(File, delimiter='\t')
+
         # Read files.
         for row in reader:
             PN = int(PointName) - 1
