@@ -542,6 +542,11 @@
               <string>Comma</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>Tab</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
