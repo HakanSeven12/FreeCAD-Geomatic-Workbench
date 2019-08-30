@@ -23,4 +23,7 @@
 import os
 from version import __version__
 
-ICONPATH = os.path.join(os.path.dirname(__file__), "Resources","Icons")
+# TODO if really needed, replace ICONPATH with  
+# ICONPATH = FreeCAD.getUserAppDataDir() + "Mod/FreeCAD-Geomatics-Workbench/Resources/Icons"
+
+# ICONPATH = os.path.join(os.path.dirname(__file__), "Resources","Icons")

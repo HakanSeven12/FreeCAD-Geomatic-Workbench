@@ -12,6 +12,7 @@ class ImportPointFile:
         Constructor
         """
 
+        #TODO : replace with  FreeCAD.getUserAppDataDir()
         # Get file path.
         self.Path = os.path.dirname(__file__)
 
@@ -50,6 +51,9 @@ class ImportPointFile:
         """
         Command activation method
         """
+        
+        if FreeCAD.ActiveDocument == None:
+            return
 
         # Get or create "Point_Groups".
         try:

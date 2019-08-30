@@ -46,6 +46,9 @@ class ExportPoints:
         Command activation method
         """
 
+        if FreeCAD.ActiveDocument == None:
+            return
+        
         # Show UI.
         UI = self.EP
         UI.setParent(FreeCADGui.getMainWindow())
