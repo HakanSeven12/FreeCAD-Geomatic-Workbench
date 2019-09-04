@@ -5,6 +5,7 @@ import numpy as np
 import Mesh
 import os
 
+
 class CreateSurface:
     """
     Command to create a new surface
@@ -13,30 +14,30 @@ class CreateSurface:
     Path = os.path.dirname(__file__)
 
     resources = {
-        'Pixmap'  : Path + '/../Resources/Icons/CreateSurface.svg',
+        'Pixmap': Path + '/../Resources/Icons/create_surface.svg',
         'MenuText': "Create Surface",
-        'ToolTip' : "Create surface from selected point group(s)."
+        'ToolTip': "Create surface from selected point group(s)."
     }
 
     def __init__(self):
-        #Import *.ui file(s)
-        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/CreateSurface.ui")
+        # Import *.ui file(s)
+        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/create_surface.ui")
 
-        #To Do List
-        self.IPFui.CreateB.clicked.connect(self.CreateSurface)
+        # todo :
+        self.IPFui.CreateB.clicked.connect(self.create_surface)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
 
-    def GetResources(self):
+    def get_resources(self):
         """
         Return the command resources dictionary
         """
         return self.resources
 
-    def Activated(self):
+    def activated(self):
         try:
             self.Surfaces = FreeCAD.ActiveDocument.Surfaces
         except:
-            self.Surfaces = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Surfaces')
+            self.Surfaces = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", 'Surfaces')
 
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
@@ -44,69 +45,71 @@ class CreateSurface:
         model = QtGui.QStandardItemModel()
         self.IPFui.PointGroupsLV.setModel(model)
 
-        PointGroups = FreeCAD.ActiveDocument.Point_Groups.Group
-        self.GroupList = []
+        point_groups = FreeCAD.ActiveDocument.Point_Groups.Group
+        self.group_list = []
 
-        for PointGroup in PointGroups:
-            self.GroupList.append(PointGroup.Name)
-            SubGroupName = PointGroup.Label
-            item = QtGui.QStandardItem(SubGroupName)
+        for PointGroup in point_groups:
+            self.group_list.append(PointGroup.Name)
+            sub_group_name = PointGroup.Label
+            item = QtGui.QStandardItem(sub_group_name)
             model.appendRow(item)
 
-    def MaxLength(self,P1,P2,P3):
-        MaxlengthLE = self.IPFui.MaxlengthLE.text()
-        List = [[P1,P2],[P2,P3],[P3,P1]]
-        Result = []
-        for i,j in List:
-            DeltaX = i[0] - j[0]
-            DeltaY = i[1] - j[1]
-            Length = (DeltaX**2+DeltaY**2)**0.5
-            Result.append(Length)
-        if Result[0] <= int(MaxlengthLE)*1000 and Result[1] <= int(MaxlengthLE)*1000 and Result[2] <= int(MaxlengthLE)*1000:
+    def max_length(self, P1, P2, P3):
+        maxlength_le = self.IPFui.MaxlengthLE.text()
+        list_ = [[P1,P2],[P2,P3],[P3,P1]]
+        result = []
+        for i,j in list_:
+            delta_x = i[0] - j[0]
+            delta_y = i[1] - j[1]
+            length = (delta_x**2+delta_y**2)**0.5
+            result.append(length)
+        if result[0] <= int(maxlength_le) * 1000 and \
+                result[1] <= int(maxlength_le) * 1000 and result[2] <= int(maxlength_le) * 1000:
             return True
         else:
             return False
 
-    def CreateSurface(self):
+    def create_surface(self):
         import scipy.spatial
 
-        Test = []
+        test_ = []
 
-        #Create surface
+        # Create surface
         for SelectedIndex in self.IPFui.PointGroupsLV.selectedIndexes():
-            Index = self.GroupList[SelectedIndex.row()]
-            PointGroup = FreeCAD.ActiveDocument.getObject(Index).Group
+            index_ = self.group_list[SelectedIndex.row()]
+            point_group = FreeCAD.ActiveDocument.getObject(index_).Group
 
-            for Point in PointGroup:
+            for Point in point_group:
                 xx = float(Point.X)
                 yy = float(Point.Y)
                 zz = float(Point.Z)
-                Test.append([xx,yy,zz])
+                test_.append([xx, yy, zz])
 
-        Data = np.array(Test)
-        DataOn = Data.mean(axis=0)
-        Basex = FreeCAD.Vector(DataOn[0], DataOn[1], DataOn[2])
-        Data -= DataOn
-        tri = scipy.spatial.Delaunay(Data[:,:2])
+        data = np.array(test_)
+        data_on = data.mean(axis=0)
+        basex = FreeCAD.Vector(data_on[0], data_on[1], data_on[2])
+        data -= data_on
+        tri = scipy.spatial.Delaunay(data[:, :2])
 
-        MeshList = []
+        mesh_list = []
 
         for i in tri.vertices:
             first = int(i[0])
             second = int(i[1])
             third = int(i[2])
 
-            if self.MaxLength(Data[first], Data[second], Data[third]):
-                MeshList.append(Data[first])
-                MeshList.append(Data[second])
-                MeshList.append(Data[third])
+            if self.max_length(data[first], data[second], data[third]):
+                mesh_list.append(data[first])
+                mesh_list.append(data[second])
+                mesh_list.append(data[third])
 
-        MeshObject = Mesh.Mesh(MeshList)
-        MeshObject.Placement.move(Basex)
-        SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
-        Surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", SurfaceNameLE)
-        Surface.Mesh = MeshObject
-        Surface.Label = SurfaceNameLE
-        self.Surfaces.addObject(Surface)
+        mesh_object = Mesh.Mesh(mesh_list)
+        mesh_object.Placement.move(basex)
+        surface_name_le = self.IPFui.SurfaceNameLE.text()
+        surface = FreeCAD.ActiveDocument.addObject("Mesh::Feature", surface_name_le)
+        surface.Mesh = mesh_object
+        surface.Label = surface_name_le
+        self.Surfaces.addObject(surface)
+
 
 FreeCADGui.addCommand('Create Surface',CreateSurface()) 

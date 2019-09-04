@@ -3,52 +3,55 @@ from PySide import QtCore, QtGui
 import MeshPart, Part, Draft
 import os
 
+
 class CreateGuideLines:
-    #Command to create sections for every selected surfaces.
+    # Command to create sections for every selected surfaces.
     Path = os.path.dirname(__file__)
 
     Resources = {
-        'Pixmap'  : Path + '/../Resources/Icons/CreateSections.svg',
+        'Pixmap': Path + '/../Resources/Icons/create_sections.svg',
         'MenuText': "Export Points",
-        'ToolTip' : "Export points to point file."
+        'ToolTip': "Export points to point file."
     }
 
     def __init__(self):
-        #Import *.ui file(s)
-        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/CreateSections.ui")
+        # Import *.ui file(s)
+        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/create_sections.ui")
 
-        #To Do List
-        self.IPFui.CreateB.clicked.connect(self.CreateSections)
+        # todo :
+        self.IPFui.CreateB.clicked.connect(self.create_sections)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
 
-    def GetResources(self):
+    def get_resources(self):
         #Return the command resources dictionary
         return self.Resources
 
-    def Activated(self):
+    def activated(self):
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
 
-    def CreateSections(self):
-        SectionGroup = FreeCAD.ActiveDocument.getObject("Group")
-        Surface = FreeCAD.ActiveDocument.getObject("YY202")
-        GuideLinesGroup = FreeCAD.ActiveDocument.getObject("Guide_Lines").Group
-        ProjectionDirection = FreeCAD.Vector(0, 0, 1)
+    @staticmethod  # i added staticmethod wrapper due to not using any instance attr
+    def create_sections():
+        section_group = FreeCAD.ActiveDocument.getObject("Group")
+        surface = FreeCAD.ActiveDocument.getObject("YY202")
+        guide_lines_group = FreeCAD.ActiveDocument.getObject("Guide_Lines").Group
+        projection_direction = FreeCAD.Vector(0, 0, 1)
 
-        Base = Surface.Mesh.Placement.Base
-        CopyMesh = Surface.Mesh.copy()
-        CopyMesh.Placement.Base = FreeCAD.Vector(0, 0, Base.z)
+        base = surface.Mesh.Placement.Base
+        copy_mesh = surface.Mesh.copy()
+        copy_mesh.Placement.Base = FreeCAD.Vector(0, 0, base.z)
 
-        for Wire in GuideLinesGroup:
-            Wire.Placement.Base = Wire.Placement.Base.add(Base.negative())
-            ProjectedWires = MeshPart.projectShapeOnMesh(Wire.Shape, CopyMesh, ProjectionDirection)
-            Wire.Placement.Base = Wire.Placement.Base.add(Base)
+        for Wire in guide_lines_group:
+            Wire.Placement.Base = Wire.Placement.Base.add(base.negative())
+            projected_wires = MeshPart.projectShapeOnMesh(Wire.Shape, copy_mesh, projection_direction)
+            Wire.Placement.Base = Wire.Placement.Base.add(base)
 
-            for ProjectedWire in ProjectedWires:
-                Section = Draft.makeWire(ProjectedWire)
-                Section.Placement.Base = Section.Placement.Base.add(FreeCAD.Vector(Base.x, Base.y, 0))
-                SectionGroup.addObject(Section)
+            for ProjectedWire in projected_wires:
+                section = Draft.makeWire(ProjectedWire)
+                section.Placement.Base = section.Placement.Base.add(FreeCAD.Vector(base.x, base.y, 0))
+                section_group.addObject(section)
         FreeCAD.ActiveDocument.recompute()
+
 
 FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines())

@@ -3,37 +3,38 @@ from PySide import QtCore, QtGui
 import Draft
 import os
 
+
 class CreateGuideLines:
-    #Command to create guide lines for selected alignment.
+    # Command to create guide lines for selected alignment.
     Path = os.path.dirname(__file__)
 
     Resources = {
-        'Pixmap'  : Path + '/../Resources/Icons/CreateSections.svg',
+        'Pixmap': Path + '/../Resources/Icons/create_sections.svg',
         'MenuText': "Create Guide Lines",
-        'ToolTip' : "Create guide lines for selected alignment."
+        'ToolTip': "Create guide lines for selected alignment."
     }
 
     def __init__(self):
-        #Import *.ui file(s)
+        # Import *.ui file(s)
         self.Path = os.path.dirname(os.path.abspath(__file__))
-        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/CreateGuideLines.ui")
+        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/create_guide_lines.ui")
         self.CPGui = FreeCADGui.PySideUic.loadUi(self.Path + "/CreateGuideLinesGroup.ui")
 
-        #To Do List
-        self.IPFui.CreateB.clicked.connect(self.CreateGuideLines)
+        # todo :
+        self.IPFui.CreateB.clicked.connect(self.create_guide_lines)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
-        self.IPFui.AddGLGroupB.clicked.connect(self.LoadCGLGui)
-        self.CPGui.OkB.clicked.connect(self.CreateNewGroup)
+        self.IPFui.AddGLGroupB.clicked.connect(self.load_cgl_gui)
+        self.CPGui.OkB.clicked.connect(self.create_new_group)
         self.CPGui.CancelB.clicked.connect(self.CPGui.close)
-        self.IPFui.AlignmentCB.currentIndexChanged.connect(self.ListGuideLinesGroups)
-        self.IPFui.FromAlgStartChB.stateChanged.connect(self.ActivateStations)
-        self.IPFui.ToAlgEndChB.stateChanged.connect(self.ActivateStations)
+        self.IPFui.AlignmentCB.currentIndexChanged.connect(self.list_guide_lines_groups)
+        self.IPFui.FromAlgStartChB.stateChanged.connect(self.activate_stations)
+        self.IPFui.ToAlgEndChB.stateChanged.connect(self.activate_stations)
 
-    def GetResources(self):
-        #Return the command resources dictionary
+    def get_resources(self):
+        # Return the command resources dictionary
         return self.Resources
 
-    def Activated(self):
+    def activated(self):
         try:
             self.GuideLineGroup = FreeCAD.ActiveDocument.Guide_Lines
         except:
@@ -45,124 +46,125 @@ class CreateGuideLines:
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
 
-        #List Alignments.
+        # List Alignments.
         self.IPFui.AlignmentCB.clear()
-        AlignmentGroup = FreeCAD.ActiveDocument.Alignments.Group
-        self.AlignmentList = []
+        alignment_group = FreeCAD.ActiveDocument.Alignments.Group
+        self.alignment_list = []
 
-        for Object in AlignmentGroup:
+        for Object in alignment_group:
             if Object.TypeId == 'Part::Part2DObjectPython':
-                self.AlignmentList.append(Object.Name)
+                self.alignment_list.append(Object.Name)
                 self.IPFui.AlignmentCB.addItem(Object.Label)
 
-        self.ListGuideLinesGroups()
+        self.list_guide_lines_groups()
 
-    def getAlignmentInfos(self):
-        AlignmentIndex = self.IPFui.AlignmentCB.currentIndex()
-        AlignmentName = self.AlignmentList[AlignmentIndex]
+    def get_alignment_info(self):
+        alignment_index = self.IPFui.AlignmentCB.currentIndex()
+        alignment_name = self.alignment_list[alignment_index]
 
-        Alignment = FreeCAD.ActiveDocument.getObject(AlignmentName)
+        Alignment = FreeCAD.ActiveDocument.getObject(alignment_name)
         Start = Alignment.Proxy.model.data['meta']['StartStation']
         Length = Alignment.Proxy.model.data['meta']['Length']
         End = Start + Length/1000
 
         return Alignment, Start, End
 
-    def ListGuideLinesGroups(self):
-        #List Guide Lines Groups.
+    def list_guide_lines_groups(self):
+        # List Guide Lines Groups.
         self.IPFui.GLGroupCB.clear()
-        GuideLinesGroup = FreeCAD.ActiveDocument.Guide_Lines.Group
+        guide_lines_group = FreeCAD.ActiveDocument.Guide_Lines.Group
         self.GLGList = []
 
-        for Object in GuideLinesGroup:
+        for Object in guide_lines_group:
             if Object.TypeId == 'App::DocumentObjectGroup':
                 self.GLGList.append(Object.Name)
                 self.IPFui.GLGroupCB.addItem(Object.Label)
-        Alignment, Start, End =self.getAlignmentInfos()
+        alignment, start, end = self.get_alignment_info()
 
-        self.IPFui.StartStationLE.setText(str(round(Start,3)))
-        self.IPFui.EndStationLE.setText(str(round(End,3)))
+        self.IPFui.StartStationLE.setText(str(round(start, 3)))
+        self.IPFui.EndStationLE.setText(str(round(end, 3)))
 
-    def LoadCGLGui(self):
-        #Load Create Guide Lines Group UI.
+    def load_cgl_gui(self):
+        # Load Create Guide Lines Group UI.
         self.CPGui.setParent(self.IPFui)
         self.CPGui.setWindowFlags(QtCore.Qt.Window)
         self.CPGui.show()
 
-    def CreateNewGroup(self):
-        #Create new guide lines group.
-        NewGroupName = self.CPGui.GuideLinesGroupNameLE.text()
-        NewGroup = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",NewGroupName)
-        NewGroup.Label = NewGroupName
-        FreeCAD.ActiveDocument.Guide_Lines.addObject(NewGroup)
-        self.IPFui.GLGroupCB.addItem(NewGroupName)
-        self.GLGList.append(NewGroup.Name)
-        NewGroup.Label = NewGroupName
+    def create_new_group(self):
+        # Create new guide lines group.
+        new_group_name = self.CPGui.GuideLinesGroupNameLE.text()
+        new_group = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",new_group_name)
+        new_group.Label = new_group_name
+        FreeCAD.ActiveDocument.Guide_Lines.addObject(new_group)
+        self.IPFui.GLGroupCB.addItem(new_group_name)
+        self.GLGList.append(new_group.Name)
+        new_group.Label = new_group_name
         self.CPGui.close()
 
-    def ActivateStations(self):
-        #When QCheckBox status changed do the following options.
-        Alignment, Start, End = self.getAlignmentInfos()
+    def activate_stations(self):
+        # When QCheckBox status changed do the following options.
+        alignment, start, end = self.get_alignment_info()
         if self.IPFui.FromAlgStartChB.isChecked():
             self.IPFui.StartStationLE.setEnabled(False)
-            self.IPFui.StartStationLE.setText(str(round(Start,3)))
+            self.IPFui.StartStationLE.setText(str(round(start,3)))
         else:
             self.IPFui.StartStationLE.setEnabled(True)
 
         if self.IPFui.ToAlgEndChB.isChecked():
             self.IPFui.EndStationLE.setEnabled(False)
-            self.IPFui.EndStationLE.setText(str(round(End, 3)))
+            self.IPFui.EndStationLE.setText(str(round(end, 3)))
         else:
             self.IPFui.EndStationLE.setEnabled(True)
 
-    def CreateGuideLines(self):
-        L = self.IPFui.LeftLengthLE.text()
-        R = self.IPFui.RightLengthLE.text()
-        FirstStation = self.IPFui.StartStationLE.text()
-        LastStation = self.IPFui.EndStationLE.text()
-        GLGIndex = self.IPFui.GLGroupCB.currentIndex()
-        GLGIndexName = self.GLGList[GLGIndex]
-        TangentIncrement = self.IPFui.TIncrementLE.text()
-        CurveSpiralIncrement = self.IPFui.CSIncrementLE.text()
+    def create_guide_lines(self):
+        l = self.IPFui.LeftLengthLE.text()
+        r = self.IPFui.RightLengthLE.text()
+        first_station = self.IPFui.StartStationLE.text()
+        last_station = self.IPFui.EndStationLE.text()
+        glg_index = self.IPFui.GLGroupCB.currentIndex()
+        glg_index_name = self.GLGList[glg_index]
+        tangent_increment = self.IPFui.TIncrementLE.text()
+        curve_spiral_increment = self.IPFui.CSIncrementLE.text()
 
-        Alignment, Start, End = self.getAlignmentInfos()
-        Pl = Alignment.Placement.Base
+        alignment, start, end = self.get_alignment_info()
+        pl = alignment.Placement.Base
 
-        Stations = []
-        Geometry = Alignment.Proxy.model.data['geometry']
-        for Geo in Geometry:
-            StartStation = Geo.get('StartStation')
-            EndStation = Geo.get('StartStation')+Geo.get('Length')/1000
-            if StartStation != 0:
+        stations = []
+        geometry = alignment.Proxy.model.data['geometry']
+        for Geo in geometry:
+            start_station = Geo.get('StartStation')
+            end_station = Geo.get('StartStation')+Geo.get('Length')/1000
+            if start_station != 0:
                 if self.IPFui.HorGeoPointsChB.isChecked():
-                    Stations.append(StartStation)
+                    stations.append(start_station)
 
             if Geo.get('Type') == 'Line':
-                for i in range(round(float(StartStation)), round(float(EndStation))):
-                    if i % int(TangentIncrement) == 0:
-                        Stations.append(i)
+                for i in range(round(float(start_station)), round(float(end_station))):
+                    if i % int(tangent_increment) == 0:
+                        stations.append(i)
 
             elif Geo.get('Type') == 'Curve' or Geo["Type"] == 'Spiral':
-                for i in range(round(float(StartStation)), round(float(EndStation))):
-                    if i % int(CurveSpiralIncrement) == 0:
-                        Stations.append(i)
-        Stations.append(round(End,3))
+                for i in range(round(float(start_station)), round(float(end_station))):
+                    if i % int(curve_spiral_increment) == 0:
+                        stations.append(i)
+        stations.append(round(end,3))
 
-        Result = []
-        for Station in Stations:
-            if float(FirstStation) <= Station <= float(LastStation):
-                Result.append(Station)
-        Result.sort()
+        result = []
+        for Station in stations:
+            if float(first_station) <= Station <= float(last_station):
+                result.append(Station)
+        result.sort()
 
-        for Station in Result:
-            Coord, vec = Alignment.Proxy.model.get_orthogonal( Station, "Left")
-            LeftEnd = Coord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
-            RightEnd = Coord.add(vec.negative().multiply(int(R)*1000))
+        for Station in result:
+            coord, vec = alignment.Proxy.model.get_orthogonal( Station, "Left")
+            left_end = coord.add(FreeCAD.Vector(vec).multiply(int(l)*1000))
+            right_end = coord.add(vec.negative().multiply(int(r)*1000))
 
-            GuideLine = Draft.makeWire([LeftEnd,Coord,RightEnd])
-            GuideLine.Placement.move(Pl)
-            GuideLine.Label = str(round(Station,3))
-            FreeCAD.ActiveDocument.getObject(GLGIndexName).addObject(GuideLine)
+            guide_line = Draft.makeWire([left_end,coord,right_end])
+            guide_line.Placement.move(pl)
+            guide_line.Label = str(round(Station,3))
+            FreeCAD.ActiveDocument.getObject(glg_index_name).addObject(guide_line)
             FreeCAD.ActiveDocument.recompute()
+
 
 FreeCADGui.addCommand('Create Guide Lines',CreateGuideLines())

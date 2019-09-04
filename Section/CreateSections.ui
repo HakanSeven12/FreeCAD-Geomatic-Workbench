@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CreateSections</class>
- <widget class="QDialog" name="CreateSections">
+ <class>create_sections</class>
+ <widget class="QDialog" name="create_sections">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CreateSections</string>
+   <string>create_sections</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
