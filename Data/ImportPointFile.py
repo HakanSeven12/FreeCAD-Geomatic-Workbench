@@ -20,9 +20,12 @@
 # *                                                                     *
 # ***********************************************************************
 
-import FreeCAD, FreeCADGui
+import FreeCAD
+import FreeCADGui
 from PySide import QtCore, QtGui
-import csv, os
+import csv
+import os
+
 
 class ImportPointFile:
     """
@@ -34,19 +37,21 @@ class ImportPointFile:
         Constructor
         """
 
-        #TODO : replace with  FreeCAD.getUserAppDataDir()
+        # TODO : replace with  FreeCAD.getUserAppDataDir()
         # Get file path.
         self.Path = os.path.dirname(__file__)
 
         # Get *.ui files.
-        self.IPFui = FreeCADGui.PySideUic.loadUi(self.Path + "/ImportPointFile.ui")
-        self.CPGui = FreeCADGui.PySideUic.loadUi(self.Path + "/CreatePointGroup.ui")
+        self.IPFui = FreeCADGui.PySideUic.loadUi(
+            self.Path + "/ImportPointFile.ui")
+        self.CPGui = FreeCADGui.PySideUic.loadUi(
+            self.Path + "/CreatePointGroup.ui")
 
         # Set icon,  menu text and tooltip.
         self.Resources = {
-            'Pixmap'  : self.Path + '/../Resources/Icons/ImportPointFile.svg',
+            'Pixmap': self.Path + '/../Resources/Icons/ImportPointFile.svg',
             'MenuText': "Import Point File",
-            'ToolTip' : "Import point file which includes survey data."
+            'ToolTip': "Import point file which includes survey data."
         }
 
         # To do.
@@ -73,22 +78,24 @@ class ImportPointFile:
         """
         Command activation method
         """
-        
-        if FreeCAD.ActiveDocument == None:
+
+        if FreeCAD.ActiveDocument is None:
             return
 
         # Get or create "Point_Groups".
         try:
             PointGroups = FreeCAD.ActiveDocument.Point_Groups
         except:
-            PointGroups = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup",'Point_Groups')
+            PointGroups = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'Point_Groups')
             PointGroups.Label = "Point Groups"
 
         # Get or create "Points".
         try:
             FreeCAD.ActiveDocument.Points
         except:
-            Points = FreeCAD.ActiveDocument.addObject('Points::Feature', "Points")
+            Points = FreeCAD.ActiveDocument.addObject(
+                'Points::Feature', "Points")
             PointGroups.addObject(Points)
 
         # Show UI.
@@ -119,8 +126,9 @@ class ImportPointFile:
 
         UI = self.IPFui
 
-        FileList = QtGui.QFileDialog.getOpenFileNames(None, "Select one or more files to open",
-                                                      os.getenv("HOME"), 'All Files (*.*)')
+        FileList = QtGui.QFileDialog.getOpenFileNames(
+                        None, "Select one or more files to open",
+                        os.getenv("HOME"), 'All Files (*.*)')
         UI.SelectedFilesLW.addItems(FileList[0])
 
     def RemoveFile(self):
@@ -131,11 +139,12 @@ class ImportPointFile:
         UI = self.IPFui
 
         for item in UI.SelectedFilesLW.selectedItems():
-           UI.SelectedFilesLW.takeItem(UI.SelectedFilesLW.row(item))
+            UI.SelectedFilesLW.takeItem(UI.SelectedFilesLW.row(item))
 
     def ActivatePointGroups(self):
         """
-        If check box status changed, enable or disable combo box and push button.
+        If check box status changed, enable or disable combo box and 
+        push button.
         """
 
         UI = self.IPFui
@@ -174,7 +183,8 @@ class ImportPointFile:
         CPG = self.CPGui
 
         NewGroupName = CPG.PointGroupNameLE.text()
-        NewGroup = FreeCAD.ActiveDocument.addObject('Points::Feature', "Point_Group")
+        NewGroup = FreeCAD.ActiveDocument.addObject(
+            'Points::Feature', "Point_Group")
         FreeCAD.ActiveDocument.Point_Groups.addObject(NewGroup)
         UI.SubGroupListCB.addItem(NewGroupName)
         self.GroupList.append(NewGroup.Name)
@@ -219,25 +229,31 @@ class ImportPointFile:
                 numRows = UI.PreviewTW.rowCount()
                 UI.PreviewTW.insertRow(numRows)
 
-                UI.PreviewTW.setItem(numRows, 0, QtGui.QTableWidgetItem(row[PN]))
-                UI.PreviewTW.setItem(numRows, 1, QtGui.QTableWidgetItem(row[N]))
-                UI.PreviewTW.setItem(numRows, 2, QtGui.QTableWidgetItem(row[E]))
-                UI.PreviewTW.setItem(numRows, 3, QtGui.QTableWidgetItem(row[Z]))
+                UI.PreviewTW.setItem(
+                    numRows, 0, QtGui.QTableWidgetItem(row[PN]))
+                UI.PreviewTW.setItem(
+                    numRows, 1, QtGui.QTableWidgetItem(row[N]))
+                UI.PreviewTW.setItem(
+                    numRows, 2, QtGui.QTableWidgetItem(row[E]))
+                UI.PreviewTW.setItem(
+                    numRows, 3, QtGui.QTableWidgetItem(row[Z]))
 
                 try:
-                    UI.PreviewTW.setItem(numRows, 4, QtGui.QTableWidgetItem(row[D]))
+                    UI.PreviewTW.setItem(
+                        numRows, 4, QtGui.QTableWidgetItem(row[D]))
                 except:
                     pass
 
                 if Counter == 500:
                     break
                 else:
-                    Counter +=1
-
+                    Counter += 1
 
             elif Operation == "Import":
-                    self.PointList.append((float(row[E]) * 1000, float(row[N]) * 1000, float(row[Z]) * 1000))
-
+            
+                self.PointList.append((float(row[E]),
+                                       float(row[N]),
+                                       float(row[Z])))
 
     def Preview(self):
         """
@@ -256,7 +272,7 @@ class ImportPointFile:
             UI.PreviewTW.setRowCount(0)
 
             # Show selected point file preview in table view.
-            File=open(listItems[0].text(), 'r')
+            File = open(listItems[0].text(), 'r')
             self.FileReader(File, "Preview")
 
     def ImportFile(self):
@@ -300,4 +316,5 @@ class ImportPointFile:
         FreeCADGui.SendMsgToActiveView("ViewFit")
         UI.close()
 
-FreeCADGui.addCommand('Import Point File',ImportPointFile())
+
+FreeCADGui.addCommand('Import Point File', ImportPointFile())

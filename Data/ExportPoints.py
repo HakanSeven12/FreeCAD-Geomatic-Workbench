@@ -70,7 +70,7 @@ class ExportPoints:
         Command activation method
         """
 
-        if FreeCAD.ActiveDocument == None:
+        if FreeCAD.ActiveDocument is None:
             return
 
         # Show UI.
@@ -148,7 +148,8 @@ class ExportPoints:
                 Counter += 1
 
                 File.write(Format[0]+Delimiter+Format[1]+Delimiter +
-                           Format[2]+Delimiter+Format[3]+Delimiter+Format[4]+"\n")
+                           Format[2]+Delimiter+Format[3]+Delimiter+Format[4] +
+                           "\n")
         File.close()
 
 
