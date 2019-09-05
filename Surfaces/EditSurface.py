@@ -27,68 +27,60 @@ import os
 
 
 class AddTriangle:
-    Path = os.path.dirname(__file__)
-
-    resources = {
-        'Pixmap': Path + '/../Resources/Icons/EditSurface.svg',
-        'MenuText': "Add Triangle",
-        'ToolTip': "Add a triangle to selected surface."
-    }
 
     def __init__(self):
 
-        "
-        Edit Surface
-        "
+        self.Path = os.path.dirname(__file__)
+
+        self.resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/EditSurface.svg',
+            'MenuText': "Add Triangle",
+            'ToolTip': "Add a triangle to selected surface."
+                }
 
     def GetResources(self):
-
         # Return the command resources dictionary
         return self.resources
 
-    def activated(self):
+    def Activated(self):
         FreeCADGui.runCommand("Mesh_AddFacet")
 
 FreeCADGui.addCommand('Add Triangle', AddTriangle())
 
 
 class DeleteTriangle:
-    Path = os.path.dirname(__file__)
-
-    resources = {
-        'Pixmap': Path + '/../Resources/Icons/EditSurface.svg',
-        'MenuText': "Delete Triangle",
-        'ToolTip': "Delete triangles from selected surface."
-    }
 
     def __init__(self):
-        print("Delete Triangle Added")
+        self.Path = os.path.dirname(__file__)
 
+        self.resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/EditSurface.svg',
+            'MenuText': "Delete Triangle",
+            'ToolTip': "Delete triangles from selected surface."
+              }
 
     def GetResources(self):
         # Return the command resources dictionary
         return self.resources
 
     @staticmethod
-    def activated():
+    def Activated():
         FreeCADGui.runCommand("Mesh_RemoveComponents")
 
 
 FreeCADGui.addCommand('Delete Triangle', DeleteTriangle())
 
-class SwapEdge:
-    Path = os.path.dirname(__file__)
 
-    resources = {
-        'Pixmap': Path + '/../Resources/Icons/EditSurface.svg',
-        'MenuText': "Swap Edge",
-        'ToolTip': "Swap Edge of selected surface."
-    }
+class SwapEdge:
 
     def __init__(self):
-        "
-        Swap Edge Added
-        "
+        self.Path = os.path.dirname(__file__)
+
+        self.resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/EditSurface.svg',
+            'MenuText': "Swap Edge",
+            'ToolTip': "Swap Edge of selected surface."
+            }
 
     def GetResources(self):
         # Return the command resources dictionary
@@ -101,24 +93,26 @@ class SwapEdge:
 
     def SwapEdge(self, cb):
         event = cb.getEvent()
-        if event.getButton() == coin.SoMouseButtonEvent.BUTTON2 and event.getState() == coin.SoMouseButtonEvent.DOWN:
+        if event.getButton() == coin.SoMouseButtonEvent.BUTTON2 \
+                and event.getState() == coin.SoMouseButtonEvent.DOWN:
             FreeCADGui.ActiveDocument.ActiveView.removeEventCallbackPivy(
                 coin.SoMouseButtonEvent.getClassTypeId(), self.MC)
-        if event.getButton() == coin.SoMouseButtonEvent.BUTTON1 and event.getState() == coin.SoMouseButtonEvent.DOWN:
+        if event.getButton() == coin.SoMouseButtonEvent.BUTTON1 \
+                and event.getState() == coin.SoMouseButtonEvent.DOWN:
             pp = cb.getPickedPoint()
 
-            if not pp is None:
+            if pp is not None:
                 detail = pp.getDetail()
 
                 if detail.isOfType(coin.SoFaceDetail.getClassTypeId()):
                     face_detail = coin.cast(
                         detail, str(detail.getTypeId().getName()))
                     index = face_detail.getFaceIndex()
-                    self.face_indexes.append(index)
+                    self.FaceIndexes.append(index)
 
-                    if len(self.face_indexes) == 2:
+                    if len(self.FaceIndexes) == 2:
                         surface = FreeCADGui.Selection.getSelection()[-1]
-                        copy_mesh = surface.Mesh.copy()
+                        CopyMesh = surface.Mesh.copy()
 
                         try:
                             CopyMesh.swapEdge(
@@ -131,19 +125,15 @@ FreeCADGui.addCommand('Swap Edge', SwapEdge())
 
 
 class SmoothSurface:
-    Path = os.path.dirname(__file__)
-
-    resources = {
-        'Pixmap': Path + '/../Resources/Icons/EditSurface.svg',
-        'MenuText': "Smooth Surface",
-        'ToolTip': "Smooth selected surface."
-    }
 
     def __init__(self):
-        "
-        Smooth Surface Added
-        "
+        self.Path = os.path.dirname(__file__)
 
+        self.resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/EditSurface.svg',
+            'MenuText': "Smooth Surface",
+            'ToolTip': "Smooth selected surface."
+            }
 
     def GetResources(self):
 
@@ -151,7 +141,7 @@ class SmoothSurface:
         return self.resources
 
     @staticmethod
-    def activated():
+    def Activated():
         surface = FreeCADGui.Selection.getSelection()[0]
         surface.Mesh.smooth()
 
