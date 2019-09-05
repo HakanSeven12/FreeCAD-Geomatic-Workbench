@@ -1,3 +1,24 @@
+# /**********************************************************************
+# *                                                                     *
+# * Copyright (c) 2019 Hakan Seven <hakanseven12@gmail.com>             *
+# *                                                                     *
+# * This program is free software; you can redistribute it and/or modify*
+# * it under the terms of the GNU Lesser General Public License (LGPL)  *
+# * as published by the Free Software Foundation; either version 2 of   *
+# * the License, or (at your option) any later version.                 *
+# * for detail see the LICENCE text file.                               *
+# *                                                                     *
+# * This program is distributed in the hope that it will be useful,     *
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of      *
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
+# * GNU Library General Public License for more details.                *
+# *                                                                     *
+# * You should have received a copy of the GNU Library General Public   *
+# * License along with this program; if not, write to the Free Software *
+# * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307*
+# * USA                                                                 *
+# *                                                                     *
+# ***********************************************************************
 
 import FreeCAD
 import FreeCADGui
@@ -7,21 +28,22 @@ import numpy as np
 import Mesh
 import os
 
+
 class CreateSurface:
     """
     Command to create a new surface
     """
 
-    Path = os.path.dirname(__file__)
-
-    resources = {
-        'Pixmap': Path + '/../Resources/Icons/CreateSurface.svg',
-        'MenuText': "Create Surface",
-        'ToolTip': "Create surface from selected point group(s)."
-    }
-
+    
     def __init__(self):
 
+        self.Path = os.path.dirname(__file__)
+
+        self.resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/CreateSurface.svg',
+            'MenuText': "Create Surface",
+            'ToolTip': "Create surface from selected point group(s)."
+            }
         # Import *.ui file(s)
         self.IPFui = FreeCADGui.PySideUic.loadUi(
             self.Path + "/CreateSurface.ui")
@@ -67,7 +89,9 @@ class CreateSurface:
             DeltaY = i[1] - j[1]
             Length = (DeltaX**2+DeltaY**2)**0.5
             Result.append(Length)
-        if Result[0] <= int(MaxlengthLE)*1000 and Result[1] <= int(MaxlengthLE)*1000 and Result[2] <= int(MaxlengthLE)*1000:
+        if Result[0] <= int(MaxlengthLE)*1000 \
+                and Result[1] <= int(MaxlengthLE)*1000 \
+                and Result[2] <= int(MaxlengthLE)*1000:
             return True
         else:
             return False
@@ -82,7 +106,9 @@ class CreateSurface:
             Angle = math.degrees(Radian)
             Result.append(Angle)
             print(Angle)
-        if Result[0] <= int(MaxAngleLE)*1000 and Result[1] <= int(MaxAngleLE)*1000 and Result[2] <= int(MaxAngleLE)*1000:
+        if Result[0] <= int(MaxAngleLE)*1000 \
+                and Result[1] <= int(MaxAngleLE)*1000 \
+                and Result[2] <= int(MaxAngleLE)*1000:
             return True
         else:
             return False
@@ -133,4 +159,3 @@ class CreateSurface:
 
 
 FreeCADGui.addCommand('Create Surface', CreateSurface())
-

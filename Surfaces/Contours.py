@@ -27,32 +27,28 @@ import Draft
 
 
 class CreateContour:
-    Path = os.path.dirname(__file__)
-
-    resources = {
-        'Pixmap': Path + '/../Resources/Icons/EditSurface.svg',
-        'MenuText': "Create Contour",
-        'ToolTip': "Create contour on selected surface."
-    }
 
     def __init__(self):
-        "
-        Add Triangle Added
-        "
+        self.Path = os.path.dirname(__file__)
+
+        self.resources = {
+                'Pixmap': self.Path + '/../Resources/Icons/EditSurface.svg',
+                'MenuText': "Create Contour",
+                'ToolTip': "Create contour on selected surface."}
 
     def GetResources(self):
 
         # Return the command resources dictionary
         return self.resources
 
-    def is_active(self):
+    def IsActive(self):
         if FreeCADGui.Selection.getSelection() is not None:
             selection = FreeCADGui.Selection.getSelection()[-1]
             if selection.TypeId == 'Mesh::Feature':
                 return True
         return False
 
-    def activated(self):
+    def Activated(self):
         surface = FreeCADGui.Selection.getSelection()[-1]
         base = surface.Mesh.Placement.Base
         copy_mesh = surface.Mesh.copy()
@@ -64,15 +60,15 @@ class CreateContour:
             self.Contours = FreeCAD.ActiveDocument.addObject(
                 "App::DocumentObjectGroup", 'Contours')
 
-        self.create_contour(copy_mesh, base)
+        self.CreateContour(copy_mesh, base)
 
-    def wire(self, name, point_list, base, support=None):
+    def Wire(self, H, PointList, base, Support=None):
         Pl = FreeCAD.Placement()
         Pl.Rotation.Q = (0.0, 0.0, 0.0, 1.0)
         Pl.Base = FreeCAD.Vector(base.x, base.y, 0)
 
         WireObj = FreeCAD.ActiveDocument.addObject(
-            "Part::Part2DObjectPython", "_"+str(Name/1000))
+            "Part::Part2DObjectPython", "_"+str(H/1000))
         Draft._Wire(WireObj)
         WireObj.Points = PointList
         WireObj.Closed = False
@@ -81,17 +77,17 @@ class CreateContour:
         WireObj.Placement = Pl
 
         if FreeCADGui:
-            Draft._ViewProviderWire(wire_obj.ViewObject)  # protected member again
-            Draft.formatObject(wire_obj)
-            Draft.select(wire_obj)
-            self.contours.addObject(wire_obj)
+            Draft._ViewProviderWire(WireObj.ViewObject)
+            Draft.formatObject(WireObj)
+            Draft.select(WireObj)
+            self.contours.addObject(WireObj)
         FreeCAD.ActiveDocument.recompute()
-        return wire_obj
+        return WireObj
 
-    def create_contour(self, Mesh, Base):
+    def CreateContour(self, Mesh, Base):
         zmax = Mesh.BoundBox.ZMax
         zmin = Mesh.BoundBox.ZMin
-        delta_h = 1000
+        DeltaH = 1000
 
         for H in range(round(zmin), round(zmax)):
             if H % int(DeltaH) == 0:

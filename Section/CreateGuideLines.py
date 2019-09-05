@@ -28,16 +28,17 @@ import os
 
 
 class CreateGuideLines:
-    # Command to create guide lines for selected alignment.
-    Path = os.path.dirname(__file__)
-
-    Resources = {
-        'Pixmap': Path + '/../Resources/Icons/CreateSections.svg',
-        'MenuText': "Create Guide Lines",
-        'ToolTip': "Create guide lines for selected alignment."
-    }
 
     def __init__(self):
+
+            # Command to create guide lines for selected alignment.
+        self.Path = os.path.dirname(__file__)
+
+        self.resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/CreateSections.svg',
+            'MenuText': "Create Guide Lines",
+            'ToolTip': "Create guide lines for selected alignment."
+                    }
         # Import *.ui file(s)
         self.Path = os.path.dirname(os.path.abspath(__file__))
 
@@ -50,8 +51,8 @@ class CreateGuideLines:
         self.IPFui.CreateB.clicked.connect(self.CreateGuideLines)
 
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
-        self.IPFui.AddGLGroupB.clicked.connect(self.load_cgl_gui)
-        self.CPGui.OkB.clicked.connect(self.create_new_group)
+        self.IPFui.AddGLGroupB.clicked.connect(self.LoadCGLGui)
+        self.CPGui.OkB.clicked.connect(self.CreateNewGroup)
         self.CPGui.CancelB.clicked.connect(self.CPGui.close)
         self.IPFui.AlignmentCB.currentIndexChanged.connect(
             self.ListGuideLinesGroups)
@@ -60,9 +61,9 @@ class CreateGuideLines:
 
     def GetResources(self):
         # Return the command resources dictionary
-        return self.Resources
+        return self.resources
 
-    def activated(self):
+    def Activated(self):
         try:
             self.GuideLineGroup = FreeCAD.ActiveDocument.Guide_Lines
         except:
@@ -85,9 +86,9 @@ class CreateGuideLines:
                 self.alignment_list.append(Object.Name)
                 self.IPFui.AlignmentCB.addItem(Object.Label)
 
-        self.list_guide_lines_groups()
+        self.ListGuideLinesGroups()
 
-    def get_alignment_info(self):
+    def getAlignmentInfos(self):
         alignment_index = self.IPFui.AlignmentCB.currentIndex()
         alignment_name = self.alignment_list[alignment_index]
 
@@ -97,7 +98,6 @@ class CreateGuideLines:
         End = Start + Length/1000
 
         return Alignment, Start, End
-
 
     def ListGuideLinesGroups(self):
 
@@ -123,7 +123,6 @@ class CreateGuideLines:
         self.CPGui.setWindowFlags(QtCore.Qt.Window)
         self.CPGui.show()
 
-
     def CreateNewGroup(self):
         # Create new guide lines group.
         NewGroupName = self.CPGui.GuideLinesGroupNameLE.text()
@@ -147,36 +146,36 @@ class CreateGuideLines:
 
         if self.IPFui.ToAlgEndChB.isChecked():
             self.IPFui.EndStationLE.setEnabled(False)
-            self.IPFui.EndStationLE.setText(str(round(end, 3)))
+            self.IPFui.EndStationLE.setText(str(round(End, 3)))
         else:
             self.IPFui.EndStationLE.setEnabled(True)
 
-    def create_guide_lines(self):
+    def CreateGuideLines(self):
         l = self.IPFui.LeftLengthLE.text()
         r = self.IPFui.RightLengthLE.text()
-        first_station = self.IPFui.StartStationLE.text()
-        last_station = self.IPFui.EndStationLE.text()
+        FirstStation = self.IPFui.StartStationLE.text()
+        LastStation = self.IPFui.EndStationLE.text()
         glg_index = self.IPFui.GLGroupCB.currentIndex()
-        glg_index_name = self.GLGList[glg_index]
+        GLGIndexName = self.GLGList[glg_index]
         tangent_increment = self.IPFui.TIncrementLE.text()
-        curve_spiral_increment = self.IPFui.CSIncrementLE.text()
+        CurveSpiralIncrement = self.IPFui.CSIncrementLE.text()
 
-        alignment, start, end = self.get_alignment_info()
-        pl = alignment.Placement.Base
+        Alignment, Start, End = self.getAlignmentInfos()
+        pl = Alignment.Placement.Base
 
-        stations = []
-        geometry = alignment.Proxy.model.data['geometry']
+        Stations = []
+        geometry = Alignment.Proxy.model.data['geometry']
         for Geo in geometry:
-            start_station = Geo.get('StartStation')
-            end_station = Geo.get('StartStation')+Geo.get('Length')/1000
-            if start_station != 0:
+            StartStation = Geo.get('StartStation')
+            EndStation = Geo.get('StartStation')+Geo.get('Length')/1000
+            if StartStation != 0:
                 if self.IPFui.HorGeoPointsChB.isChecked():
-                    stations.append(start_station)
+                    Stations.append(StartStation)
 
             if Geo.get('Type') == 'Line':
-                for i in range(round(float(start_station)), round(float(end_station))):
+                for i in range(round(float(StartStation)), round(float(EndStation))):
                     if i % int(tangent_increment) == 0:
-                        stations.append(i)
+                        Stations.append(i)
 
             elif Geo.get('Type') == 'Curve' or Geo["Type"] == 'Spiral':
                 for i in range(round(float(StartStation)), round(float(EndStation))):
@@ -192,11 +191,11 @@ class CreateGuideLines:
 
         for Station in Result:
             Coord, vec = Alignment.Proxy.model.get_orthogonal(Station, "Left")
-            LeftEnd = Coord.add(FreeCAD.Vector(vec).multiply(int(L)*1000))
-            RightEnd = Coord.add(vec.negative().multiply(int(R)*1000))
+            LeftEnd = Coord.add(FreeCAD.Vector(vec).multiply(int(l)*1000))
+            RightEnd = Coord.add(vec.negative().multiply(int(r)*1000))
 
             GuideLine = Draft.makeWire([LeftEnd, Coord, RightEnd])
-            GuideLine.Placement.move(Pl)
+            GuideLine.Placement.move(pl)
             GuideLine.Label = str(round(Station, 3))
             FreeCAD.ActiveDocument.getObject(GLGIndexName).addObject(GuideLine)
             FreeCAD.ActiveDocument.recompute()
