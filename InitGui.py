@@ -1,8 +1,6 @@
-from Data import ImportPointFile
-from Data import ExportPoints
-from Surfaces import CreateSurface
-from Surfaces import EditSurface
-from Surfaces import Contours
+import GeoData
+from Data import ImportPointFile, ExportPoints
+from Surfaces import CreateSurface, EditSurface, Contours
 from Section import CreateGuideLines
 
 class GeomaticsCommandGroup:
@@ -36,8 +34,8 @@ class GeomaticsWorkbench ( Gui.Workbench ):
     import os
 
     "Geomatics Workbench Object"
-    MenuText = 'Geomatics'
-    ToolTip = 'Geomatic/Survey Engineering Workbench'
+    MenuText = 'Geomatics (Alpha)'
+    ToolTip = 'Geomatics/Survey Engineering Workbench'
     Icon = os.path.join(ICONPATH, 'GeomaticsWorkbench.svg')
 		
     def __init__(self):
@@ -52,6 +50,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                 'gui': self.menu + self.toolbar,
                 'cmd': ['Import Point File',
                         'Export Points',
+                        'GeoData Tools'
                        ]
             },
 
@@ -64,7 +63,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
 			},
 
             'Section Tools': {
-                'gui': self.menu,
+                'gui': self.menu + self.toolbar,
                 'cmd': ['Create Guide Lines']
             },
 
@@ -88,7 +87,7 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                 self.appendMenu(_k, _v['cmd'])
 
     EditSurfaceSub = ['Add Triangle','Delete Triangle','Swap Edge','Smooth Surface']
-    Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit Surface', TypeId = 'Mesh::Feature'))
+    Gui.addCommand('Surface Editor', GeomaticsCommandGroup(EditSurfaceSub, 'Edit selected surface.', TypeId = 'Mesh::Feature'))
 
     DraftDraw = ["Draft_Line","Draft_Wire","Draft_Circle","Draft_Arc","Draft_Ellipse",
                  "Draft_Polygon","Draft_Rectangle", "Draft_Text", "Draft_Dimension",
@@ -106,6 +105,13 @@ class GeomaticsWorkbench ( Gui.Workbench ):
                 ]
 
     Gui.addCommand('Edit Tools', GeomaticsCommandGroup(DraftEdit, 'Draft Snap Tools'))
+	
+    GeoData = ['Import OSM Map', 'Import CSV', 'Import GPX', 'Import Heights',
+                'Import SRTM', 'Import XYZ', 'Import LatLonZ',  'Import Image', 'Import ASTER', 
+                'Import LIDAR', 'Create House', 'Navigator','ElevationGrid', 'Import EMIR',
+                ]
+
+    Gui.addCommand('GeoData Tools', GeomaticsCommandGroup(GeoData, 'GeoData WB Tools'))
 
     def ContextMenu(self, recipient):
         """
