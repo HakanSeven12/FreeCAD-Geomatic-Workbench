@@ -9,9 +9,9 @@ class CreateGuideLines:
     Path = os.path.dirname(__file__)
 
     Resources = {
-        'Pixmap'  : Path + '/../Resources/Icons/CreateSections.svg',
+        'Pixmap': Path + '/../Resources/Icons/create_sections.svg',
         'MenuText': "Export Points",
-        'ToolTip' : "Export points to point file."
+        'ToolTip': "Export points to point file."
     }
 
     def __init__(self):
@@ -26,7 +26,7 @@ class CreateGuideLines:
         # Return the command resources dictionary
         return self.Resources
 
-    def Activated(self):
+    def activated(self):
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()

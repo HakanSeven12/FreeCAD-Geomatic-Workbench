@@ -2,6 +2,7 @@ import FreeCAD, FreeCADGui
 from PySide import QtCore, QtGui
 import os
 
+
 class ExportPoints:
     """
     Command to export points to point file.
@@ -99,7 +100,7 @@ class ExportPoints:
         elif UI.DelimiterCB.currentText() == "Comma":
             Delimiter=','
 
-        #Create point file.
+        # Create point file.
         File = open(FileDestinationLE, 'w')
         Counter = 1
 

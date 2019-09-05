@@ -2,6 +2,7 @@ import FreeCAD, FreeCADGui
 from PySide import QtCore, QtGui
 import csv, os
 
+
 class ImportPointFile:
     """
     Command to import point file which includes survey data.
