@@ -1,4 +1,27 @@
-import FreeCAD, FreeCADGui
+# /**********************************************************************
+# *                                                                     *
+# * Copyright (c) 2019 Hakan Seven <hakanseven12@gmail.com>             *
+# *                                                                     *
+# * This program is free software; you can redistribute it and/or modify*
+# * it under the terms of the GNU Lesser General Public License (LGPL)  *
+# * as published by the Free Software Foundation; either version 2 of   *
+# * the License, or (at your option) any later version.                 *
+# * for detail see the LICENCE text file.                               *
+# *                                                                     *
+# * This program is distributed in the hope that it will be useful,     *
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of      *
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
+# * GNU Library General Public License for more details.                *
+# *                                                                     *
+# * You should have received a copy of the GNU Library General Public   *
+# * License along with this program; if not, write to the Free Software *
+# * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307*
+# * USA                                                                 *
+# *                                                                     *
+# ***********************************************************************
+
+import FreeCAD
+import FreeCADGui
 from pivy import coin
 import os
 
@@ -13,18 +36,19 @@ class AddTriangle:
     }
 
     def __init__(self):
-        # todo : does not make sense
-        print("Add Triangle Added")
 
-    def get_resources(self):
+        "
+        Edit Surface
+        "
+
+    def GetResources(self):
+
         # Return the command resources dictionary
         return self.resources
 
     def activated(self):
         FreeCADGui.runCommand("Mesh_AddFacet")
 
-
-# todo : does not make sense
 FreeCADGui.addCommand('Add Triangle', AddTriangle())
 
 
@@ -32,15 +56,16 @@ class DeleteTriangle:
     Path = os.path.dirname(__file__)
 
     resources = {
-        'Pixmap' : Path + '/../Resources/Icons/EditSurface.svg',
+        'Pixmap': Path + '/../Resources/Icons/EditSurface.svg',
         'MenuText': "Delete Triangle",
         'ToolTip': "Delete triangles from selected surface."
     }
 
     def __init__(self):
-        print ("Delete Triangle Added")
+        print("Delete Triangle Added")
 
-    def get_resources(self):
+
+    def GetResources(self):
         # Return the command resources dictionary
         return self.resources
 
@@ -49,8 +74,7 @@ class DeleteTriangle:
         FreeCADGui.runCommand("Mesh_RemoveComponents")
 
 
-FreeCADGui.addCommand('Delete Triangle',DeleteTriangle())
-
+FreeCADGui.addCommand('Delete Triangle', DeleteTriangle())
 
 class SwapEdge:
     Path = os.path.dirname(__file__)
@@ -62,23 +86,24 @@ class SwapEdge:
     }
 
     def __init__(self):
-        # todo : does not make sense
-        print("Swap Edge Added")
+        "
+        Swap Edge Added
+        "
 
-    def get_resources(self):
+    def GetResources(self):
         # Return the command resources dictionary
         return self.resources
 
-    def activated(self):
-        self.face_indexes = []
-        self.mc = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(),
-                                                                            self.swap_edge)
+    def Activated(self):
+        self.FaceIndexes = []
+        self.MC = FreeCADGui.ActiveDocument.ActiveView.addEventCallbackPivy(
+            coin.SoMouseButtonEvent.getClassTypeId(), self.SwapEdge)
 
-    def swap_edge(self, cb):
+    def SwapEdge(self, cb):
         event = cb.getEvent()
         if event.getButton() == coin.SoMouseButtonEvent.BUTTON2 and event.getState() == coin.SoMouseButtonEvent.DOWN:
-            FreeCADGui.ActiveDocument.ActiveView.removeEventCallbackPivy(coin.SoMouseButtonEvent.getClassTypeId(),
-                                                                         self.mc)
+            FreeCADGui.ActiveDocument.ActiveView.removeEventCallbackPivy(
+                coin.SoMouseButtonEvent.getClassTypeId(), self.MC)
         if event.getButton() == coin.SoMouseButtonEvent.BUTTON1 and event.getState() == coin.SoMouseButtonEvent.DOWN:
             pp = cb.getPickedPoint()
 
@@ -86,7 +111,8 @@ class SwapEdge:
                 detail = pp.getDetail()
 
                 if detail.isOfType(coin.SoFaceDetail.getClassTypeId()):
-                    face_detail = coin.cast(detail, str(detail.getTypeId().getName()))
+                    face_detail = coin.cast(
+                        detail, str(detail.getTypeId().getName()))
                     index = face_detail.getFaceIndex()
                     self.face_indexes.append(index)
 
@@ -95,15 +121,12 @@ class SwapEdge:
                         copy_mesh = surface.Mesh.copy()
 
                         try:
-                            copy_mesh.swapEdge(self.face_indexes[0], self.face_indexes[1])
+                            CopyMesh.swapEdge(
+                                self.FaceIndexes[0], self.FaceIndexes[1])
+
                         except:
                             pass
 
-                        surface.Mesh = copy_mesh
-                        self.face_indexes.clear()
-
-
-# todo : does not make sense
 FreeCADGui.addCommand('Swap Edge', SwapEdge())
 
 
@@ -117,10 +140,13 @@ class SmoothSurface:
     }
 
     def __init__(self):
-        # todo : does not make sense
-        print("Smooth Surface Added")
+        "
+        Smooth Surface Added
+        "
 
-    def get_resources(self):
+
+    def GetResources(self):
+
         # Return the command resources dictionary
         return self.resources
 
@@ -129,6 +155,5 @@ class SmoothSurface:
         surface = FreeCADGui.Selection.getSelection()[0]
         surface.Mesh.smooth()
 
+FreeCADGui.addCommand('Smooth Surface', SmoothSurface())
 
-# todo : does not make sense
-FreeCADGui.addCommand('Smooth Surface',SmoothSurface())

@@ -1,4 +1,27 @@
-import FreeCAD, FreeCADGui
+# /**********************************************************************
+# *                                                                     *
+# * Copyright (c) 2019 Hakan Seven <hakanseven12@gmail.com>             *
+# *                                                                     *
+# * This program is free software; you can redistribute it and/or modify*
+# * it under the terms of the GNU Lesser General Public License (LGPL)  *
+# * as published by the Free Software Foundation; either version 2 of   *
+# * the License, or (at your option) any later version.                 *
+# * for detail see the LICENCE text file.                               *
+# *                                                                     *
+# * This program is distributed in the hope that it will be useful,     *
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of      *
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the       *
+# * GNU Library General Public License for more details.                *
+# *                                                                     *
+# * You should have received a copy of the GNU Library General Public   *
+# * License along with this program; if not, write to the Free Software *
+# * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307*
+# * USA                                                                 *
+# *                                                                     *
+# ***********************************************************************
+
+import FreeCAD
+import FreeCADGui
 import os
 import Draft
 
@@ -13,10 +36,12 @@ class CreateContour:
     }
 
     def __init__(self):
-        # todo : does not make sense
-        print("Add Triangle Added")
+        "
+        Add Triangle Added
+        "
 
-    def get_resources(self):
+    def GetResources(self):
+
         # Return the command resources dictionary
         return self.resources
 
@@ -36,7 +61,8 @@ class CreateContour:
         try:
             self.contours = FreeCAD.ActiveDocument.Contours
         except:
-            self.contours = FreeCAD.ActiveDocument.addObject("App::DocumentObjectGroup", 'contours')
+            self.Contours = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'Contours')
 
         self.create_contour(copy_mesh, base)
 
@@ -45,13 +71,15 @@ class CreateContour:
         Pl.Rotation.Q = (0.0, 0.0, 0.0, 1.0)
         Pl.Base = FreeCAD.Vector(base.x, base.y, 0)
 
-        wire_obj = FreeCAD.ActiveDocument.addObject("Part::Part2DObjectPython", "_" + str(name / 1000))
-        Draft._Wire(wire_obj)  # it seems Wire is a protected member of Draft. Are you really sure?
-        wire_obj.Points = point_list
-        wire_obj.Closed = False
-        wire_obj.Support = support
-        wire_obj.MakeFace = False
-        wire_obj.Placement = Pl
+        WireObj = FreeCAD.ActiveDocument.addObject(
+            "Part::Part2DObjectPython", "_"+str(Name/1000))
+        Draft._Wire(WireObj)
+        WireObj.Points = PointList
+        WireObj.Closed = False
+        WireObj.Support = Support
+        WireObj.MakeFace = False
+        WireObj.Placement = Pl
+
         if FreeCADGui:
             Draft._ViewProviderWire(wire_obj.ViewObject)  # protected member again
             Draft.formatObject(wire_obj)
@@ -66,11 +94,11 @@ class CreateContour:
         delta_h = 1000
 
         for H in range(round(zmin), round(zmax)):
-            if H % int(delta_h) == 0:
-                cross_sections = Mesh.crossSections([((0,0,H),(0,0,1))],0.000001)
-                for i in cross_sections[0]:
-                    contour = self.wire(H, i, Base)
-                    contour.Label = str(H/1000)
+            if H % int(DeltaH) == 0:
+                CrossSections = Mesh.crossSections(
+                    [((0, 0, H), (0, 0, 1))], 0.000001)
+                for i in CrossSections[0]:
+                    Contour = self.Wire(H, i, Base)
+                    Contour.Label = str(H/1000)
 
-
-FreeCADGui.addCommand('Create Contour',CreateContour())
+FreeCADGui.addCommand('Create Contour', CreateContour())
