@@ -36,15 +36,18 @@ class AddTriangle:
     }
 
     def __init__(self):
-        print("Add Triangle Added")
+
+        "
+        Edit Surface
+        "
 
     def GetResources(self):
+
         # Return the command resources dictionary
         return self.resources
 
-    def Activated(self):
+    def activated(self):
         FreeCADGui.runCommand("Mesh_AddFacet")
-
 
 FreeCADGui.addCommand('Add Triangle', AddTriangle())
 
@@ -61,16 +64,17 @@ class DeleteTriangle:
     def __init__(self):
         print("Delete Triangle Added")
 
+
     def GetResources(self):
         # Return the command resources dictionary
         return self.resources
 
-    def Activated(self):
+    @staticmethod
+    def activated():
         FreeCADGui.runCommand("Mesh_RemoveComponents")
 
 
 FreeCADGui.addCommand('Delete Triangle', DeleteTriangle())
-
 
 class SwapEdge:
     Path = os.path.dirname(__file__)
@@ -82,8 +86,9 @@ class SwapEdge:
     }
 
     def __init__(self):
-
-        print("Swap Edge Added")
+        "
+        Swap Edge Added
+        "
 
     def GetResources(self):
         # Return the command resources dictionary
@@ -101,24 +106,26 @@ class SwapEdge:
                 coin.SoMouseButtonEvent.getClassTypeId(), self.MC)
         if event.getButton() == coin.SoMouseButtonEvent.BUTTON1 and event.getState() == coin.SoMouseButtonEvent.DOWN:
             pp = cb.getPickedPoint()
+
             if not pp is None:
                 detail = pp.getDetail()
+
                 if detail.isOfType(coin.SoFaceDetail.getClassTypeId()):
                     face_detail = coin.cast(
                         detail, str(detail.getTypeId().getName()))
                     index = face_detail.getFaceIndex()
-                    self.FaceIndexes.append(index)
-                    if len(self.FaceIndexes) == 2:
-                        Surface = FreeCADGui.Selection.getSelection()[-1]
-                        CopyMesh = Surface.Mesh.copy()
+                    self.face_indexes.append(index)
+
+                    if len(self.face_indexes) == 2:
+                        surface = FreeCADGui.Selection.getSelection()[-1]
+                        copy_mesh = surface.Mesh.copy()
+
                         try:
                             CopyMesh.swapEdge(
                                 self.FaceIndexes[0], self.FaceIndexes[1])
+
                         except:
                             pass
-                        Surface.Mesh = CopyMesh
-                        self.FaceIndexes.clear()
-
 
 FreeCADGui.addCommand('Swap Edge', SwapEdge())
 
@@ -133,16 +140,20 @@ class SmoothSurface:
     }
 
     def __init__(self):
+        "
+        Smooth Surface Added
+        "
 
-        print("Smooth Surface Added")
 
     def GetResources(self):
+
         # Return the command resources dictionary
         return self.resources
 
-    def Activated(self):
-        Surface = FreeCADGui.Selection.getSelection()[0]
-        Surface.Mesh.smooth()
-
+    @staticmethod
+    def activated():
+        surface = FreeCADGui.Selection.getSelection()[0]
+        surface.Mesh.smooth()
 
 FreeCADGui.addCommand('Smooth Surface', SmoothSurface())
+

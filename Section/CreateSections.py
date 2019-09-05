@@ -51,7 +51,7 @@ class CreateGuideLines:
         # Return the command resources dictionary
         return self.Resources
 
-    def Activated(self):
+    def activated(self):
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()

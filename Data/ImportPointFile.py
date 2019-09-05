@@ -1,3 +1,4 @@
+
 # /**********************************************************************
 # *                                                                     *
 # * Copyright (c) 2019 Hakan Seven <hakanseven12@gmail.com>             *
@@ -25,7 +26,6 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 import csv
 import os
-
 
 class ImportPointFile:
     """

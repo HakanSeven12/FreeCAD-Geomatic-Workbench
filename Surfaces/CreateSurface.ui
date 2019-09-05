@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CreateSurface</class>
- <widget class="QDialog" name="CreateSurface">
+ <class>create_surface</class>
+ <widget class="QDialog" name="create_surface">
   <property name="geometry">
    <rect>
     <x>0</x>

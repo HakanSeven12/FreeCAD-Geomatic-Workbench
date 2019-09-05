@@ -25,7 +25,6 @@ import FreeCADGui
 from PySide import QtCore, QtGui
 import os
 
-
 class ExportPoints:
     """
     Command to export points to point file.
@@ -154,3 +153,4 @@ class ExportPoints:
 
 
 FreeCADGui.addCommand('Export Points', ExportPoints())
+

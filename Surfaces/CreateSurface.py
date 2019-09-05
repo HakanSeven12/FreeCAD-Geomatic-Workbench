@@ -1,3 +1,4 @@
+
 import FreeCAD
 import FreeCADGui
 from FreeCAD import Base
@@ -5,7 +6,6 @@ from PySide import QtCore, QtGui
 import numpy as np
 import Mesh
 import os
-
 
 class CreateSurface:
     """
@@ -21,6 +21,7 @@ class CreateSurface:
     }
 
     def __init__(self):
+
         # Import *.ui file(s)
         self.IPFui = FreeCADGui.PySideUic.loadUi(
             self.Path + "/CreateSurface.ui")
@@ -132,3 +133,4 @@ class CreateSurface:
 
 
 FreeCADGui.addCommand('Create Surface', CreateSurface())
+
