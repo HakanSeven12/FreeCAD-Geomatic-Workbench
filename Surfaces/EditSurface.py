@@ -146,4 +146,3 @@ class SmoothSurface:
         surface.Mesh.smooth()
 
 FreeCADGui.addCommand('Smooth Surface', SmoothSurface())
-
