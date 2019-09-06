@@ -21,12 +21,11 @@
 # *                                                                     *
 # ***********************************************************************
 
-import os
-
 import GeoData
 from Data import ImportPointFile, ExportPoints
 from Surfaces import CreateSurface, EditSurface, Contours
 from Section import CreateGuideLines
+import os
 
 
 class GeomaticsCommandGroup:
@@ -56,13 +55,17 @@ class GeomaticsCommandGroup:
 
 
 class GeomaticsWorkbench (Gui.Workbench):
-    "Geomatics Workbench Object"
-    MenuText = 'Geomatics (Alpha)'
-    ToolTip = 'Geomatics/Survey Engineering Workbench'
-    Icon = FreeCAD.getUserAppDataDir() + \
-      "Mod/FreeCAD-Geomatics-Workbench/Resources/Icons/GeomaticsWorkbench.svg"
+    " Geomatics Workbench Object "
 
     def __init__(self):
+
+        # TODO : test if the workbench is installed elsewhere
+        #   FreeCAD.getResourceDir(): for supported Workbenches
+        self.__class__.Icon = FreeCAD.getUserAppDataDir() + \
+                        "Mod/Geomatics/Resources/Icons/GeomaticsWorkbench.svg"
+
+        self.__class__.MenuText = 'Geomatics (Alpha)'
+        self.__class__.ToolTip = 'Geomatics/Survey Engineering Workbench'
 
         self.menu = 1
         self.toolbar = 2
