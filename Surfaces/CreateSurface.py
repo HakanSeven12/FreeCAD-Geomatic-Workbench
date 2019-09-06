@@ -34,7 +34,6 @@ class CreateSurface:
     Command to create a new surface
     """
 
-    
     def __init__(self):
 
         self.Path = os.path.dirname(__file__)
@@ -49,8 +48,9 @@ class CreateSurface:
             self.Path + "/CreateSurface.ui")
 
         # To Do List
-        self.IPFui.CreateB.clicked.connect(self.CreateSurface)
-        self.IPFui.CancelB.clicked.connect(self.IPFui.close)
+        UI = self.IPFui
+        UI.CreateB.clicked.connect(self.CreateSurface)
+        UI.CancelB.clicked.connect(UI.close)
 
     def GetResources(self):
         """
@@ -89,9 +89,9 @@ class CreateSurface:
             DeltaY = i[1] - j[1]
             Length = (DeltaX**2+DeltaY**2)**0.5
             Result.append(Length)
-        if Result[0] <= int(MaxlengthLE)*1000 \
-                and Result[1] <= int(MaxlengthLE)*1000 \
-                and Result[2] <= int(MaxlengthLE)*1000:
+        if Result[0] <= int(MaxlengthLE) \
+                and Result[1] <= int(MaxlengthLE) \
+                and Result[2] <= int(MaxlengthLE):
             return True
         else:
             return False
@@ -106,9 +106,9 @@ class CreateSurface:
             Angle = math.degrees(Radian)
             Result.append(Angle)
             print(Angle)
-        if Result[0] <= int(MaxAngleLE)*1000 \
-                and Result[1] <= int(MaxAngleLE)*1000 \
-                and Result[2] <= int(MaxAngleLE)*1000:
+        if Result[0] <= int(MaxAngleLE) \
+                and Result[1] <= int(MaxAngleLE) \
+                and Result[2] <= int(MaxAngleLE):
             return True
         else:
             return False
