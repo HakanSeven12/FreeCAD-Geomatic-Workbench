@@ -27,6 +27,7 @@ from PySide import QtCore, QtGui
 import csv
 import os
 
+
 class ImportPointFile:
     """
     Command to import point file which includes survey data.
