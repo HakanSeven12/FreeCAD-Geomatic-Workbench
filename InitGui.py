@@ -27,7 +27,6 @@ from Surfaces import CreateSurface, EditSurface, Contours
 from Section import CreateGuideLines
 import os
 
-
 class GeomaticsCommandGroup:
     def __init__(self, cmdlist, menu, TypeId=None, tooltip=None):
         self.cmdlist = cmdlist
@@ -63,7 +62,6 @@ class GeomaticsWorkbench (Gui.Workbench):
         #   FreeCAD.getResourceDir(): for supported Workbenches
         self.__class__.Icon = FreeCAD.getUserAppDataDir() + \
                         "Mod/Geomatics/Resources/Icons/GeomaticsWorkbench.svg"
-
         self.__class__.MenuText = 'Geomatics (Alpha)'
         self.__class__.ToolTip = 'Geomatics/Survey Engineering Workbench'
 
@@ -91,7 +89,9 @@ class GeomaticsWorkbench (Gui.Workbench):
 
             'Section Tools': {
                 'gui': self.menu + self.toolbar,
-                'cmd': ['Create Guide Lines']
+                'cmd': ['Create Guide Lines',
+                        'Create Sections'
+                        ]
             },
 
             'Draft Tools': {
@@ -119,7 +119,7 @@ class GeomaticsWorkbench (Gui.Workbench):
                    GeomaticsCommandGroup(EditSurfaceSub,
                                          'Edit selected surface.',
                                          TypeId='Mesh::Feature'))
-
+                                         
     DraftDraw = ["Draft_Line", "Draft_Wire", "Draft_Circle", "Draft_Arc",
                  "Draft_Ellipse", "Draft_Polygon", "Draft_Rectangle",
                  "Draft_Text", "Draft_Dimension", "Draft_BSpline",

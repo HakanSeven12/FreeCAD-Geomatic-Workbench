@@ -28,17 +28,18 @@ import Draft
 import os
 
 
-class CreateGuideLines:
-    # Command to create sections for every selected surfaces.
-    Path = os.path.dirname(__file__)
-
-    Resources = {
-        'Pixmap': Path + '/../Resources/Icons/CreateSections.svg',
-        'MenuText': "Export Points",
-        'ToolTip': "Export points to point file."
-    }
+class CreateSections:
 
     def __init__(self):
+        # Command to create sections for every selected surfaces.
+        self.Path = os.path.dirname(__file__)
+
+        self.Resources = {
+            'Pixmap': self.Path + '/../Resources/Icons/CreateSections.svg',
+            'MenuText': "Create Sections",
+            'ToolTip': "Create Sections"
+        }
+
         # Import *.ui file(s)
         self.IPFui = FreeCADGui.PySideUic.loadUi(
             self.Path + "/CreateSections.ui")
@@ -51,19 +52,59 @@ class CreateGuideLines:
         # Return the command resources dictionary
         return self.Resources
 
-    def activated(self):
+    def Activated(self):
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
 
+        self.IPFui.GLGCB.clear()
+        GuideLinesGroup = FreeCAD.ActiveDocument.GuideLines.Group
+        self.GuideLinesList = []
+
+        for group in GuideLinesGroup:
+            if group.TypeId == 'App::DocumentObjectGroup':
+                self.GuideLinesList.append(group.Name)
+                self.IPFui.GLGCB.addItem(group.Label)
+
+        self.IPFui.SelectSurfacesLW.clear()
+        SurfacesGroup = FreeCAD.ActiveDocument.Surfaces.Group
+        self.SurfacesList = []
+
+        for group in SurfacesGroup:
+            if group.TypeId == 'Mesh::Feature':
+                self.SurfacesList.append(group.Name)
+                self.IPFui.SelectSurfacesLW.addItem(group.Label)
+
     def CreateSections(self):
-        GuideLinesGroup = FreeCAD.ActiveDocument.Test.Group
-        SectionGroup = FreeCAD.ActiveDocument.Group
+        FreeCADVersion = FreeCAD.Version()
+        if FreeCADVersion[0] == '0' and int(FreeCADVersion[1]) < 19:
+            FreeCAD.Console.PrintError(
+                "This feature is only available on versions > 0.18")
+            return
+
+        try:
+            self.SectionsGroup = FreeCAD.ActiveDocument.Sections
+        except:
+            self.SectionsGroup = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'Sections')
+            self.SectionsGroup.Label = "Sections"
+
+        GuideLineIndex = self.IPFui.GLGCB.currentIndex()
+
+        if GuideLineIndex < 0:
+            FreeCAD.Console.PrintMessage(
+                "No Guide Lines Group")
+            return
+
+        GuideLineName = self.GuideLinesList[GuideLineIndex]
+        GuideLine = FreeCAD.ActiveDocument.getObject(GuideLineName).Group
+
+        # GuideLinesGroup = FreeCAD.ActiveDocument.GuideLines.Group
         CopyMesh = FreeCAD.ActiveDocument.Surface.Mesh.copy()
         Base = CopyMesh.Placement.Base
         CopyMesh.Placement.move(Base.negative())
 
-        for Wire in GuideLinesGroup:
+        for Wire in GuideLine:
             CopyShape = Wire.Shape.copy()
             CopyShape.Placement.move(Base.negative())
 
@@ -84,9 +125,9 @@ class CreateGuideLines:
                 Points1+Points2, CopyMesh, FreeCAD.Vector(0, 0, 1))
             Pwire = Draft.makeWire(Section)
             Pwire.Placement.move(Base)
-            SectionGroup.addObject(Pwire)
+            self.SectionsGroup.addObject(Pwire)
 
         FreeCAD.ActiveDocument.recompute()
 
 
-FreeCADGui.addCommand('Create Guide Lines', CreateGuideLines())
+FreeCADGui.addCommand('Create Sections', CreateSections())
