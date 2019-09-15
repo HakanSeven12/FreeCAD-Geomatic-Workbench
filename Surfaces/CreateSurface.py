@@ -58,6 +58,11 @@ class CreateSurface:
         """
         return self.resources
 
+    def IsActive(self):
+        if FreeCAD.ActiveDocument is None:
+            return False
+        return True
+
     def Activated(self):
         try:
             self.Surfaces = FreeCAD.ActiveDocument.Surfaces
