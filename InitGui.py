@@ -62,7 +62,7 @@ class GeomaticsWorkbench (Gui.Workbench):
         #   FreeCAD.getResourceDir(): for supported Workbenches
         self.__class__.Icon = FreeCAD.getUserAppDataDir() + \
                         "Mod/Geomatics/Resources/Icons/GeomaticsWorkbench.svg"
-        self.__class__.MenuText = 'Geomatics (Alpha)'
+        self.__class__.MenuText = 'Geomatics'
         self.__class__.ToolTip = 'Geomatics/Survey Engineering Workbench'
 
         self.menu = 1
@@ -119,7 +119,7 @@ class GeomaticsWorkbench (Gui.Workbench):
                    GeomaticsCommandGroup(EditSurfaceSub,
                                          'Edit selected surface.',
                                          TypeId='Mesh::Feature'))
-                                         
+
     DraftDraw = ["Draft_Line", "Draft_Wire", "Draft_Circle", "Draft_Arc",
                  "Draft_Ellipse", "Draft_Polygon", "Draft_Rectangle",
                  "Draft_Text", "Draft_Dimension", "Draft_BSpline",
@@ -138,7 +138,7 @@ class GeomaticsWorkbench (Gui.Workbench):
                  "Draft_Drawing", "Draft_Mirror", "Draft_Stretch"
                  ]
 
-    Gui.addCommand('Edit Tools', 
+    Gui.addCommand('Edit Tools',
                    GeomaticsCommandGroup(DraftEdit, 'Draft Snap Tools'))
 
     GeoData = ['Import OSM Map', 'Import CSV', 'Import GPX', 'Import Heights',

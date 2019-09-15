@@ -58,7 +58,15 @@ class CreateSections:
         self.IPFui.show()
 
         self.IPFui.GLGCB.clear()
-        GuideLinesGroup = FreeCAD.ActiveDocument.GuideLines.Group
+
+        try:
+            self.GuideLines = FreeCAD.ActiveDocument.GuideLines
+        except:
+            self.GuideLines = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'GuideLines')
+            self.GuideLines.Label = "Guide Lines"
+
+        GuideLinesGroup = self.GuideLines.Group
         self.GuideLinesList = []
 
         for group in GuideLinesGroup:
@@ -67,7 +75,14 @@ class CreateSections:
                 self.IPFui.GLGCB.addItem(group.Label)
 
         self.IPFui.SelectSurfacesLW.clear()
-        SurfacesGroup = FreeCAD.ActiveDocument.Surfaces.Group
+        try:
+            self.Surfaces = FreeCAD.ActiveDocument.Surfaces
+        except:
+            self.Surfaces = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'Surfaces')
+            self.Surfaces.Label = "Surfaces"
+
+        SurfacesGroup = self.Surfaces.Group
         self.SurfacesList = []
 
         for group in SurfacesGroup:

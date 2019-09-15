@@ -293,6 +293,10 @@ class ImportPointFile:
             PointGroup = FreeCAD.ActiveDocument.Points
 
         # Read Points from file.
+        if UI.SelectedFilesLW.count() < 1:
+            FreeCAD.Console.PrintMessage("No Files selected")
+            return
+
         Items = []
         for i in range(UI.SelectedFilesLW.count()):
             Items.append(UI.SelectedFilesLW.item(i))
@@ -304,7 +308,6 @@ class ImportPointFile:
         List = []
         Base = self.PointList[0]
         for Point in self.PointList:
-            print(Point)
             Point = (Point[0]-Base[0], Point[1]-Base[1], Point[2]-Base[2])
             List.append(Point)
 
@@ -315,6 +318,5 @@ class ImportPointFile:
         FreeCAD.ActiveDocument.recompute()
         FreeCADGui.SendMsgToActiveView("ViewFit")
         UI.close()
-
 
 FreeCADGui.addCommand('Import Point File', ImportPointFile())

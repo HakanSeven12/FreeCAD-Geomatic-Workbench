@@ -65,6 +65,13 @@ class CreateSurface:
             self.Surfaces = FreeCAD.ActiveDocument.addObject(
                 "App::DocumentObjectGroup", 'Surfaces')
 
+        try:
+            PointGroups = FreeCAD.ActiveDocument.Point_Groups
+        except:
+            PointGroups = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'Point_Groups')
+            PointGroups.Label = "Point Groups"
+
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
@@ -114,6 +121,11 @@ class CreateSurface:
             return False
 
     def CreateSurface(self):
+
+        if len(self.IPFui.PointGroupsLV.selectedIndexes()) < 1:
+            FreeCAD.Console.PrintMessage("No Points object selected")
+            return
+
         import scipy.spatial
 
         Test = []

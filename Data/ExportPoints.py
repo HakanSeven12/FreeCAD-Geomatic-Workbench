@@ -72,6 +72,13 @@ class ExportPoints:
         if FreeCAD.ActiveDocument is None:
             return
 
+        try:
+            PointGroups = FreeCAD.ActiveDocument.Point_Groups
+        except:
+            PointGroups = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'Point_Groups')
+            PointGroups.Label = "Point Groups"
+
         # Show UI.
         UI = self.EP
         UI.setParent(FreeCADGui.getMainWindow())
@@ -120,6 +127,9 @@ class ExportPoints:
         Format = ["", "", "", "", ""]
         FileDestinationLE = UI.FileDestinationLE.text()
 
+        if FileDestinationLE.strip() == "" or UI.PointGroupsLW.count() < 1:
+            return
+
         # Set delimiter.
         if UI.DelimiterCB.currentText() == "Space":
             Delimiter = ' '
@@ -127,7 +137,11 @@ class ExportPoints:
             Delimiter = ','
 
         # Create point file.
-        File = open(FileDestinationLE, 'w')
+        try:
+            File = open(FileDestinationLE, 'w')
+        except:
+            FreeCAD.Console.PrintMessage("Can't open file")
+
         Counter = 1
 
         for SelectedIndex in UI.PointGroupsLW.selectedIndexes():
@@ -136,9 +150,9 @@ class ExportPoints:
 
             for Point in PointGroup.Points.Points:
                 pn = str(Counter)
-                xx = str(round(float(Point.x)/1000, 3))
-                yy = str(round(float(Point.y)/1000, 3))
-                zz = str(round(float(Point.z)/1000, 3))
+                xx = str(round(float(Point.x), 3))
+                yy = str(round(float(Point.y), 3))
+                zz = str(round(float(Point.z), 3))
                 Format[int(PointName)-1] = pn
                 Format[int(Easting)-1] = xx
                 Format[int(Northing)-1] = yy
@@ -151,6 +165,4 @@ class ExportPoints:
                            "\n")
         File.close()
 
-
 FreeCADGui.addCommand('Export Points', ExportPoints())
-
