@@ -42,6 +42,9 @@ class CreateContour:
         return self.resources
 
     def IsActive(self):
+        if FreeCAD.ActiveDocument is None:
+            return False
+
         if FreeCADGui.Selection.getSelection() is not None:
             selection = FreeCADGui.Selection.getSelection()[-1]
             if selection.TypeId == 'Mesh::Feature':
@@ -52,7 +55,6 @@ class CreateContour:
         surface = FreeCADGui.Selection.getSelection()[-1]
         base = surface.Mesh.Placement.Base
         copy_mesh = surface.Mesh.copy()
-        copy_mesh.Placement.Base = FreeCAD.Vector(0, 0, base.z)
 
         # todo : try - except part should be changed
         try:
@@ -66,7 +68,7 @@ class CreateContour:
     def Wire(self, H, PointList, base, Support=None):
         Pl = FreeCAD.Placement()
         Pl.Rotation.Q = (0.0, 0.0, 0.0, 1.0)
-        Pl.Base = FreeCAD.Vector(base.x, base.y, 0)
+        Pl.Base = FreeCAD.Vector(base.x, base.y, base.z)
 
         WireObj = FreeCAD.ActiveDocument.addObject(
             "Part::Part2DObjectPython", "_"+str(H))
@@ -88,16 +90,15 @@ class CreateContour:
     def CreateContour(self, Mesh, Base):
         zmax = Mesh.BoundBox.ZMax
         zmin = Mesh.BoundBox.ZMin
-        DeltaH = 1
 
-        # TODO : Check this part of the code  
+        # TODO DeltaH must be set by user
+        DeltaH = 1
 
         for H in range(int(round(zmin)), int(round(zmax))):
             if H % int(DeltaH) == 0:
                 CrossSections = Mesh.crossSections(
-                    [((0, 0, H), (0, 0, 1))], 0.0001)
+                    [((0, 0, H), (0, 0, 1))], 0.000001)
 
-                FreeCAD.Console.PrintError(CrossSections)
                 for i in CrossSections[0]:
                     Contour = self.Wire(H, i, Base)
                     Contour.Label = str(H)

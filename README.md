@@ -8,13 +8,16 @@ This workbench is being developed to provide functionality specific to Geomatics
 * Create Surface  
 * Edit Surface  
 * Create Contours  
-* Create Guide Lines  
-* Create Sections (WIP)
+* Create Guide Lines  (only for line segments)
+* Create Sections (WIP, need version >= 0.19)
 
 ## Requirements
-* FreeCAD 0.19  
-* python 3.6  
-* scipy 1.2.1
+* FreeCAD 0.18  
+* Python 3.6  
+For Surface creation 
+* scipy (for Surface creation)
+* numpy
+For GeoDataWB 
 * cv2
 * gdal
 * gdalconst
@@ -48,8 +51,13 @@ There are two methods to install manually:
 Discuss this Workbench on the FreeCAD forum thread dedicated to this topic: 
 [Geomatics Workbench](https://forum.freecadweb.org/viewtopic.php?f=8&t=34371).
 
+Or submit/comment issues on [github issues tracker](https://github.com/HakanSeven12/FreeCAD-Geomatics-Workbench/issues)
+
 ## Developer 
 Hakan Seven with inspiration and help from the FreeCAD community.
+
+## Long term vision 
+For a long term vision and a list of desired features see the [TODO file](https://github.com/HakanSeven12/FreeCAD-Geomatics-Workbench/blob/master/TODO.md)
 
 ## Usage & Screenshots
 ![IPF](https://user-images.githubusercontent.com/3831435/59975941-f9e35800-95c6-11e9-9afc-05f5a5d0bf2d.gif)

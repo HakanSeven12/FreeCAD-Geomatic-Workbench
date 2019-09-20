@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>261</width>
-    <height>400</height>
+    <width>310</width>
+    <height>470</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>340</width>
-    <height>400</height>
+    <width>310</width>
+    <height>470</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,8 +30,8 @@
     <rect>
      <x>10</x>
      <y>0</y>
-     <width>241</width>
-     <height>393</height>
+     <width>293</width>
+     <height>471</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -48,6 +48,19 @@
       </property>
       <property name="text">
        <string>Select Alignment:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="SelecetAlignmentL_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>(Only Line Segments are supported)</string>
       </property>
      </widget>
     </item>
@@ -434,6 +447,9 @@
       </item>
       <item>
        <widget class="QLabel" name="CSIncrementL">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Increment Along Curves-Spirals:</string>
         </property>
@@ -441,6 +457,9 @@
       </item>
       <item>
        <widget class="QLineEdit" name="CSIncrementLE">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>

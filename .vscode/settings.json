@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/usr/bin/python",
+    "python.pythonPath": "C:\\Program Files\\FreeCAD 0.18\\bin\\python.exe",
     "python.linting.enabled": true,
     "python.linting.pep8Enabled": true,
     "python.linting.pylintEnabled": true

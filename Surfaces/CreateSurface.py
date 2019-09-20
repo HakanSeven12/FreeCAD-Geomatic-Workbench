@@ -58,12 +58,24 @@ class CreateSurface:
         """
         return self.resources
 
+    def IsActive(self):
+        if FreeCAD.ActiveDocument is None:
+            return False
+        return True
+
     def Activated(self):
         try:
             self.Surfaces = FreeCAD.ActiveDocument.Surfaces
         except:
             self.Surfaces = FreeCAD.ActiveDocument.addObject(
                 "App::DocumentObjectGroup", 'Surfaces')
+
+        try:
+            PointGroups = FreeCAD.ActiveDocument.Point_Groups
+        except:
+            PointGroups = FreeCAD.ActiveDocument.addObject(
+                "App::DocumentObjectGroup", 'Point_Groups')
+            PointGroups.Label = "Point Groups"
 
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
@@ -105,7 +117,7 @@ class CreateSurface:
             Radian = FreeCAD.Vector(i).getAngle(FreeCAD.Vector(j))
             Angle = math.degrees(Radian)
             Result.append(Angle)
-            print(Angle)
+            
         if Result[0] <= int(MaxAngleLE) \
                 and Result[1] <= int(MaxAngleLE) \
                 and Result[2] <= int(MaxAngleLE):
@@ -114,6 +126,11 @@ class CreateSurface:
             return False
 
     def CreateSurface(self):
+
+        if len(self.IPFui.PointGroupsLV.selectedIndexes()) < 1:
+            FreeCAD.Console.PrintMessage("No Points object selected")
+            return
+
         import scipy.spatial
 
         Test = []
