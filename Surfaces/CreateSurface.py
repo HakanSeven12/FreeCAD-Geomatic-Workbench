@@ -58,6 +58,11 @@ class CreateSurface:
         """
         return self.resources
 
+    def IsActive(self):
+        if FreeCAD.ActiveDocument is None:
+            return False
+        return True
+
     def Activated(self):
         try:
             self.Surfaces = FreeCAD.ActiveDocument.Surfaces
@@ -112,7 +117,7 @@ class CreateSurface:
             Radian = FreeCAD.Vector(i).getAngle(FreeCAD.Vector(j))
             Angle = math.degrees(Radian)
             Result.append(Angle)
-            print(Angle)
+            
         if Result[0] <= int(MaxAngleLE) \
                 and Result[1] <= int(MaxAngleLE) \
                 and Result[2] <= int(MaxAngleLE):

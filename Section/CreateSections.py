@@ -52,6 +52,11 @@ class CreateSections:
         # Return the command resources dictionary
         return self.Resources
 
+    def IsActive(self):
+        if FreeCAD.ActiveDocument is None:
+            return False
+        return True
+
     def Activated(self):
         self.IPFui.setParent(FreeCADGui.getMainWindow())
         self.IPFui.setWindowFlags(QtCore.Qt.Window)

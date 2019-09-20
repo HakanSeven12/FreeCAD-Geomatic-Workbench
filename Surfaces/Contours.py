@@ -42,6 +42,9 @@ class CreateContour:
         return self.resources
 
     def IsActive(self):
+        if FreeCAD.ActiveDocument is None:
+            return False
+
         if FreeCADGui.Selection.getSelection() is not None:
             selection = FreeCADGui.Selection.getSelection()[-1]
             if selection.TypeId == 'Mesh::Feature':
