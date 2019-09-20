@@ -14,10 +14,10 @@ This workbench is being developed to provide functionality specific to Geomatics
 ## Requirements
 * FreeCAD 0.18  
 * Python 3.6  
-For Surface creation 
+### For Surface creation 
 * scipy (for Surface creation)
 * numpy
-For GeoDataWB 
+### For GeoDataWB 
 * cv2
 * gdal
 * gdalconst
