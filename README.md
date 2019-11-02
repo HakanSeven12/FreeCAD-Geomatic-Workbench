@@ -24,20 +24,9 @@ This workbench is being developed to provide functionality specific to Geomatics
 * requests (urllib3, chardet, certifi, idna)
 
 ## Installation
-
-### Automatically via Addon Manager (Recommended)
 * Open **Tools** :arrow_forward: **Addon Manager**.
+
 * Select **Geomatics** and click `Install/update selected`.  
-* Restart FreeCAD.
-
-### Manual Installation
-There are two methods to install manually:  
-* **First Method:** Download the ZIP file of this repo from Github and extract into the `~/.FreeCAD/Mod/` directory.  
-
-* **Second Method:** *(preferred)* Using `git clone` you clone the repo in to `~/.FreeCAD/Mod/` directory.  
-  `cd ~/.FreeCAD/Mod; git clone https://github.com/HakanSeven12/FreeCAD-Geomatics-Workbench`  
-  **Note:** to stay up to date with the development of this repo:  
-  `cd ~/.FreeCAD/Mod/FreeCAD-Geomatics-Workbench; git fetch`
 
 * Go to **Edit** :arrow_forward: **Preferences** :arrow_forward: **General** :arrow_forward: **Units**  
   * Set `Number of decimals = 6`.  
