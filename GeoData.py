@@ -33,7 +33,7 @@ class import_csv:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import CSV ',
+            'MenuText': 'Import CSV',
             'ToolTip': 'Import CSV'
         }
 
@@ -50,7 +50,7 @@ class import_emir:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import EMIR ',
+            'MenuText': 'Import EMIR',
             'ToolTip': 'Import EMIR'
         }
 
@@ -67,7 +67,7 @@ class import_xyz:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import XYZ ',
+            'MenuText': 'Import XYZ',
             'ToolTip': 'Import XYZ'
         }
 
@@ -84,7 +84,7 @@ class import_image:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import Image ',
+            'MenuText': 'Import Image',
             'ToolTip': 'Import Image'
         }
 
@@ -99,7 +99,7 @@ class import_gpx:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import GPX ',
+            'MenuText': 'Import GPX',
             'ToolTip': 'Import GPX'
         }
 
@@ -116,8 +116,8 @@ class import_latlony:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import Lat Lon Height ',
-            'ToolTip': 'Import LatLonH'
+            'MenuText': 'Import Lat/Long Height',
+            'ToolTip': 'Import Latitude/Longitude Height'
         }
 
 
@@ -133,7 +133,7 @@ class import_aster:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import ASTER ',
+            'MenuText': 'Import ASTER',
             'ToolTip': 'Import ASTER'
         }
 
@@ -150,7 +150,7 @@ class import_lidar:
     def GetResources(self):
         return {
             'Pixmap': 'Std_Tool3',
-            'MenuText': 'Import LIDAR ',
+            'MenuText': 'Import LIDAR',
             'ToolTip': 'Import LIDAR'
         }
 
@@ -253,7 +253,7 @@ class ElevationGrid:
         return {
             'Pixmap': 'Std_Tool1',
             'MenuText': 'Elevation Grid',
-            'ToolTip': 'create Elevation Grid '
+            'ToolTip': 'Create Elevation Grid '
         }
 
 

@@ -33,7 +33,7 @@ class CreateGuideLines:
 
     def __init__(self):
 
-            # Command to create guide lines for selected alignment.
+        # Command to create guide lines for selected alignment.
         self.Path = os.path.dirname(__file__)
 
         self.resources = {
@@ -47,7 +47,7 @@ class CreateGuideLines:
         self.CPGui = FreeCADGui.PySideUic.loadUi(
             self.Path + "/CreateGuideLinesGroup.ui")
 
-        # To Do List
+        # TODO List
         self.IPFui.CreateB.clicked.connect(self.CreateGuideLines)
         self.IPFui.CancelB.clicked.connect(self.IPFui.close)
         self.IPFui.AddGLGroupB.clicked.connect(self.LoadCGLGui)
@@ -88,7 +88,7 @@ class CreateGuideLines:
         self.IPFui.setWindowFlags(QtCore.Qt.Window)
         self.IPFui.show()
 
-        # List Alignments.
+        # List Alignments
         self.IPFui.AlignmentCB.clear()
         alignment_group = FreeCAD.ActiveDocument.Alignments.Group
         self.alignment_list = []
@@ -117,8 +117,8 @@ class CreateGuideLines:
         alignment_name = self.alignment_list[alignment_index]
 
         Alignment = FreeCAD.ActiveDocument.getObject(alignment_name)
-        # # At this point the WorkBench make use of an unregistred WB
-        # # freecad.trails
+        ## At this point the WorkBench makes use of an unregistered WB
+        ## freecad.trails
         # Start = Alignment.Proxy.model.data['meta']['StartStation']
         # Length = Alignment.Proxy.model.data['meta']['Length']
         # End = Start + Length/1000
@@ -149,13 +149,13 @@ class CreateGuideLines:
 
     def LoadCGLGui(self):
 
-        # Load Create Guide Lines Group UI.
+        # Load Create Guide Lines Group UI
         self.CPGui.setParent(self.IPFui)
         self.CPGui.setWindowFlags(QtCore.Qt.Window)
         self.CPGui.show()
 
     def CreateNewGroup(self):
-        # Create new guide lines group.
+        # Create new guide lines group
         NewGroupName = self.CPGui.GuideLinesGroupNameLE.text()
         NewGroup = FreeCAD.ActiveDocument.addObject(
             "App::DocumentObjectGroup", NewGroupName)
@@ -167,7 +167,7 @@ class CreateGuideLines:
         self.CPGui.close()
 
     def ActivateStations(self):
-        # When QCheckBox status changed do the following options.
+        # When QCheckBox status changed do the following options
         Alignment, Start, End = self.getAlignmentInfos()
         if self.IPFui.FromAlgStartChB.isChecked():
             self.IPFui.StartStationLE.setEnabled(False)

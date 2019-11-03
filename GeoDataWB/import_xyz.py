@@ -95,11 +95,11 @@ def getShape(pts):
 
 
 ## reduce the size of a grid 
-# by deleting data colums and rows
+# by deleting data columns and rows
 # on a regular pattern
 
 def reduceGrid(pts,ku=100,kv=50,lu=0,lv=0):
-	''' simplifiy data '''
+	''' simplify data '''
 
 	wb, eb, sb, nb = 3, 3, 3, 3
 	lu,lv=getShape(pts)
@@ -125,7 +125,7 @@ def reduceGrid(pts,ku=100,kv=50,lu=0,lv=0):
 def showFrame(pts,u=0,v=0,d=10,lu=None,lv=None):
 	'''showFrame(pts,u=0,v=0,d=10,lu=None,lv=None)
 	creates a rectangle frame of size u * v  on a rectangle grid point cloud with shape lu * lv
-	if lu or lv is not set, the shape of the point clloud is calculated
+	if lu or lv is not set, the shape of the point cloud is calculated
 	'''
 
 	say(("showframe u v to u+d v+d  in lu,lv",u,v,d,lu,lv))
@@ -697,7 +697,7 @@ class ViewProvider:
 #\endcond
 
 def muv(app,u=3,v=5,d=10,la=100,lb=100):
-	'''generate a quadratic mesh on startposition u,v wit size d)'''
+	'''generate a quadratic mesh on startposition u,v with size d)'''
 	st=time.time()
 	tt=Part.BSplineSurface()
 	wb, eb, sb, nb = 0, 0, 0, 0
@@ -734,7 +734,7 @@ def muv(app,u=3,v=5,d=10,la=100,lb=100):
 
 
 def suv(app,u=3,v=5,d=10,la=100,lb=100):
-	'''generate a quadratic bspline surface on startposition u,v wit size d)'''
+	'''generate a quadratic bspline surface on startposition u,v with size d)'''
 
 	st=time.time()
 	tt=Part.BSplineSurface()

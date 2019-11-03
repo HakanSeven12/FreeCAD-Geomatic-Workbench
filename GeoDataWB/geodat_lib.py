@@ -36,7 +36,7 @@ def getShape(pts):
 
 
 def reduceGrid(pts,ku=100,kv=50):
-	''' simplifiy data '''
+	''' simplify data '''
 
 	wb, eb, sb, nb = 3, 3, 3, 1
 	lu,lv=getShape(pts)

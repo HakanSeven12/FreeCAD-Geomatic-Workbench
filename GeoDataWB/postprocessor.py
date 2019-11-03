@@ -58,7 +58,7 @@ def getNormals(nsf,size=16,direction=FreeCAD.Vector(0,0,1)):
 			u=float(ux)/size
 			v=float(vx)/size
 			(t1,t2)=nsf.tangent(u,v)
-			# calculate the normale vector and how it differs from the given direction
+			# calculate the normal vector and how it differs from the given direction
 			n=t1.cross(t2)
 			kzs[ux,vx]=n*direction
 
