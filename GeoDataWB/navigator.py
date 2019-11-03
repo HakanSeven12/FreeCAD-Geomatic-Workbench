@@ -102,7 +102,7 @@ def on_key_release(ef,keystring):
 
 
 
-## The EventFilter controls the Qt mouse and keybord events
+## The EventFilter controls the Qt mouse and keyboard events
 #
 
 class EventFilter(QtCore.QObject):
@@ -321,7 +321,7 @@ class EventFilter(QtCore.QObject):
 					return self.on_clicks(self,'Left',1)
 #					return True
 
-				# right mouse button when context menue deactivated
+				# right mouse button when context menu deactivated
 				elif e.button() == QtCore.Qt.RightButton:
 					self.output.vmap['click'].setText('right')
 					self.output.vmap['clickcount'].setText('1')
@@ -788,7 +788,7 @@ class Horizon(QtGui.QWidget):
 		self.repaint()
 	#\endcond
 
-## a widget to dispay the xy position of the camera in the scene
+## a widget to display the xy position of the camera in the scene
 
 class Map(QtGui.QWidget):
 

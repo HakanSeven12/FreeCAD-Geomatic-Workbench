@@ -346,7 +346,7 @@ def import_osm2(b, l, bk, progressbar, status, elevation):
 						height = heights[m.params['lat']+' '+m.params['lon']]*1000 - baseheight
 
 					except:
-						sayErr("---no height avaiable for " + m.params['lat']+' '+m.params['lon'])
+						sayErr("---no height available for " + m.params['lat']+' '+m.params['lon'])
 						height = 0
 
 				p.z = height
