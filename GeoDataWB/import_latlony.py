@@ -63,6 +63,29 @@ trackstring='''
 <extensions> extensionsType </extensions>    <!-- GPX Erweiterung -->
 '''
 
+# translated above in to english
+'''
+<ele> xsd: decimal </ele>                    <!-- Height in m -->
+<time> xsd: dateTime </time>                 <!-- Date and Time (UTC / Zulu) in ISO 8601 Format: yyyy-mm-ddThh: mm: ssZ -->
+<magvar> degreesType </magvar>               <!-- Declination / magnetic local miss in degrees -->
+<geoidheight> xsd: decimal </geoidheight>    <!-- Height relative to Geoid -->
+<name> xsd: string </name>                   <!-- Name of the item -->
+<cmt> xsd: string </cmt>                     <!-- Comment -->
+<desc> xsd: string </desc>                   <!-- Element Description -->
+<src> xsd: string </src>                     <!-- Data Source / Origin -->
+<link> linkType </link>                      <!-- Link to further information -->
+<sym> xsd: string </sym>                     <!-- Appearance icon -->
+<type> xsd: string </type>                   <!-- Classification -->
+<fix> fixType </fix>                         <!-- Type of position detection: none, 2d, 3d, dgps, pps -->
+<sat> xsd: nonNegativeInteger </sat>         <!-- Number of satellites used for the position calculation -->
+<hdop> xsd: decimal </hdop>                  <!-- HDOP: Horizontal distribution of position information -->
+<vdop> xsd: decimal </vdop>                  <!-- VDOP: Vertical distribution of position information -->
+<pdop> xsd: decimal </pdop>                  <!-- PDOP: Scattering of position information -->
+<ageofdgpsdata> xsd:decimal </ageofdgpsdata> <!-- Seconds between last DGPS reception and position calculation -->
+<dgpsid> dgpsStationType:integer </dgpsid>   <!-- ID of the used DGPS station -->
+<extensions> extensionsType </extensions>    <!-- GPX extension -->
+'''
+
 import FreeCAD,FreeCADGui, Part
 App=FreeCAD
 Gui=FreeCADGui
@@ -248,7 +271,7 @@ def import_latlon(filename,orig,hi):
 		t=mathplotlibNode.createMPL()
 		t.Label="My Track raw Data"
 
-		# hier werte bereitstellen
+		# provide values here
 		t.countSources=4
 		t.source1Values=px
 		t.source2Values=py
@@ -265,7 +288,7 @@ def import_latlon(filename,orig,hi):
 		t.useOut3=True
 		t.useOut4=True
 
-		# werte umrechnen
+		# convert values
 		t2=numpyNode.createNP()
 		t2.Label="My Track data processed"
 		t2.sourceObject=t
@@ -281,7 +304,7 @@ def import_latlon(filename,orig,hi):
 		t2.expression4="-1+2*(in4-np.min(in4))/(np.max(in4)-np.min(in4))"
 		t2.label4 = "time relative"
 
-		# werte grafisch darstellen
+		# graphing values
 		t3=mathplotlibNode.createMPL()
 		t3.Label="My Track Data visualization"
 		t3.record=False
@@ -445,9 +468,3 @@ def mydialog():
 
 def importLatLonZ():
 	mydialog()
-
-
-
-
-
-
