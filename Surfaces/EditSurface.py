@@ -121,6 +121,9 @@ class SwapEdge:
                         except:
                             pass
 
+                        surface.Mesh = CopyMesh
+                        self.FaceIndexes.clear()
+
 FreeCADGui.addCommand('Swap Edge', SwapEdge())
 
 
