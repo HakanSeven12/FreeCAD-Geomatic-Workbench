@@ -131,11 +131,11 @@ class CreateSurface:
             FreeCAD.Console.PrintMessage("No Points object selected")
             return
 
-        import scipy.spatial
+        import numpy as np
 
         Test = []
 
-        # Create surface
+        # Create a set of points
         for SelectedIndex in self.IPFui.PointGroupsLV.selectedIndexes():
             Index = self.GroupList[SelectedIndex.row()]
             PointGroup = FreeCAD.ActiveDocument.getObject(Index)
@@ -150,11 +150,20 @@ class CreateSurface:
         DataOn = Data.mean(axis=0)
         Basex = FreeCAD.Vector(DataOn[0], DataOn[1], DataOn[2])
         Data -= DataOn
-        tri = scipy.spatial.Delaunay(Data[:, :2])
+
+        from Surfaces import Delaunay2D
+
+        # Create Delaunay Triangulation and insert points one by one
+        Delaunay = Delaunay2D.Delaunay2D()
+
+        for s in Data[:, :2]:
+            Delaunay.addPoint(s)
+
+        #Create Surface
 
         MeshList = []
 
-        for i in tri.vertices:
+        for i in Delaunay.exportTriangles():
             first = int(i[0])
             second = int(i[1])
             third = int(i[2])
@@ -173,6 +182,6 @@ class CreateSurface:
         Surface.Mesh = MeshObject
         Surface.Label = SurfaceNameLE
         self.Surfaces.addObject(Surface)
-
+        FreeCAD.ActiveDocument.recompute()
 
 FreeCADGui.addCommand('Create Surface', CreateSurface())
