@@ -15,7 +15,6 @@ This workbench is being developed to provide functionality specific to Geomatics
 * FreeCAD 0.18  
 * Python 3.6  
 ### For Surface creation 
-* scipy (for Surface creation)
 * numpy
 ### For GeoDataWB 
 * cv2
