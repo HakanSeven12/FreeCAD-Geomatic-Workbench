@@ -151,29 +151,22 @@ class CreateSurface:
         Basex = FreeCAD.Vector(DataOn[0], DataOn[1], DataOn[2])
         Data -= DataOn
 
-        from Surfaces import Delaunay2D
+        from Surfaces import Delaunator
 
-        # Create Delaunay Triangulation and insert points one by one
-        Delaunay = Delaunay2D.Delaunay2D()
-
-        for s in Data[:, :2]:
-            Delaunay.addPoint(s)
-
-        #Create Surface
+        # Create Delaunay Triangulation
+        Delaunator = Delaunator.Delaunator()
+        triangles = Delaunator.run(Data[:, :2])
 
         MeshList = []
 
-        for i in Delaunay.exportTriangles():
-            first = int(i[0])
-            second = int(i[1])
-            third = int(i[2])
+        for i in range(0, len(triangles), 3):
+            if self.MaxLength(Data[triangles[i]], Data[triangles[i+1]], Data[triangles[i+2]])\
+                    and self.MaxAngle(Data[triangles[i]], Data[triangles[i+1]], Data[triangles[i+2]]):
+                MeshList.append(Data[triangles[i+2]])
+                MeshList.append(Data[triangles[i+1]])
+                MeshList.append(Data[triangles[i]])
 
-            if self.MaxLength(Data[first], Data[second], Data[third])\
-                    and self.MaxAngle(Data[first], Data[second], Data[third]):
-                MeshList.append(Data[first])
-                MeshList.append(Data[second])
-                MeshList.append(Data[third])
-
+        #Create Surface
         MeshObject = Mesh.Mesh(MeshList)
         MeshObject.Placement.move(Basex)
         SurfaceNameLE = self.IPFui.SurfaceNameLE.text()
