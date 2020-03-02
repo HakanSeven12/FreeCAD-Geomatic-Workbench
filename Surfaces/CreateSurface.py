@@ -151,11 +151,10 @@ class CreateSurface:
         Basex = FreeCAD.Vector(DataOn[0], DataOn[1], DataOn[2])
         Data -= DataOn
 
-        from Surfaces import Delaunator
+        from Surfaces.Delaunator import Delaunator
 
         # Create Delaunay Triangulation
-        Delaunator = Delaunator.Delaunator()
-        triangles = Delaunator.run(Data[:, :2])
+        triangles = Delaunator(Data[:, :2]).triangles
 
         MeshList = []
 
