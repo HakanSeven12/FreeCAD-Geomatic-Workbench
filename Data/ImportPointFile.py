@@ -256,9 +256,9 @@ class ImportPointFile:
                     Counter += 1
 
             elif Operation == "Import":
-                self.PointList.append((float(row[E]),
-                                       float(row[N]),
-                                       float(row[Z])))
+                self.PointList.append((float(row[E]) * 1000,
+                                       float(row[N]) * 1000,
+                                       float(row[Z]) * 1000))
 
     def Preview(self):
         """
