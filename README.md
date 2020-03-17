@@ -27,9 +27,6 @@ This workbench is being developed to provide functionality specific to Geomatics
 
 * Select **Geomatics** and click `Install/update selected`.  
 
-* Go to **Edit** :arrow_forward: **Preferences** :arrow_forward: **General** :arrow_forward: **Units**  
-  * Set `Number of decimals = 6`.  
-
 * Go to **Edit** :arrow_forward: **Preferences** :arrow_forward: **General** :arrow_forward: **Document**  
   * Check `Allow duplicate object labels in one document`.  
 
