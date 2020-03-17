@@ -92,7 +92,7 @@ class CreateContour:
         zmin = Mesh.BoundBox.ZMin
 
         # TODO DeltaH must be set by user
-        DeltaH = 1
+        DeltaH = 1000
 
         for H in range(int(round(zmin)), int(round(zmax))):
             if H % int(DeltaH) == 0:
