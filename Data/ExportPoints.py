@@ -155,9 +155,9 @@ class ExportPoints:
 
             for Point in PointGroup.Points.Points:
                 pn = str(Counter)
-                xx = str(round(float(Point.x), 3))
-                yy = str(round(float(Point.y), 3))
-                zz = str(round(float(Point.z), 3))
+                xx = str(round(float(Point.x) / 1000, 3))
+                yy = str(round(float(Point.y) / 1000, 3))
+                zz = str(round(float(Point.z) / 1000, 3))
                 Format[int(PointName)-1] = pn
                 Format[int(Easting)-1] = xx
                 Format[int(Northing)-1] = yy
