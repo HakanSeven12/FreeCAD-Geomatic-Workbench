@@ -101,9 +101,9 @@ class CreateSurface:
             DeltaY = i[1] - j[1]
             Length = (DeltaX**2+DeltaY**2)**0.5
             Result.append(Length)
-        if Result[0] <= int(MaxlengthLE) \
-                and Result[1] <= int(MaxlengthLE) \
-                and Result[2] <= int(MaxlengthLE):
+        if Result[0] <= int(MaxlengthLE)*1000 \
+                and Result[1] <= int(MaxlengthLE)*1000 \
+                and Result[2] <= int(MaxlengthLE)*1000:
             return True
         else:
             return False
@@ -118,9 +118,9 @@ class CreateSurface:
             Angle = math.degrees(Radian)
             Result.append(Angle)
             
-        if Result[0] <= int(MaxAngleLE) \
-                and Result[1] <= int(MaxAngleLE) \
-                and Result[2] <= int(MaxAngleLE):
+        if Result[0] <= int(MaxAngleLE)*1000 \
+                and Result[1] <= int(MaxAngleLE)*1000 \
+                and Result[2] <= int(MaxAngleLE)*1000:
             return True
         else:
             return False
