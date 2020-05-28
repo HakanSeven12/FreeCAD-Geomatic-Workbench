@@ -1,4 +1,4 @@
-# GEOMATICS WORKBENCH WAS MERGED WITH TRAILS WORKBENCH THIS REPOSITORY DEVELOPMENT WAS STOPPED. NEW REPOSITORY: https://github.com/HakanSeven12/freecad.trails
+# GEOMATICS WORKBENCH WAS MERGED WITH TRAILS WORKBENCH DEVELOPMENT OF THIS REPOSITORY WAS STOPPED. NEW REPOSITORY: https://github.com/HakanSeven12/freecad.trails
 
 # FreeCAD Geomatics Workbench
 This workbench is being developed to provide functionality specific to Geomatics/Survey engineering.
